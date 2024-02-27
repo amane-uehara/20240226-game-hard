@@ -37,9 +37,10 @@ module mother_board (
   );
 
   cpu cpu (
-    .clk, .reset,
-    .rom_addr, .rom_data,
-    .uart_w_req, .uart_w_data, .uart_busy,
-    .irr, .ack, .uart_r_data
+    .clk, reset,
+    .addr(rom_addr), .instruction(rom_data),
+    .irr, .ack,
+    .r_data(uart_r_data),
+    .w_req(uart_w_req), .w_data(uart_w_data), .w_busy(uart_busy)
   );
 endmodule
