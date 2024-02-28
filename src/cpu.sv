@@ -2,7 +2,7 @@
 
 module cpu (
   input  logic        clk, reset,
-  output logic [31:0] addr,
+  output logic [31:0] pc,
   input  logic [31:0] instruction,
   input  logic        irr,
   output logic        ack,
@@ -16,7 +16,8 @@ module cpu (
   typedef enum logic [2:0] {
     STAGE_FE,
     STAGE_DE,
-    STAGE_EX
+    STAGE_EX,
+    STAGE_WR
   } STAGE;
 
   STAGE stage, next_stage;
@@ -24,7 +25,8 @@ module cpu (
     unique case (stage)
       STAGE_FE: next_stage = STAGE_DE;
       STAGE_DE: next_stage = STAGE_EX;
-      STAGE_EX: next_stage = STAGE_FE;
+      STAGE_EX: next_stage = STAGE_WR;
+      STAGE_WR: next_stage = STAGE_FE;
       default:  next_stage = STAGE_FE;
     endcase
   end
@@ -34,12 +36,13 @@ module cpu (
     else       stage <= next_stage;
   end
 
-  DECODE de, next_de;
-  EXECUTE ex, next_ex;
+  REGISTERS regs, next_regs;
+  DECODE    de,   next_de;
+  EXECUTE   ex,   next_ex;
 
   decoder decoder(
-    .clk, .reset,
     .de(next_de),
+    .regs,
     .ex,
     .instruction,
     .w_busy,
@@ -48,25 +51,36 @@ module cpu (
   );
 
   always_ff @(posedge clk) begin
-    if (reset)                  de <= '0;
-    else if (stage == STAGE_DE) de <= next_de;
-    else                        de <= de;
+    if (reset)
+      de <= '0;
+    else if (stage == STAGE_DE)
+      de <= next_de;
   end
 
-  alu alu(
-    .clk, .reset,
-    .ex(next_ex),
-    .de
-  );
+  alu alu(.ex(next_ex), .de);
 
   always_ff @(posedge clk) begin
-    if (reset)                  ex <= '0;
-    else if (stage == STAGE_EX) ex <= next_ex;
-    else                        ex <= ex;
+    if (reset)
+      ex <= '0;
+    else if (stage == STAGE_EX)
+      ex <= next_ex;
   end
 
-  assign addr = ex.addr;
-  assign w_req = ex.w_req;
+  always_ff @(posedge clk) begin
+    if (reset) begin
+      regs.pc <= 32'd0;
+      regs.x <= '0;
+      regs.intr_en <= 1'b0;
+    end else if (stage == STAGE_WR) begin
+      regs.pc <= ex.pc;
+      regs.x[ex.rd] <= ex.x_rd;
+      regs.mem[ex.addr_4byte] <= ex.mem_val;
+      regs.intr_en <= ex.intr_en;
+    end
+  end
+
+  assign pc = regs.pc;
+  assign w_req = ex.w_req & (stage == STAGE_WR);
   assign w_data = ex.w_data;
-  assign ack = ex.ack;
+  assign ack = ex.ack & (stage == STAGE_WR);
 endmodule
