@@ -25,7 +25,7 @@ module decoder import lib_cpu :: *; (
   assign de.x_rs2 = regs.x[de.rs2];
 
   logic [31:0] addr;
-  assign addr = de.x_rs2 + de.imm12;
+  assign addr = de.x_rs1 + de.imm12;
   assign de.addr_4byte = addr[9:2];
   assign de.mem_val = regs.mem[de.addr_4byte];
 
