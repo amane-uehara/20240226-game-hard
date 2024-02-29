@@ -9,11 +9,11 @@ module decoder import lib_cpu :: *; (
   input  logic [31:0] r_data
 );
   assign de = '0;
-  assign de.calcr = instruction[3:0];
-  assign de.opt   = instruction[7:4];
-  assign de.rd    = instruction[11:8];
-  assign de.rs1   = instruction[15:12];
-  assign de.rs2   = instruction[19:16];
+  assign de.opcode = instruction[3:0];
+  assign de.opt    = instruction[7:4];
+  assign de.rd     = instruction[11:8];
+  assign de.rs1    = instruction[15:12];
+  assign de.rs2    = instruction[19:16];
 
   logic s;
   assign s = instruction[31];
