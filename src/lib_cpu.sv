@@ -2,11 +2,18 @@
 `define LIB_CPU_SV
 
 package lib_cpu;
+  typedef enum logic [2:0] {
+    STAGE_FE,
+    STAGE_DE,
+    STAGE_EX,
+    STAGE_WR
+  } STAGE;
+
   typedef struct packed {
-    logic [ 15:0][31:0] x;
-    logic [255:0][31:0] mem;
-    logic        [31:0] pc;
-    logic               intr_en;
+    logic [15:0][31:0] x;
+    logic [63:0][31:0] mem;
+    logic       [31:0] pc;
+    logic              intr_en;
   } REGISTERS;
 
   typedef struct packed {
@@ -20,7 +27,7 @@ package lib_cpu;
     logic [31:0] x_rd;
     logic [31:0] x_rs1;
     logic [31:0] x_rs2;
-    logic [31:0] addr_4byte;
+    logic [ 5:0] mem_index;
     logic [31:0] mem_val;
     logic        w_busy;
     logic [31:0] r_data;
@@ -37,7 +44,7 @@ package lib_cpu;
     logic        ack;
     logic [ 3:0] rd;
     logic [31:0] x_rd;
-    logic [ 7:0] addr_4byte;
+    logic [ 5:0] mem_index;
     logic [31:0] mem_val;
     logic        intr_en;
   } EXECUTE;

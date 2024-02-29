@@ -19,15 +19,15 @@ package lib_alu;
   endfunction
 
   function automatic EXECUTE fn_nop (input DECODE de);
-    fn_nop.pc         = de.pc + 32'd4;
-    fn_nop.w_req      = 1'b0;
-    fn_nop.w_data     = 32'd0;
-    fn_nop.ack        = 1'b0;
-    fn_nop.rd         = de.rd;
-    fn_nop.x_rd       = de.x_rd;
-    fn_nop.addr_4byte = de.addr_4byte;
-    fn_nop.mem_val    = de.mem_val;
-    fn_nop.intr_en    = de.intr_en;
+    fn_nop.pc        = de.pc + 32'd4;
+    fn_nop.w_req     = 1'b0;
+    fn_nop.w_data    = 32'd0;
+    fn_nop.ack       = 1'b0;
+    fn_nop.rd        = de.rd;
+    fn_nop.x_rd      = de.x_rd;
+    fn_nop.mem_index = de.mem_index;
+    fn_nop.mem_val   = de.mem_val;
+    fn_nop.intr_en   = de.intr_en;
   endfunction
 
   function automatic EXECUTE fn_lih (input DECODE de);
@@ -37,13 +37,15 @@ package lib_alu;
 
   function automatic logic [31:0] fn_calc (
     input logic [3:0] opt,
-    input logic [31:0] a, b, default_val
+    input logic [31:0] a,
+    input logic [31:0] b,
+    input logic [31:0] default_val
   );
     unique case (opt)
       4'h0:    fn_calc = a + b;
       4'h1:    fn_calc = a - b;
-      4'h2:    fn_calc = a << b[0:4];
-      4'h3:    fn_calc = signed'(a) >> b[0:4];
+      4'h2:    fn_calc = a << b[4:0];
+      4'h3:    fn_calc = signed'(a) >> b[4:0];
       4'h4:    fn_calc = a & b;
       4'h5:    fn_calc = a | b;
       4'h6:    fn_calc = a ^ b;

@@ -13,13 +13,6 @@ module cpu (
 );
   import lib_cpu :: *;
 
-  typedef enum logic [2:0] {
-    STAGE_FE,
-    STAGE_DE,
-    STAGE_EX,
-    STAGE_WR
-  } STAGE;
-
   STAGE stage, next_stage;
   always_comb begin
     unique case (stage)
@@ -41,43 +34,24 @@ module cpu (
   EXECUTE   ex,   next_ex;
 
   decoder decoder(
-    .de(next_de),
+    .clk, .reset, .w_en(stage == STAGE_DE),
+    .de,
     .regs,
-    .ex,
     .instruction,
     .w_busy,
     .irr,
     .r_data
   );
 
-  always_ff @(posedge clk) begin
-    if (reset)
-      de <= '0;
-    else if (stage == STAGE_DE)
-      de <= next_de;
-  end
+  alu alu(
+    .clk, .reset, .w_en(stage == STAGE_EX),
+    .ex(next_ex), .de
+  );
 
-  alu alu(.ex(next_ex), .de);
-
-  always_ff @(posedge clk) begin
-    if (reset)
-      ex <= '0;
-    else if (stage == STAGE_EX)
-      ex <= next_ex;
-  end
-
-  always_ff @(posedge clk) begin
-    if (reset) begin
-      regs.pc <= 32'd0;
-      regs.x <= '0;
-      regs.intr_en <= 1'b0;
-    end else if (stage == STAGE_WR) begin
-      regs.pc <= ex.pc;
-      regs.x[ex.rd] <= ex.x_rd;
-      regs.mem[ex.addr_4byte] <= ex.mem_val;
-      regs.intr_en <= ex.intr_en;
-    end
-  end
+  reg_file reg_file(
+    .clk, .reset, .w_en(stage == STAGE_WR),
+    .regs, .ex
+  );
 
   assign pc = regs.pc;
   assign w_req = ex.w_req & (stage == STAGE_WR);
