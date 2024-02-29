@@ -5,6 +5,6 @@ module alu import lib_cpu :: *; (
   output EXECUTE ex,
   input  DECODE  de
 );
-  import lib_cpu :: fn_alu;
+  import lib_alu :: fn_alu;
   assign ex = fn_alu(de);
 endmodule

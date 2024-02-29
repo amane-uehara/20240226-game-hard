@@ -18,7 +18,7 @@ package lib_alu;
     endcase
   endfunction
 
-  function automatic REG_EXECUTE fn_nop (input REG_DECODE de);
+  function automatic EXECUTE fn_nop (input DECODE de);
     fn_nop.pc         = de.pc + 32'd4;
     fn_nop.w_req      = 1'b0;
     fn_nop.w_data     = 32'd0;
@@ -58,7 +58,7 @@ package lib_alu;
 
   function automatic EXECUTE fn_calcr (input DECODE de);
     fn_calcr = fn_nop(de);
-    fn_calci = fn_calc(de.opt, de.x_rs1, de.x_rs2, de.x_rd);
+    fn_calcr = fn_calc(de.opt, de.x_rs1, de.x_rs2, de.x_rd);
   endfunction
 
   function automatic EXECUTE fn_sw (input DECODE de);
@@ -74,25 +74,24 @@ package lib_alu;
   function automatic EXECUTE fn_jalr (input DECODE de);
     fn_jalr = fn_nop(de);
     fn_jalr.x_rd = de.pc + 32'd4;
-    fn_jalr.pc = de.x_rs2; // rs1にしたい
+    fn_jalr.pc = de.x_rs2; // rs1にした�?
   endfunction
 
   function automatic EXECUTE fn_jcc (input DECODE de);
-    fn_jcc = fn_nop(de);
-    fn_jcc.x_rd = de.pc + 32'd4;
+      logic is_jmp;
+      fn_jcc = fn_nop(de);
+      fn_jcc.x_rd = de.pc + 32'd4;
 
-    logic is_jmp;
-    unique case (de.opt)
-      4'h0:    is_jmp = (de.x_rs1 == 32'd0);
-      4'h1:    is_jmp = (de.x_rs1 != 32'd0);
-      4'h2:    is_jmp = (de.x_rs1[31] == 1'b0); // de.x_rs1 >= 0
-      4'h3:    is_jmp = (de.x_rs1[31] != 1'b0); // de.x_rs1 <  0
-      default: is_jmp = 1'b0;
-    endcase
+      unique case (de.opt)
+        4'h0:    is_jmp = (de.x_rs1 == 32'd0);
+        4'h1:    is_jmp = (de.x_rs1 != 32'd0);
+        4'h2:    is_jmp = (de.x_rs1[31] == 1'b0); // de.x_rs1 >= 0
+        4'h3:    is_jmp = (de.x_rs1[31] != 1'b0); // de.x_rs1 <  0
+        default: is_jmp = 1'b0;
+      endcase
 
-    fn_jcc.pc = is_jmp ? de.x_rs2; // rs1にしたい
+      fn_jcc.pc = is_jmp ? de.x_rs1 : de.pc + 32'd4;
   endfunction
 
 endpackage
-
 `endif
