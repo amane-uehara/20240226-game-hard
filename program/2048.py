@@ -1,5 +1,4 @@
-mem = [0]*16
-R = 0x92D68CA2
+mem = [0]*17
 
 def main():
   init_game()
@@ -11,6 +10,7 @@ def init_game():
   print("push [w,s,a,d] and enter")
   for i in range(16):
     mem[i] = 0
+  mem[16] = 0x92D68CA2
   add_new()
 
 def trap_handler():
@@ -34,26 +34,43 @@ def print_board():
   print("")
 
 def add_new():
-  r = rand_16()
-  while (mem[r] != 0):
-    r = rand_16()
-  mem[r] = 1
+  f = 1
+  a = rand_16()
+  for b in range(16):
+    c = a + b
+    d = c % 16
+    e = mem[d]
+    if (e == 0):
+      mem[d] = f
+      f = 0
 
 def init_if_game_over():
-  is_game_over = 1
-  for i in range(16):
-    if mem[i] == 0:
-      is_game_over = 0
-  if (is_game_over == 1):
+  a = 1
+  for b in range(16):
+    if mem[b] == 0:
+      a = 0
+  if (a == 1):
     print("game over")
     init_game()
 
 def rand_16():
-  global R
-  R = (R ^ (R << 13)) & 0xFFFFFFFF
-  R = (R ^ (R >> 17)) & 0xFFFFFFFF
-  R = (R ^ (R <<  5)) & 0xFFFFFFFF
-  return (R & 0x0000000F)
+  a = mem[16]
+
+  b = a << 13
+  c = a ^ b
+  a = c & 0xFFFFFFFF
+
+  b = a >> 17
+  c = a ^ b
+  a = c & 0xFFFFFFFF
+
+  b = a << 5
+  c = a ^ b
+  a = c & 0xFFFFFFFF
+
+  mem[16] = a
+  a = a & 0x0000000F
+  return a
 
 # a = row
 # b = a*4
