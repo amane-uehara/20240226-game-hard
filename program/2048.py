@@ -24,14 +24,20 @@ def trap_handler():
   print_board()
 
 def print_board():
-  for i in range(4):
-    print(mem[i*4:4*(i+1)])
+  for a in range(4):
+    b = a << 2
+    for c in range(4):
+      d = b + c
+      e = mem[d]
+      print(e, end="")
+    print("")
+  print("")
 
 def add_new():
   r = rand_16()
   while (mem[r] != 0):
     r = rand_16()
-  mem[r] = 2
+  mem[r] = 1
 
 def init_if_game_over():
   is_game_over = 1
@@ -81,7 +87,7 @@ def merge():
         f = d + 1
         g = mem[f]
         if (e == g):
-          mem[d] = e + e
+          mem[d] = e + 1
           mem[f] = 0
 
 def reverse():
