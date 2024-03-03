@@ -1,0 +1,32 @@
++
+-
+&
+^
+<<
+>>
+
+a = 1
+a = b
+a = b + 1
+a = b + c
+
+a = mem[16]
+a = mem[f]
+
+mem[16] = 0x92D68CA2
+mem[16] = a
+mem[d] = 0
+mem[d] = f
+
+a = rand_16()
+def rand_16():
+
+for a in range(4):
+if (x == 'w'):
+while (True):
+
+print("push [w,s,a,d] and enter")
+
+# a = input("")
+# mem = [0]*17
+# a = a & 0xFFFFFFFF
