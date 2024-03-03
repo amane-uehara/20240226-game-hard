@@ -10,15 +10,20 @@ def init_game():
   print("push [w,s,a,d] and enter")
   for i in range(16):
     mem[i] = 0
-  mem[16] = 0x92D68CA2
+  # mem[16] = 0x92D68CA2
+  mem[16] = 0x8CA2
   add_new()
 
 def trap_handler():
   x = input("")
-  if   (x == 'w') : move_up()
-  elif (x == 's') : move_down()
-  elif (x == 'a') : move_left()
-  elif (x == 'd') : move_right()
+  if (x == 'w'):
+    move_up()
+  if (x == 's'):
+    move_down()
+  if (x == 'a'):
+    move_left()
+  if (x == 'd'):
+    move_right()
   init_if_game_over()
   add_new()
   print_board()
@@ -47,7 +52,8 @@ def add_new():
 def init_if_game_over():
   a = 1
   for b in range(16):
-    if mem[b] == 0:
+    c = mem[b]
+    if (c == 0):
       a = 0
   if (a == 1):
     print("game over")
@@ -57,16 +63,16 @@ def rand_16():
   a = mem[16]
 
   b = a << 13
-  c = a ^ b
-  a = c & 0xFFFFFFFF
+  a = a ^ b
+  a = a & 0xFFFFFFFF
 
   b = a >> 17
-  c = a ^ b
-  a = c & 0xFFFFFFFF
+  a = a ^ b
+  a = a & 0xFFFFFFFF
 
   b = a << 5
-  c = a ^ b
-  a = c & 0xFFFFFFFF
+  a = a ^ b
+  a = a & 0xFFFFFFFF
 
   mem[16] = a
   a = a & 0x0000000F
@@ -104,7 +110,8 @@ def merge():
         f = d + 1
         g = mem[f]
         if (e == g):
-          mem[d] = e + 1
+          e = e + 1
+          mem[d] = e
           mem[f] = 0
 
 def reverse():
