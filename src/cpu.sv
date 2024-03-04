@@ -18,6 +18,12 @@ module cpu (
   EXECUTE ex;
 
   logic is_update_reg;
+  logic [1:0] counter;
+  always_ff @(posedge clk) begin
+    if (reset) counter <= 2'd0;
+    else counter <= counter + 2'd1;
+  end
+  assign is_update = (~counter[0]) & (~counter[1]);
 
   sr_file sr_file(
     .clk, .reset, .w_en(is_update_reg),
@@ -45,4 +51,9 @@ module cpu (
   assign de.gr     = gr;
 
   alu alu(.clk, .reset, .de, .ex);
+
+  assign pc = sr.pc;
+  assign ack = ex.ack & is_update_reg;
+  assign w_req = ex.ack & is_update_reg;
+  assign w_data = ex.w_data;
 endmodule
