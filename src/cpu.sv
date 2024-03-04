@@ -13,48 +13,36 @@ module cpu (
 );
   import lib_cpu :: *;
 
-  STAGE stage, next_stage;
-  always_comb begin
-    unique case (stage)
-      STAGE_FE: next_stage = STAGE_DE;
-      STAGE_DE: next_stage = STAGE_EX;
-      STAGE_EX: next_stage = STAGE_WR;
-      STAGE_WR: next_stage = STAGE_FE;
-      default:  next_stage = STAGE_FE;
-    endcase
-  end
+  GENERAL_REG gr;
+  SPECIAL_REG sr;
+  EXECUTE ex;
 
-  always_ff @(posedge clk) begin
-    if (reset) stage <= STAGE_FE;
-    else       stage <= next_stage;
-  end
+  logic is_update_reg;
 
-  REGISTERS regs, next_regs;
-  DECODE    de,   next_de;
-  EXECUTE   ex,   next_ex;
-
-  decoder decoder(
-    .clk, .reset, .w_en(stage == STAGE_DE),
-    .de,
-    .regs,
-    .instruction,
-    .w_busy,
+  sr_file sr_file(
+    .clk, .reset, .w_en(is_update_reg),
     .irr,
-    .r_data
+    .w_busy,
+    .r_data,
+    .ex,
+    .sr
   );
 
-  alu alu(
-    .clk, .reset, .w_en(stage == STAGE_EX),
-    .ex(next_ex), .de
+  gr_file gr_file(
+    .clk, .reset, .w_en(is_update_reg),
+    .rs1(instruction[15:12]),
+    .rs2(instruction[19:16]),
+    .rd(instruction[11:8]),
+    .ex,
+    .gr
   );
 
-  reg_file reg_file(
-    .clk, .reset, .w_en(stage == STAGE_WR),
-    .regs, .ex
-  );
+  DECODE de;
+  assign de.opcode = instruction[ 3: 0];
+  assign de.opt    = instruction[ 7: 4];
+  assign de.imm    = instruction[31:20];
+  assign de.sp     = sp;
+  assign de.gp     = gp;
 
-  assign pc = regs.pc;
-  assign w_req = ex.w_req & (stage == STAGE_WR);
-  assign w_data = ex.w_data;
-  assign ack = ex.ack & (stage == STAGE_WR);
+  alu alu(.clk, .reset, .de, .ex);
 endmodule
