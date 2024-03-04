@@ -13,7 +13,7 @@ module gr_file import lib_cpu :: *; (
     if (reset) begin
       x <= '0;
     end else if (w_en) begin
-      x[rd] <= x_rd;
+      x[rd] <= ex.x_rd;
       mem[ex.mem_addr] <= ex.mem_val;
     end
   end

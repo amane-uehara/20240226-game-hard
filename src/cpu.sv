@@ -41,8 +41,8 @@ module cpu (
   assign de.opcode = instruction[ 3: 0];
   assign de.opt    = instruction[ 7: 4];
   assign de.imm    = instruction[31:20];
-  assign de.sp     = sp;
-  assign de.gp     = gp;
+  assign de.sr     = sr;
+  assign de.gr     = gr;
 
   alu alu(.clk, .reset, .de, .ex);
 endmodule

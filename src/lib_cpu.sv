@@ -21,7 +21,7 @@ package lib_cpu;
     logic [ 3:0] opt;
     logic [ 3:0] rd;
     logic [11:0] imm;
-    SPECIAL_REG  sp;
+    SPECIAL_REG  sr;
     GENERAL_REG  gr;
   } DECODE;
 

@@ -22,15 +22,14 @@ package lib_alu;
     fn_nop.w_req    = 1'b0;
     fn_nop.w_data   = 32'd0;
     fn_nop.ack      = 1'b0;
-    fn_nop.mem_addr = de.gr.mem_addr;
+    fn_nop.mem_addr = de.gr.x_rs1;
     fn_nop.mem_val  = de.gr.mem_val;
     fn_nop.intr_en  = de.sr.intr_en;
   endfunction
 
   function automatic logic [31:0] fn_calc (
     input logic [3:0] opt,
-    input logic [31:0] a,
-    input logic [31:0] b,
+    input logic [31:0] a, b
   );
     unique case (opt)
       4'h0:    fn_calc = a + b;
@@ -47,7 +46,7 @@ package lib_alu;
 
   function automatic EXECUTE fn_calci (input DECODE de);
     logic s = de.imm[11];
-    logic [31:0] imm_ext = {{20{s}, de.imm[11:0]};
+    logic [31:0] imm_ext = {{20{s}}, de.imm[11:0]};
 
     fn_calci = fn_nop(de);
     fn_calci = fn_calc(de.opt, de.gr.x_rs1, imm_ext);
