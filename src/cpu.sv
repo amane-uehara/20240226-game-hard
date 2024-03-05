@@ -2,8 +2,8 @@
 
 module cpu (
   input  logic        clk, reset,
-  output logic [31:0] pc,
-  input  logic [31:0] instruction,
+  output logic [10:0] rom_addr,
+  input  logic [31:0] rom_data,
   input  logic        irr,
   output logic        ack,
   input  logic [31:0] r_data,
@@ -13,46 +13,53 @@ module cpu (
 );
   import lib_cpu :: *;
 
-  GENERAL_REG gr;
-  SPECIAL_REG sr;
-  EXECUTE ex;
-
   logic is_update_reg;
-  logic [1:0] counter;
+  logic [1:0] counter, next_counter;
+  assign next_counter = counter + 2'd1;
   always_ff @(posedge clk) begin
     if (reset) counter <= 2'd0;
-    else counter <= counter + 2'd1;
+    else       counter <= next_counter;
   end
   assign is_update = (~counter[0]) & (~counter[1]);
 
-  sr_file sr_file(
-    .clk, .reset, .w_en(is_update_reg),
-    .irr,
-    .w_busy,
-    .r_data,
-    .ex,
-    .sr
-  );
+  SPECIAL_REG sr;
+  GENERAL_REG gr;
+  EXECUTE ex;
+
+  always_ff @(posedge clk) begin
+    if (reset) begin
+      sr         <= '0;
+    end else if (is_update_reg) begin
+      sr.pc      <= ex.pc;
+      sr.irr     <= irr;
+      sr.intr_en <= ex.intr_en;
+      sr.w_busy  <= w_busy;
+      sr.r_data  <= r_data;
+    end
+  end
 
   gr_file gr_file(
-    .clk, .reset, .w_en(is_update_reg),
-    .rs1(instruction[15:12]),
-    .rs2(instruction[19:16]),
-    .rd(instruction[11:8]),
-    .ex,
+    .clk, .reset,
+    .w_en(is_update_reg),
+    .rs1(rom_data[15:12]),
+    .rs2(rom_data[19:16]),
+    .rd(rom_data[11:8]),
+    .mem_addr(ex.mem_addr),
+    .mem_val(ex.mem_val),
+    .x_rd(ex.x_rd),
     .gr
   );
 
   DECODE de;
-  assign de.opcode = instruction[ 3: 0];
-  assign de.opt    = instruction[ 7: 4];
-  assign de.imm    = instruction[31:20];
+  assign de.opcode = rom_data[ 3: 0];
+  assign de.opt    = rom_data[ 7: 4];
+  assign de.imm    = rom_data[31:20];
   assign de.sr     = sr;
   assign de.gr     = gr;
 
   alu alu(.clk, .reset, .de, .ex);
 
-  assign pc = sr.pc;
+  assign rom_addr = sr.pc[10:0];
   assign ack = ex.ack & is_update_reg;
   assign w_req = ex.ack & is_update_reg;
   assign w_data = ex.w_data;

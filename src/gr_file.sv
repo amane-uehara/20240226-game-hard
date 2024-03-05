@@ -1,10 +1,11 @@
 `include "lib_cpu.sv"
 
 module gr_file import lib_cpu :: *; (
-  input  logic       clk, reset, w_en,
-  input  logic [4:0] rs1, rs2, rd,
-  input  EXECUTE     ex,
-  output GENERAL_REG gr
+  input  logic        clk, reset, w_en,
+  input  logic [ 4:0] rs1, rs2, rd,
+  input  logic [31:0] x_rd, mem_val,
+  input  logic [ 5:0] mem_addr,
+  output GENERAL_REG  gr
 );
   logic [15:0][31:0] x;
   logic [63:0][31:0] mem;
@@ -13,8 +14,8 @@ module gr_file import lib_cpu :: *; (
     if (reset) begin
       x <= '0;
     end else if (w_en) begin
-      x[rd] <= ex.x_rd;
-      mem[ex.mem_addr] <= ex.mem_val;
+      x[rd] <= x_rd;
+      mem[mem_addr] <= mem_val;
     end
   end
 endmodule

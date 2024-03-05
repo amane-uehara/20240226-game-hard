@@ -26,13 +26,13 @@ module mother_board (
   logic ack;
   uart_intr uart_intr (.clk, .reset, .uart_update, .ack, .irr);
 
-  logic [8:0]  rom_addr;
+  logic [10:0] rom_addr;
   logic [31:0] rom_data;
   rom rom (.clk, .addr(rom_addr), .data(rom_data));
 
   cpu cpu (
     .clk, .reset,
-    .pc(rom_addr), .instruction(rom_data),
+    .rom_addr, .rom_data,
     .irr, .ack, .r_data(uart_r_data),
     .w_req(uart_w_req), .w_data(uart_w_data), .w_busy(uart_busy)
   );
