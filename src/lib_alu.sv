@@ -20,9 +20,9 @@ package lib_alu;
   function automatic EXECUTE fn_nop (input DECODE de);
     fn_nop.pc       = de.sr.pc + 32'd4;
     fn_nop.w_req    = 1'b0;
-    fn_nop.w_data   = 32'd0;
+    fn_nop.w_data   = 8'd0;
     fn_nop.ack      = 1'b0;
-    fn_nop.mem_addr = de.gr.x_rs1;
+    fn_nop.mem_addr = de.gr.x_rs1[5:0];
     fn_nop.mem_val  = de.gr.mem_val;
     fn_nop.intr_en  = de.sr.intr_en;
   endfunction

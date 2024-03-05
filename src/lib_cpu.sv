@@ -7,7 +7,7 @@ package lib_cpu;
     logic        irr;
     logic        intr_en;
     logic        w_busy;
-    logic [31:0] r_data;
+    logic [ 7:0] r_data;
   } SPECIAL_REG;
 
   typedef struct packed {
@@ -19,7 +19,6 @@ package lib_cpu;
   typedef struct packed {
     logic [ 3:0] opcode;
     logic [ 3:0] opt;
-    logic [ 3:0] rd;
     logic [11:0] imm;
     SPECIAL_REG  sr;
     GENERAL_REG  gr;
@@ -28,7 +27,7 @@ package lib_cpu;
   typedef struct packed {
     logic [31:0] pc;
     logic        w_req;
-    logic [31:0] w_data;
+    logic [ 7:0] w_data;
     logic        ack;
     logic [ 3:0] rd;
     logic [31:0] x_rd;

@@ -6,9 +6,9 @@ module cpu (
   input  logic [31:0] rom_data,
   input  logic        irr,
   output logic        ack,
-  input  logic [31:0] r_data,
+  input  logic [ 7:0] r_data,
   output logic        w_req,
-  output logic [31:0] w_data,
+  output logic [ 7:0] w_data,
   input  logic        w_busy
 );
   import lib_cpu :: *;
@@ -20,7 +20,7 @@ module cpu (
     if (reset) counter <= 2'd0;
     else       counter <= next_counter;
   end
-  assign is_update = (~counter[0]) & (~counter[1]);
+  assign is_update_reg = (~counter[0]) & (~counter[1]);
 
   SPECIAL_REG sr;
   GENERAL_REG gr;
