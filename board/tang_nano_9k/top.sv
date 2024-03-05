@@ -18,7 +18,8 @@ module top (
 
   defparam mother_board.transmitter.WAIT = CLOCK_HZ/UART_BAUD_RATE;
   defparam mother_board.receiver.WAIT    = CLOCK_HZ/UART_BAUD_RATE;
-  defparam mother_board.rom.FILENAME     = "rom.mem";
+  // defparam mother_board.rom.FILENAME     = "rom.mem";
+  defparam mother_board.rom.FILENAME     = "../mem/rom.mem";
 
   mother_board mother_board (
     .clk,
