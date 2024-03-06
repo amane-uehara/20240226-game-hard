@@ -15,13 +15,12 @@ module top (
   /* CLOCK:27MHz, UART_BAUD_RATE:115200 ROM:2KiB */
   localparam CLOCK_HZ       = 27_000_000;
   localparam UART_BAUD_RATE = 115200;
+  localparam FILENAME       = "../../mem/rom.mem";
 
-  defparam mother_board.transmitter.WAIT = CLOCK_HZ/UART_BAUD_RATE;
-  defparam mother_board.receiver.WAIT    = CLOCK_HZ/UART_BAUD_RATE;
-  // defparam mother_board.rom.FILENAME     = "rom.mem";
-  defparam mother_board.rom.FILENAME     = "../mem/rom.mem";
-
-  mother_board mother_board (
+  mother_board #(
+    .WAIT(CLOCK_HZ/UART_BAUD_RATE),
+    .FILENAME(FILENAME)
+  ) mother_board (
     .clk,
     .reset(syn_reset),
     .uart_tx,

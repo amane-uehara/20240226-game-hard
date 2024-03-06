@@ -12,10 +12,10 @@ module top (
   always_ff @(posedge clk) tmp_uart_rx <= uart_rx;
   always_ff @(posedge clk) syn_uart_rx <= tmp_uart_rx;
 
-  /* CLOCK:100MHz, UART_BAUD_RATE:115200 ROM:2KiB */
-  localparam CLOCK_HZ       = 100_000_000;
+  /* CLOCK:50MHz, UART_BAUD_RATE:115200 ROM:2KiB */
+  localparam CLOCK_HZ       = 50_000_000;
   localparam UART_BAUD_RATE = 115200;
-  localparam FILENAME       = "rom.mem"
+  localparam FILENAME       = "../../mem/rom.mem";
 
   mother_board #(
     .WAIT(CLOCK_HZ/UART_BAUD_RATE),
