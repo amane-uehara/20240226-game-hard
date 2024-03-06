@@ -20,7 +20,7 @@ module cpu (
     if (reset) counter <= 2'd0;
     else       counter <= next_counter;
   end
-  assign is_update_reg = (~counter[0]) & (~counter[1]);
+  assign is_update_reg = (counter == 2'd3);
 
   SPECIAL_REG sr;
   GENERAL_REG gr;
@@ -40,14 +40,21 @@ module cpu (
 
   gr_file gr_file(
     .clk, .reset,
-    .w_en(is_update_reg),
+    .w_en(is_update_reg & ex.w_rd),
     .rs1(rom_data[15:12]),
     .rs2(rom_data[19:16]),
     .rd(rom_data[11:8]),
-    .mem_addr(ex.mem_addr),
-    .mem_val(ex.mem_val),
     .x_rd(ex.x_rd),
-    .gr
+    .x_rs1(gr.x_rs1),
+    .x_rs2(gr.x_rs2)
+  );
+
+  mem_file mem_file(
+    .clk, .reset,
+    .w_en(is_update_reg & ex.w_req),
+    .addr(ex.mem_addr),
+    .r_data(gr.mem_val),
+    .w_data(ex.mem_val)
   );
 
   DECODE de;

@@ -22,6 +22,8 @@ package lib_alu;
     fn_nop.w_req    = 1'b0;
     fn_nop.w_data   = 8'd0;
     fn_nop.ack      = 1'b0;
+    fn_nop.w_rd     = 1'b0;
+    fn_nop.x_rd     = 32'd0;
     fn_nop.mem_addr = de.gr.x_rs1[5:0];
     fn_nop.mem_val  = de.gr.mem_val;
     fn_nop.intr_en  = de.sr.intr_en;
@@ -49,12 +51,14 @@ package lib_alu;
     logic [31:0] imm_ext = {{20{s}}, de.imm[11:0]};
 
     fn_calci = fn_nop(de);
-    fn_calci = fn_calc(de.opt, de.gr.x_rs1, imm_ext);
+    fn_calci.w_rd = 1'b1;
+    fn_calci.x_rd = fn_calc(de.opt, de.gr.x_rs1, imm_ext);
   endfunction
 
   function automatic EXECUTE fn_calcr (input DECODE de);
     fn_calcr = fn_nop(de);
-    fn_calcr = fn_calc(de.opt, de.gr.x_rs1, de.gr.x_rs2);
+    fn_calcr.w_rd = 1'b1;
+    fn_calcr.x_rd = fn_calc(de.opt, de.gr.x_rs1, de.gr.x_rs2);
   endfunction
 
   function automatic EXECUTE fn_sw (input DECODE de);
@@ -64,11 +68,13 @@ package lib_alu;
 
   function automatic EXECUTE fn_lw (input DECODE de);
     fn_lw = fn_nop(de);
+    fn_lw.w_rd = 1'b1;
     fn_lw.x_rd = de.gr.mem_val;
   endfunction
 
   function automatic EXECUTE fn_jalr (input DECODE de);
     fn_jalr = fn_nop(de);
+    fn_jalr.w_rd = 1'b1;
     fn_jalr.x_rd = de.sr.pc + 32'd4;
     fn_jalr.pc = de.gr.x_rs1;
   endfunction
