@@ -7,16 +7,24 @@ module gr_file import lib_cpu :: *; (
   input  logic [ 5:0] mem_addr,
   output GENERAL_REG  gr
 );
-  logic [15:0][31:0] x;
-  logic [63:0][31:0] mem;
+  logic [15:0][31:0] x, next_x;
+  logic [63:0][31:0] mem, next_mem;
+
+  always_comb begin
+    next_x = x;
+    next_mem = mem;
+
+    if (w_en) begin
+      next_x[rd] = x_rd;
+      next_mem[mem_addr] = mem_val;
+    end
+  end
+
+  always_ff @(posedge clk) mem <= next_mem;
 
   always_ff @(posedge clk) begin
-    if (reset) begin
-      x <= '0;
-    end else if (w_en) begin
-      x[rd] <= x_rd;
-      mem[mem_addr] <= mem_val;
-    end
+    if (reset) x <= '0;
+    else       x <= next_x;
   end
 
   assign gr.x_rs1   = x[rs1];
