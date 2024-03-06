@@ -18,10 +18,11 @@ module test_top ();
 
   initial begin
     #1;
-    mother_board.rom.mem[0] = 32'h12345678;
+    mother_board.rom.mem[0] = 32'h54311101;
     mother_board.rom.mem[1] = 32'h12345678;
     mother_board.rom.mem[2] = 32'h12345678;
     mother_board.rom.mem[3] = 32'h12345678;
+    mother_board.rom.mem[4] = 32'h54322201;
   end
 
   always #5 clk = ~clk;
