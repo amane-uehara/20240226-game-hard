@@ -65,8 +65,11 @@
 |            | rs2        | rs1   |      | 0x1 | 0x5 | jneq   |
 |            | rs2        | rs1   |      | 0x2 | 0x5 | jgt    |
 |            | rs2        | rs1   |      | 0x3 | 0x5 | jle    |
-|            |            |       |      |     | 0x6 | halt   |
-|            |            |       |      | 0x1 | 0x6 | ie     |
-|            |            |       |      | 0x2 | 0x6 | ide    |
-|            |            | rs1   |      | 0x3 | 0x6 | ivec   |
-|            |            |       |      | 0x4 | 0x6 | iret   |
+|            |            |       | rd   |     | 0x6 | keyboard |
+|            | rs2        |       |      |     | 0x7 | monitor  |
+|            |            |       | rd   |     | 0x8 | monitor busy |
+|            |            |       |      |     | 0x9 | halt   |
+|            |            |       |      | 0x1 | 0x9 | ie     |
+|            |            |       |      | 0x2 | 0x9 | ide    |
+|            |            | rs1   |      | 0x3 | 0x9 | ivec   |
+|            |            |       |      | 0x4 | 0x9 | iret   |

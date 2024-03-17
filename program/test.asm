@@ -28,3 +28,7 @@ label_piyo:
 b = label_piyo
 label_fuga:
 c = label_hoge
+
+a = keyboard()
+monitor = b
+c = monitor_busy()

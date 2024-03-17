@@ -21,6 +21,9 @@ parse_table = {
   "jalr":  f"{RD}=pc\+4,pc={RS1}",
   "jcc":   f"if\({RS2}{COMP}0\)pc={RS1}",
   "jmp":   f"pc={RS1}",
+  "keyboard":     f"{RD}=keyboard\(\)",
+  "monitor":      f"monitor={RS2}",
+  "monitor_busy": f"{RD}=monitor_busy\(\)",
   "priv":  f"{PRIV}\(\)"
 }
 
@@ -35,7 +38,10 @@ num_opcode = {
   "jalr"  : 4,
   "jcc"   : 5,
   "jmp"   : 5,
-  "priv"  : 6
+  "keyboard"     : 6,
+  "monitor"      : 7,
+  "monitor_busy" : 8,
+  "priv"  : 9
 }
 
 num_reg = {
