@@ -10,12 +10,9 @@ a = b
 a = b + 1
 a = b + c
 
-a = mem[16]
 a = mem[f]
+a = 0x92D68CA2
 
-mem[16] = 0x92D68CA2
-mem[16] = a
-mem[d] = 0
 mem[d] = f
 
 a = rand_16()

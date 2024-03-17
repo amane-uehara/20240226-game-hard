@@ -1,4 +1,5 @@
 mem = [0]*17
+zero = 0
 
 def main():
   init_game()
@@ -8,10 +9,12 @@ def main():
 
 def init_game():
   print("push [w,s,a,d] and enter")
-  for i in range(16):
-    mem[i] = 0
-  # mem[16] = 0x92D68CA2
-  mem[16] = 0x8CA2
+  for i in range(15):
+    mem[i] = zero
+  # a = 0x92D68CA2
+  a = 0x8CA2
+  b = 16
+  mem[b] = a
   add_new()
 
 def trap_handler():
@@ -60,7 +63,8 @@ def init_if_game_over():
     init_game()
 
 def rand_16():
-  a = mem[16]
+  c = 16
+  a = mem[c]
 
   b = a << 13
   a = a ^ b
@@ -74,7 +78,7 @@ def rand_16():
   a = a ^ b
   a = a & 0xFFFFFFFF
 
-  mem[16] = a
+  mem[c] = a
   a = a & 0x0000000F
   return a
 
@@ -97,7 +101,7 @@ def compress():
         f = b + h
         mem[f] = e
         if (h != c):
-          mem[d] = 0
+          mem[d] = zero
         h = h + 1
 
 def merge():
@@ -112,7 +116,7 @@ def merge():
         if (e == g):
           e = e + 1
           mem[d] = e
-          mem[f] = 0
+          mem[f] = zero
 
 def reverse():
   for a in range(4):
