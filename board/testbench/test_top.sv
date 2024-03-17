@@ -16,14 +16,14 @@ module test_top ();
     .FILENAME(FILENAME)
   ) mother_board (.*);
 
-  initial begin
-    #1;
-    mother_board.rom.mem[0] = 32'h54311101;
-    mother_board.rom.mem[1] = 32'h12345678;
-    mother_board.rom.mem[2] = 32'h12345678;
-    mother_board.rom.mem[3] = 32'h12345678;
-    mother_board.rom.mem[4] = 32'h54322201;
-  end
+  //initial begin
+  //  #1;
+  //  mother_board.rom.mem[0] = 32'h54311101;
+  //  mother_board.rom.mem[1] = 32'h12345678;
+  //  mother_board.rom.mem[2] = 32'h12345678;
+  //  mother_board.rom.mem[3] = 32'h12345678;
+  //  mother_board.rom.mem[4] = 32'h54322201;
+  //end
 
   always #5 clk = ~clk;
   initial   clk = 1'b0;
@@ -64,8 +64,10 @@ module show import lib_cpu :: *;(
     ADD_R, SUB_R, SLL_R, SRA_R, SRL_R, AND_R, OR_R, XOR_R,
     SW,
     LW,
+    KEYBOARD, MONITOR, MONITOR_BUSY,
     JALR,
-    JZ, JNZ, JGE, JLT
+    JZ, JNZ, JGE, JLT,
+    HALT, IEN, IDIS, IACK
   } ENUM_OP;
 
   typedef enum logic [3:0] {
@@ -76,30 +78,34 @@ module show import lib_cpu :: *;(
   ENUM_OP op;
   always_comb begin
     casez (rom_data[7:0])
-      {4'h0, 4'h0}: op = NOP;
-      {4'h0, 4'h1}: op = ADD_I;
-      {4'h1, 4'h1}: op = SUB_I;
-      {4'h2, 4'h1}: op = SLL_I;
-      {4'h3, 4'h1}: op = SRA_I;
-      {4'h4, 4'h1}: op = SRL_I;
-      {4'h5, 4'h1}: op = AND_I;
-      {4'h6, 4'h1}: op = OR_I;
-      {4'h7, 4'h1}: op = XOR_I;
-      {4'h0, 4'h2}: op = ADD_R;
-      {4'h1, 4'h2}: op = SUB_R;
-      {4'h2, 4'h2}: op = SLL_R;
-      {4'h3, 4'h2}: op = SRA_R;
-      {4'h4, 4'h2}: op = SRL_R;
-      {4'h5, 4'h2}: op = AND_R;
-      {4'h6, 4'h2}: op = OR_R;
-      {4'h7, 4'h2}: op = XOR_R;
-      {4'h0, 4'h3}: op = SW;
-      {4'h0, 4'h4}: op = LW;
-      {4'h0, 4'h5}: op = JALR;
-      {4'h0, 4'h6}: op = JZ;
-      {4'h1, 4'h6}: op = JNZ;
-      {4'h2, 4'h6}: op = JGE;
-      {4'h3, 4'h6}: op = JLT;
+      {4'h0, 4'h0}: op = ADD_I;
+      {4'h1, 4'h0}: op = SUB_I;
+      {4'h2, 4'h0}: op = SLL_I;
+      {4'h3, 4'h0}: op = SRA_I;
+      {4'h4, 4'h0}: op = AND_I;
+      {4'h5, 4'h0}: op = OR_I;
+      {4'h6, 4'h0}: op = XOR_I;
+      {4'h0, 4'h1}: op = ADD_R;
+      {4'h1, 4'h1}: op = SUB_R;
+      {4'h2, 4'h1}: op = SLL_R;
+      {4'h3, 4'h1}: op = SRA_R;
+      {4'h4, 4'h1}: op = AND_R;
+      {4'h5, 4'h1}: op = OR_R;
+      {4'h6, 4'h1}: op = XOR_R;
+      {4'h0, 4'h2}: op = SW;
+      {4'h0, 4'h3}: op = LW;
+      {4'h0, 4'h4}: op = KEYBOARD;
+      {4'h0, 4'h5}: op = MONITOR;
+      {4'h0, 4'h6}: op = MONITOR_BUSY;
+      {4'h0, 4'h7}: op = JALR;
+      {4'h0, 4'h8}: op = JZ;
+      {4'h1, 4'h8}: op = JNZ;
+      {4'h2, 4'h8}: op = JGE;
+      {4'h3, 4'h8}: op = JLT;
+      {4'h0, 4'h9}: op = HALT;
+      {4'h1, 4'h9}: op = IEN;
+      {4'h2, 4'h9}: op = IDIS;
+      {4'h3, 4'h9}: op = IACK;
       default:      op = OTHER;
     endcase
   end
