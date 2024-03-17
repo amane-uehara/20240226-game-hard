@@ -8,13 +8,29 @@ a = b
 h = mem[i]
 mem[f] = g
 
+b = label_1
 a = pc + 4, pc = b
-pc = c
+label_1:
 
+c = label_2
+pc = c
+label_2:
+
+d = label_3
 if (e == 0) pc = d
+label_3:
+
+d = label_4
 if (f != 0) pc = d
+label_4:
+
+d = label_5
 if (g >= 0) pc = d
+label_5:
+
+d = label_6
 if (h <  0) pc = d
+label_6:
 
 label_hoge:
 a = label_fuga

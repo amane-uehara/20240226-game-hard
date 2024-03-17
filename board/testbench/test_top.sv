@@ -58,9 +58,9 @@ module show import lib_cpu :: *;(
   input EXECUTE            ex,
   input logic [15:0][31:0] x
 );
-  typedef enum logic [4:0] {
+  typedef enum logic [5:0] {
     OTHER, NOP,
-    ADD_I, SUB_I, SLL_I, SRA_I, SRL_I, AND_I, OR_I, XOR_I,
+    MOV_I, ADD_I, SUB_I, SLL_I, SRA_I, SRL_I, AND_I, OR_I, XOR_I,
     ADD_R, SUB_R, SLL_R, SRA_R, SRL_R, AND_R, OR_R, XOR_R,
     SW,
     LW,
@@ -75,10 +75,18 @@ module show import lib_cpu :: *;(
     X5_A, X6_B, X7_C, X8_D, X9_E, XA_F, XB_G, XC_H, XD_I, XE_J
   } ENUM_REG;
 
+  ENUM_REG rs1, rs2, rd;
+  logic [3:0] i_rs1, i_rs2, i_rd;
+  assign i_rs1 = rom_data[15:12];
+  assign i_rs2 = rom_data[19:16];
+  assign i_rd  = rom_data[11:8];
+
   ENUM_OP op;
   always_comb begin
     casez (rom_data[7:0])
-      {4'h0, 4'h0}: op = ADD_I;
+      {4'h0, 4'h0}:
+        if (i_rs1 == 4'd0) op = MOV_I;
+        else op = ADD_I;
       {4'h1, 4'h0}: op = SUB_I;
       {4'h2, 4'h0}: op = SLL_I;
       {4'h3, 4'h0}: op = SRA_I;
@@ -109,12 +117,6 @@ module show import lib_cpu :: *;(
       default:      op = OTHER;
     endcase
   end
-
-  ENUM_REG rs1, rs2, rd;
-  logic [3:0] i_rs1, i_rs2, i_rd;
-  assign i_rs1 = rom_data[15:12];
-  assign i_rs2 = rom_data[19:16];
-  assign i_rd  = rom_data[11:8];
 
   always_comb begin
     case (i_rs1)
