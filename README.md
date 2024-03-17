@@ -44,29 +44,29 @@
 
 | 31-20      | 19-16      | 15-12 | 11-8 | 7-4 | 3-0 | opcode |
 | ---------- | ---------- | ----- | ---- | --- | --- | -----  |
-|            |            | rs1   | rd   |     | 0x9 | lw     |
-|            | rs2        | rs1   |      |     | 0xB | sw     |
-| imm[11:0]  |            | rs1   | rd   |     | 0x2 | addi   |
-| imm[11:0]  |            | rs1   | rd   | 0x1 | 0x2 | subi   |
-| imm[11:0]  |            | rs1   | rd   | 0x2 | 0x2 | slai   |
-| imm[11:0]  |            | rs1   | rd   | 0x3 | 0x2 | srai   |
-| imm[11:0]  |            | rs1   | rd   | 0x4 | 0x2 | andi   |
-| imm[11:0]  |            | rs1   | rd   | 0x5 | 0x2 | ori    |
-| imm[11:0]  |            | rs1   | rd   | 0x6 | 0x2 | xori   |
-|            | rs2        | rs1   | rd   |     | 0x3 | add    |
-|            | rs2        | rs1   | rd   | 0x1 | 0x3 | sub    |
-|            | rs2        | rs1   | rd   | 0x2 | 0x3 | sla    |
-|            | rs2        | rs1   | rd   | 0x3 | 0x3 | sra    |
-|            | rs2        | rs1   | rd   | 0x4 | 0x3 | and    |
-|            | rs2        | rs1   | rd   | 0x5 | 0x3 | or     |
-|            | rs2        | rs1   | rd   | 0x6 | 0x3 | xor    |
-|            | rs2        | rs1   |      |     | 0x7 | jeq    |
-|            | rs2        | rs1   |      | 0x1 | 0x7 | jneq   |
-|            | rs2        | rs1   |      | 0x2 | 0x7 | jgt    |
-|            | rs2        | rs1   |      | 0x3 | 0x7 | jle    |
-|            |            | rs1   | rd   |     | 0x5 | jalr   |
-|            |            |       |      |     | 0xF | halt   |
-|            |            |       |      | 0x1 | 0xF | ie     |
-|            |            |       |      | 0x2 | 0xF | ide    |
-|            |            | rs1   |      | 0x3 | 0xF | ivec   |
-|            |            |       |      | 0x4 | 0xF | iret   |
+| imm[11:0]  |            | rs1   | rd   |     | 0x0 | addi   |
+| imm[11:0]  |            | rs1   | rd   | 0x1 | 0x0 | subi   |
+| imm[11:0]  |            | rs1   | rd   | 0x2 | 0x0 | slai   |
+| imm[11:0]  |            | rs1   | rd   | 0x3 | 0x0 | srai   |
+| imm[11:0]  |            | rs1   | rd   | 0x4 | 0x0 | andi   |
+| imm[11:0]  |            | rs1   | rd   | 0x5 | 0x0 | ori    |
+| imm[11:0]  |            | rs1   | rd   | 0x6 | 0x0 | xori   |
+|            | rs2        | rs1   | rd   |     | 0x1 | add    |
+|            | rs2        | rs1   | rd   | 0x1 | 0x1 | sub    |
+|            | rs2        | rs1   | rd   | 0x2 | 0x1 | sla    |
+|            | rs2        | rs1   | rd   | 0x3 | 0x1 | sra    |
+|            | rs2        | rs1   | rd   | 0x4 | 0x1 | and    |
+|            | rs2        | rs1   | rd   | 0x5 | 0x1 | or     |
+|            | rs2        | rs1   | rd   | 0x6 | 0x1 | xor    |
+|            |            | rs1   | rd   |     | 0x2 | lw     |
+|            | rs2        | rs1   |      |     | 0x3 | sw     |
+|            |            | rs1   | rd   |     | 0x4 | jalr   |
+|            | rs2        | rs1   |      |     | 0x5 | jeq    |
+|            | rs2        | rs1   |      | 0x1 | 0x5 | jneq   |
+|            | rs2        | rs1   |      | 0x2 | 0x5 | jgt    |
+|            | rs2        | rs1   |      | 0x3 | 0x5 | jle    |
+|            |            |       |      |     | 0x8 | halt   |
+|            |            |       |      | 0x1 | 0x8 | ie     |
+|            |            |       |      | 0x2 | 0x8 | ide    |
+|            |            | rs1   |      | 0x3 | 0x8 | ivec   |
+|            |            |       |      | 0x4 | 0x8 | iret   |
