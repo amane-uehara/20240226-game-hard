@@ -1,12 +1,12 @@
-a = b + c
-a = b
-
 a = 57
 d = e + 3
 zero = zero + 3
 
-mem[f] = g
+a = b + c
+a = b
+
 h = mem[i]
+mem[f] = g
 
 a = pc + 4, pc = b
 pc = c
@@ -25,7 +25,7 @@ c = label_piyo
 label_moge:
 
 a = keyboard()
-monitor = b
+monitor(b)
 c = monitor_busy()
 
 ien()

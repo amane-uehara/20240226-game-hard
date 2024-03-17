@@ -11,28 +11,28 @@ COMP = "(?P<opt>(==|!=|>=|<))"
 PRIV = "(?P<opt>(halt|ien|idis|iack|iret))"
 
 parse_table = {
-  "calcr": f"{RD}={RS1}{CALC}{RS2}",
-  "movr":  f"{RD}={RS1}",
   "calci": f"{RD}={RS1}{CALC}{IMM}",
   "movi":  f"{RD}={IMM}",
   "movl":  f"{RD}={LABEL}",
+  "calcr": f"{RD}={RS1}{CALC}{RS2}",
+  "movr":  f"{RD}={RS1}",
   "load":  f"{RD}=mem\[{RS1}\]",
   "store": f"mem\[{RS1}\]={RS2}",
   "jalr":  f"{RD}=pc\+4,pc={RS1}",
   "jcc":   f"if\({RS2}{COMP}0\)pc={RS1}",
   "jmp":   f"pc={RS1}",
   "keyboard":     f"{RD}=keyboard\(\)",
-  "monitor":      f"monitor={RS2}",
+  "monitor":      f"monitor\({RS2}\)",
   "monitor_busy": f"{RD}=monitor_busy\(\)",
   "priv":  f"{PRIV}\(\)"
 }
 
 num_opcode = {
-  "calcr" : 0,
-  "movr"  : 0,
-  "calci" : 1,
-  "movi"  : 1,
-  "movl"  : 1,
+  "calci" : 0,
+  "movi"  : 0,
+  "movl"  : 0,
+  "calcr" : 1,
+  "movr"  : 1,
   "load"  : 2,
   "store" : 3,
   "jalr"  : 4,
