@@ -65,8 +65,8 @@
 |            | rs2        | rs1   |      | 0x1 | 0x5 | jneq   |
 |            | rs2        | rs1   |      | 0x2 | 0x5 | jgt    |
 |            | rs2        | rs1   |      | 0x3 | 0x5 | jle    |
-|            |            |       |      |     | 0x8 | halt   |
-|            |            |       |      | 0x1 | 0x8 | ie     |
-|            |            |       |      | 0x2 | 0x8 | ide    |
-|            |            | rs1   |      | 0x3 | 0x8 | ivec   |
-|            |            |       |      | 0x4 | 0x8 | iret   |
+|            |            |       |      |     | 0x6 | halt   |
+|            |            |       |      | 0x1 | 0x6 | ie     |
+|            |            |       |      | 0x2 | 0x6 | ide    |
+|            |            | rs1   |      | 0x3 | 0x6 | ivec   |
+|            |            |       |      | 0x4 | 0x6 | iret   |
