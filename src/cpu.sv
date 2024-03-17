@@ -33,6 +33,7 @@ module cpu (
       sr.pc      <= ex.pc;
       sr.irr     <= irr;
       sr.intr_en <= ex.intr_en;
+      sr.intr_pc <= ex.intr_pc;
       sr.w_busy  <= w_busy;
       sr.r_data  <= r_data;
     end
@@ -67,7 +68,7 @@ module cpu (
   alu alu(.clk, .reset, .de, .ex);
 
   assign rom_addr = sr.pc[10:0];
-  assign ack = ex.ack & is_update_reg;
-  assign w_req = ex.ack & is_update_reg;
+  assign ack = ex.ack;
+  assign w_req = ex.w_req & is_update_reg;
   assign w_data = ex.w_data;
 endmodule

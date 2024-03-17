@@ -5,18 +5,6 @@
 package lib_alu;
   import lib_cpu :: *;
 
-  function automatic EXECUTE fn_alu(input DECODE de);
-    unique case (de.opcode)
-      4'h1:    fn_alu = fn_calci(de);
-      4'h2:    fn_alu = fn_calcr(de);
-      4'h3:    fn_alu = fn_sw(de);
-      4'h4:    fn_alu = fn_lw(de);
-      4'h5:    fn_alu = fn_jalr(de);
-      4'h6:    fn_alu = fn_jcc(de);
-      default: fn_alu = fn_nop(de);
-    endcase
-  endfunction
-
   function automatic EXECUTE fn_nop (input DECODE de);
     fn_nop.pc       = de.sr.pc + 32'd4;
     fn_nop.w_req    = 1'b0;
@@ -27,6 +15,7 @@ package lib_alu;
     fn_nop.mem_addr = de.gr.x_rs1[5:0];
     fn_nop.mem_val  = de.gr.mem_val;
     fn_nop.intr_en  = de.sr.intr_en;
+    fn_nop.intr_pc  = de.sr.intr_pc;
   endfunction
 
   function automatic logic [31:0] fn_calc (
@@ -61,15 +50,15 @@ package lib_alu;
     fn_calcr.x_rd = fn_calc(de.opt, de.gr.x_rs1, de.gr.x_rs2);
   endfunction
 
-  function automatic EXECUTE fn_sw (input DECODE de);
-    fn_sw = fn_nop(de);
-    fn_sw.mem_val = de.gr.x_rs1;
-  endfunction
-
   function automatic EXECUTE fn_lw (input DECODE de);
     fn_lw = fn_nop(de);
     fn_lw.w_rd = 1'b1;
     fn_lw.x_rd = de.gr.mem_val;
+  endfunction
+
+  function automatic EXECUTE fn_sw (input DECODE de);
+    fn_sw = fn_nop(de);
+    fn_sw.mem_val = de.gr.x_rs1;
   endfunction
 
   function automatic EXECUTE fn_jalr (input DECODE de);
@@ -92,6 +81,31 @@ package lib_alu;
       fn_jcc = fn_nop(de);
       fn_jcc.x_rd = de.sr.pc + 32'd4;
       fn_jcc.pc = is_jmp ? de.gr.x_rs1 : de.sr.pc + 32'd4;
+  endfunction
+
+  function automatic EXECUTE fn_icall (input DECODE de);
+    fn_icall         = fn_nop(de);
+    fn_icall.pc      = 32'd0;
+    fn_icall.intr_pc = de.sr.pc;
+    fn_icall.intr_en = 1'b0;
+  endfunction
+
+  function automatic EXECUTE fn_iret (input DECODE de);
+    fn_iret         = fn_nop(de);
+    fn_iret.pc      = de.sr.intr_pc;
+    fn_iret.intr_en = 1'b1;
+  endfunction
+
+  function automatic EXECUTE fn_priviledge (input DECODE de);
+    fn_priviledge = fn_nop(de);
+
+    case (de.opt)
+      4'h0: fn_priviledge.pc      = de.sr.pc; // halt
+      4'h1: fn_priviledge.intr_en = 1'b1; // ien
+      4'h2: fn_priviledge.intr_en = 1'b0; // idis
+      4'h3: fn_priviledge.ack     = 1'b1; // ack
+      4'h4: fn_priviledge         = fn_iret(de);
+    endcase
   endfunction
 
 endpackage

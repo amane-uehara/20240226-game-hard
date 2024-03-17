@@ -6,6 +6,7 @@ package lib_cpu;
     logic [31:0] pc;
     logic        irr;
     logic        intr_en;
+    logic        intr_pc;
     logic        w_busy;
     logic [ 7:0] r_data;
   } SPECIAL_REG;
@@ -34,6 +35,7 @@ package lib_cpu;
     logic [ 5:0] mem_addr;
     logic [31:0] mem_val;
     logic        intr_en;
+    logic        intr_pc;
   } EXECUTE;
 endpackage
 
