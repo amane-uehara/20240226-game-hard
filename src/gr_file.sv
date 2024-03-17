@@ -20,6 +20,6 @@ module gr_file import lib_cpu :: *; (
     else       x <= next_x;
   end
 
-  assign x_rs1 = x[rs1];
-  assign x_rs2 = x[rs2];
+  assign x_rs1 = (rs1 == 4'd0) ? 32'd0 : x[rs1];
+  assign x_rs2 = (rs1 == 4'd0) ? 32'd0 : x[rs2];
 endmodule
