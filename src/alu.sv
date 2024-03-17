@@ -15,9 +15,9 @@ module alu import lib_cpu :: *; (
       4'h1:    next_ex = fn_calcr(de);
       4'h2:    next_ex = fn_lw(de);
       4'h3:    next_ex = fn_sw(de);
-      4'h5:    next_ex = fn_jalr(de);
-      4'h6:    next_ex = fn_jcc(de);
-      4'h7:    next_ex = fn_priviledge(de);
+      4'h4:    next_ex = fn_jalr(de);
+      4'h5:    next_ex = fn_jcc(de);
+      4'h6:    next_ex = fn_priviledge(de);
       default: next_ex = fn_nop(de);
     endcase
 
