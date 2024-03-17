@@ -76,11 +76,11 @@ nop_parsed = {
 def hex_format(a, width):
   return format(2**32+a, '08x')[-width:]
 
-def to_hex(parsed_list, symbol_table):
+def to_hex(parsed_list, label_table):
   ret = []
   for parsed in parsed_list:
     if parsed["opcode"] == "movl":
-      imm = hex_format(symbol_table[parsed["label"]], 3)
+      imm = hex_format(label_table[parsed["label"]], 3)
     else:
       imm = hex_format(int(parsed["imm"]), 3)
 
@@ -94,7 +94,7 @@ def to_hex(parsed_list, symbol_table):
 
 def main():
   parsed_list = []
-  symbol_table = {}
+  label_table = {}
 
   with open(sys.argv[1]) as f:
     line_num = -1
@@ -119,10 +119,10 @@ def main():
       m = re.match(f'^{LABEL}:$', line)
       if m:
         label = m.groupdict()["label"]
-        symbol_table[label] = addr
+        label_table[label] = addr
 
   print(*parsed_list, sep="\n")
-  print(symbol_table, sep="\n")
-  print(*to_hex(parsed_list, symbol_table), sep="\n")
+  print(label_table, sep="\n")
+  print(*to_hex(parsed_list, label_table), sep="\n")
 
 main()
