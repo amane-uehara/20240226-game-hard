@@ -1,60 +1,67 @@
 import re
+import sys
 
-assembly_code = [
-  "a = b + c",
-  "a = b",
-  "a = 57",
-  "d = e + 3",
-  "zero = zero + 3",
-  "mem[f-4] = g",
-  "mem[f-0] = g",
-  "mem[f+0] = g",
-  "mem[f+4] = g",
-  "h = mem[i+8]",
-  "a = pc + 4, pc = b",
-  "pc = c",
-  "if (e == 0) pc = d",
-  "if (f != 0) pc = d",
-  "if (g >= 0) pc = d",
-  "if (h <  0) pc = d"
-]
-
+LABEL = "(?P<label>(label[_0-9a-z]*))"
 RS1 = "(?P<rs1>([a-z]|zero))"
 RS2 = "(?P<rs2>([a-z]|zero))"
 RD  = "(?P<rd>([a-z]|zero))"
 IMM = "(?P<imm>[+-]?\d+)"
 CALC = "(?P<opt>(\+|-))"
 COMP = "(?P<opt>(==|!=|>=|<))"
+PRIV = "(?P<opt>(halt|ien|idis|iack|iret))"
 
 parse_table = {
   "calcr": f"{RD}={RS1}{CALC}{RS2}",
   "movr":  f"{RD}={RS1}",
   "calci": f"{RD}={RS1}{CALC}{IMM}",
   "movi":  f"{RD}={IMM}",
-  "load":  f"{RD}=mem\[{RS1}{IMM}?\]",
-  "store": f"mem\[{RS1}{IMM}?\]={RS2}",
+  "movl":  f"{RD}={LABEL}",
+  "load":  f"{RD}=mem\[{RS1}\]",
+  "store": f"mem\[{RS1}\]={RS2}",
   "jalr":  f"{RD}=pc\+4,pc={RS1}",
+  "jcc":   f"if\({RS2}{COMP}0\)pc={RS1}",
   "jmp":   f"pc={RS1}",
-  "jcc":   f"if\({RS2}{COMP}0\)pc={RS1}"
+  "priv":  f"{PRIV}\(\)"
 }
 
 num_opcode = {
-  "calcr": 1, "movr": 1, "calci": 2, "movi": 2,
-  "load": 3, "store": 4,
-  "jalr": 5, "jmp": 6, "jcc": 7
+  "calcr" : 0,
+  "movr"  : 0,
+  "calci" : 1,
+  "movi"  : 1,
+  "movl"  : 1,
+  "load"  : 2,
+  "store" : 3,
+  "jalr"  : 4,
+  "jcc"   : 5,
+  "jmp"   : 5,
+  "priv"  : 6
 }
 
 num_reg = {
-  "zero": 0,
-  "a": 1, "b": 2, "c": 3, "d": 4,
-  "e": 5, "f": 6, "g": 7, "h": 8,
-  "i": 9
+  "zero" : 0,
+  "ra"   : 1,
+  "sp"   : 2,
+  "tptr" : 3,
+  "tcmp" : 4,
+  "a"    : 5,
+  "b"    : 6,
+  "c"    : 7,
+  "d"    : 8,
+  "e"    : 9,
+  "f"    : 10,
+  "g"    : 11,
+  "h"    : 12,
+  "i"    : 13,
+  "j"    : 14,
+  "k"    : 15
 }
 
 num_opt = {
   "null": 0,
-  "+": 0, "-": 1,
-  "==": 0, "!=": 1, ">=": 2, "<": 3
+  "+": 0, "-": 1, "<<": 2, ">>": 3, "&": 4, "|": 5, "^": 6,
+  "==": 0, "!=": 1, ">=": 2, "<": 3,
+  "halt": 0, "ien": 1, "idis": 2, "iack": 3, "iret": 4
 }
 
 nop_parsed = {
@@ -69,29 +76,53 @@ nop_parsed = {
 def hex_format(a, width):
   return format(2**32+a, '08x')[-width:]
 
-def main():
+def to_hex(parsed_list, symbol_table):
   ret = []
-  for line in assembly_code:
-    line = line.replace(" ","")
-    print(line)
+  for parsed in parsed_list:
+    if parsed["opcode"] == "movl":
+      imm = hex_format(symbol_table[parsed["label"]], 3)
+    else:
+      imm = hex_format(int(parsed["imm"]), 3)
 
-    for k, v in parse_table.items():
-      m = re.match(f"^{v}$", line)
+    rs2    = hex_format(num_reg[parsed["rs2"]], 1)
+    rs1    = hex_format(num_reg[parsed["rs1"]], 1)
+    rd     = hex_format(num_reg[parsed["rd"]], 1)
+    opt    = hex_format(num_opt[parsed["opt"]], 1)
+    opcode = hex_format(num_opcode[parsed["opcode"]], 1)
+    ret.append(f"{imm}{rs2}{rs1}{rd}{opt}{opcode} # {parsed['addr']:4x} | {parsed['line_num']:4d} | {parsed['line_raw']}")
+  return ret
+
+def main():
+  parsed_list = []
+  symbol_table = {}
+
+  with open(sys.argv[1]) as f:
+    line_num = -1
+    addr = 0
+    for line_raw in f:
+      line_num += 1
+      line = line_raw.replace(" ","")
+
+      line_dict = {}
+      line_dict["addr"]     = addr
+      line_dict["line_num"] = line_num
+      line_dict["line_raw"] = line_raw.strip()
+
+      for k, v in parse_table.items():
+        m = re.match(f"^{v}$", line)
+        if m:
+          parsed = {**line_dict, **nop_parsed, "opcode":k, **m.groupdict()}
+          parsed_list.append(parsed)
+          addr += 1
+          break
+
+      m = re.match(f'^{LABEL}:$', line)
       if m:
-        parsed = {**nop_parsed, **m.groupdict()}
-        parsed["opcode"] = k
-        print(parsed)
+        label = m.groupdict()["label"]
+        symbol_table[label] = addr
 
-        hex_list = []
-        hex_list.append(hex_format(int(parsed["imm"]), 3))
-        hex_list.append(hex_format(num_reg[parsed["rs2"]], 1))
-        hex_list.append(hex_format(num_reg[parsed["rs1"]], 1))
-        hex_list.append(hex_format(num_reg[parsed["rd"]], 1))
-        hex_list.append(hex_format(num_opt[parsed["opt"]], 1))
-        hex_list.append(hex_format(num_opcode[parsed["opcode"]], 1))
-        print("".join(hex_list))
-        break
-
-  print(*ret, sep="\n")
+  print(*parsed_list, sep="\n")
+  print(symbol_table, sep="\n")
+  print(*to_hex(parsed_list, symbol_table), sep="\n")
 
 main()
