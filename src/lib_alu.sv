@@ -61,6 +61,24 @@ package lib_alu;
     fn_sw.mem_val = de.gr.x_rs1;
   endfunction
 
+  function automatic EXECUTE fn_keyboard (input DECODE de);
+    fn_keyboard = fn_nop(de);
+    fn_keyboard.w_rd = 1'b1;
+    fn_keyboard.x_rd = de.sr.r_data;
+  endfunction
+
+  function automatic EXECUTE fn_monitor (input DECODE de);
+    fn_monitor = fn_nop(de);
+    fn_monitor.w_req  = 1'b1;
+    fn_monitor.w_data = de.gr.x_rs1;
+  endfunction
+
+  function automatic EXECUTE fn_monitor_busy (input DECODE de);
+    fn_monitor_busy = fn_nop(de);
+    fn_monitor_busy.w_rd = 1'b1;
+    fn_monitor_busy.x_rd = de.sr.w_busy;
+  endfunction
+
   function automatic EXECUTE fn_jalr (input DECODE de);
     fn_jalr = fn_nop(de);
     fn_jalr.w_rd = 1'b1;
