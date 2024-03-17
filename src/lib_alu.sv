@@ -6,7 +6,7 @@ package lib_alu;
   import lib_cpu :: *;
 
   function automatic EXECUTE fn_nop (input DECODE de);
-    fn_nop.pc       = de.sr.pc + 32'd4;
+    fn_nop.pc       = de.sr.pc + 32'd1;
     fn_nop.w_req    = 1'b0;
     fn_nop.w_data   = 8'd0;
     fn_nop.ack      = 1'b0;
@@ -82,7 +82,7 @@ package lib_alu;
   function automatic EXECUTE fn_jalr (input DECODE de);
     fn_jalr = fn_nop(de);
     fn_jalr.w_rd = 1'b1;
-    fn_jalr.x_rd = de.sr.pc + 32'd4;
+    fn_jalr.x_rd = de.sr.pc + 32'd1;
     fn_jalr.pc = de.gr.x_rs1;
   endfunction
 
@@ -97,8 +97,7 @@ package lib_alu;
       endcase
 
       fn_jcc = fn_nop(de);
-      fn_jcc.x_rd = de.sr.pc + 32'd4;
-      fn_jcc.pc = is_jmp ? de.gr.x_rs1 : de.sr.pc + 32'd4;
+      fn_jcc.pc = is_jmp ? de.gr.x_rs1 : de.sr.pc + 32'd1;
   endfunction
 
   function automatic EXECUTE fn_icall (input DECODE de);
@@ -121,7 +120,7 @@ package lib_alu;
       4'h0: fn_priviledge.pc      = de.sr.pc; // halt
       4'h1: fn_priviledge.intr_en = 1'b1; // ien
       4'h2: fn_priviledge.intr_en = 1'b0; // idis
-      4'h3: fn_priviledge.ack     = 1'b1; // ack
+      4'h3: fn_priviledge.ack     = 1'b1; // iack
       4'h4: fn_priviledge         = fn_iret(de);
     endcase
   endfunction

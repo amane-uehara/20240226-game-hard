@@ -20,7 +20,7 @@ module cpu (
     if (reset) counter <= 2'd0;
     else       counter <= next_counter;
   end
-  assign is_update_reg = (counter == 2'd3);
+  assign is_update_reg = (counter == 2'd0);
 
   SPECIAL_REG sr;
   GENERAL_REG gr;
