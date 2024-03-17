@@ -95,7 +95,7 @@ def to_hex(parsed_list, label_table):
     rd     = hex_format(num_reg[parsed["rd"]], 1)
     opt    = hex_format(num_opt[parsed["opt"]], 1)
     opcode = hex_format(num_opcode[parsed["opcode"]], 1)
-    ret.append(f"{imm}{rs2}{rs1}{rd}{opt}{opcode} # {parsed['addr']:4x} | {parsed['line_num']:4d} | {parsed['line_raw']}")
+    ret.append(f"{imm}{rs2}{rs1}{rd}{opt}{opcode} // {parsed['addr']:4x} | {parsed['line_num']:4d} | {parsed['line_raw']}")
   return ret
 
 def main():
