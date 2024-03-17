@@ -16,19 +16,20 @@ if (f != 0) pc = d
 if (g >= 0) pc = d
 if (h <  0) pc = d
 
-halt()
-ien()
-idis()
-iack()
-iret()
-
 label_hoge:
 a = label_fuga
 label_piyo:
-b = label_piyo
+b = label_moge
 label_fuga:
-c = label_hoge
+c = label_piyo
+label_moge:
 
 a = keyboard()
 monitor = b
 c = monitor_busy()
+
+ien()
+idis()
+iack()
+iret()
+halt()
