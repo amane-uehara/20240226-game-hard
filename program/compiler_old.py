@@ -2,7 +2,7 @@ import os
 import sys
 import re
 
-file_label    = "LABEL_" + os.path.splitext(os.path.basename(__file__))[0] + "_"
+file_label    = "label_" + os.path.splitext(os.path.basename(__file__))[0] + "_"
 match_reg     = "[a-k]|zero|ra|sp|tptr|tcmp"
 match_rs1     = "(?P<rs1>" + match_reg + ")"
 match_rs2     = "(?P<rs2>" + match_reg + ")"
@@ -54,7 +54,7 @@ def main():
 
   with open(asm_file, mode='w') as f:
     for asm in asm_lines:
-      if (asm[0:9] == "LABEL_FN_"):
+      if (asm[0:9] == "label_fn_"):
         f.write("\n")
       f.write(asm)
       f.write("\n")
@@ -101,7 +101,7 @@ def asm_other(line):
   asm_init = []
 
   if m := re.search('^def {}\(\):$'.format(match_label), line):
-    asm_init.append("LABEL_FN_{}:".format(m.group("label")))
+    asm_init.append("label_fn_{}:".format(m.group("label")))
 
   elif m := re.search("^return$", line):
     asm_init.append("jalr zero ra")
@@ -113,13 +113,13 @@ def asm_other(line):
     asm_init += asm_pop(m.group("regs").split(','))
 
   elif m := re.search('^a = {}\(\)$'.format(match_label), line):
-    asm_init.append("li tptr LABEL_FN_{}".format(m.group("label")))
+    asm_init.append("li tptr label_fn_{}".format(m.group("label")))
     asm_init.append("jalr ra tptr")
 
   elif m := re.search('^a = {}\((?P<regs>.*)\)$'.format(match_label), line):
     regs = m.group("regs").split(',')
     asm_init += asm_push(regs)
-    asm_init.append("li tptr LABEL_FN_{}".format(m.group("label")))
+    asm_init.append("li tptr label_fn_{}".format(m.group("label")))
     asm_init.append("jalr ra tptr")
     asm_init += asm_pop(reversed(regs))
 
