@@ -37,7 +37,7 @@ package lib_cpu;
     logic [31:0] mem_val;
     logic        intr_en;
     logic        intr_pc;
-    logic        intr_vec;
+    logic [31:0] intr_vec;
   } EXECUTE;
 endpackage
 
