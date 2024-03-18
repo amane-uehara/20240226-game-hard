@@ -55,9 +55,8 @@ a = 0
 halt()
 
 label_trap:
-b = 0
-c = 1
-intr(b) = c
+b = 1
+intr(zero) = b
 a = 1
 iret()
 a = 2
