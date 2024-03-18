@@ -18,5 +18,6 @@ label_trap:
 
   intr(zero) = a
 
+  b = b + 1
   io(zero) = b
   iret()
