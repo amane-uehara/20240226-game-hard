@@ -36,10 +36,15 @@
 | ---------------------------- | ------------------------------- |
 | `calcr opt rd rs1 rs2`       | `x[rd] = x[rs1] opt x[rs2]`     |
 | `calci opt rd rs1 imm[11:0]` | `x[rd] = x[rs1] opt ext32(imm)` |
-| `sw rs2 rs1`                 | `mem[x[rs1]] = x[rs2]`          |
-| `lw rd rs1`                  | `x[rd] = mem[x[rs1]]`           |
 | `jalr rd rs1`                | `x[rd] = pc + 4; pc = x[rs1]`   |
 | `jcc opt rs2 rs1`            | `if opt(x[rs2]) {pc = x[rs1]}`  |
+| `lw rd rs1`                  | `x[rd] = mem[x[rs1]]`           |
+| `sw rs2 rs1`                 | `mem[x[rs1]] = x[rs2]`          |
+| `r_io rd rs1`                | `x[rd] = io[x[rs1]]`            |
+| `w_io rs1 rs2`               | `io[x[rs1]] = x[rs2]`           |
+| `w_intr rs1 rs2`             | `intr[x[rs1]] = x[rs2]`         |
+| `iret`                       | `pc = intr_pc; intr_en = 1`     |
+| `icall`                      | `intr_pc = pc; pc = intr_vec; intr_en = 0`|
 
 
 | 31-20      | 19-16      | 15-12 | 11-8 | 7-4 | 3-0 | opcode |
@@ -58,18 +63,14 @@
 |            | rs2        | rs1   | rd   | 0x4 | 0x1 | and    |
 |            | rs2        | rs1   | rd   | 0x5 | 0x1 | or     |
 |            | rs2        | rs1   | rd   | 0x6 | 0x1 | xor    |
-|            |            | rs1   | rd   |     | 0x2 | lw     |
-|            | rs2        | rs1   |      |     | 0x3 | sw     |
-|            |            | rs1   | rd   |     | 0x4 | jalr   |
-|            | rs2        | rs1   |      |     | 0x5 | jeq    |
-|            | rs2        | rs1   |      | 0x1 | 0x5 | jneq   |
-|            | rs2        | rs1   |      | 0x2 | 0x5 | jgt    |
-|            | rs2        | rs1   |      | 0x3 | 0x5 | jle    |
-|            |            |       | rd   |     | 0x6 | keyboard |
-|            | rs2        |       |      |     | 0x7 | monitor  |
-|            |            |       | rd   |     | 0x8 | monitor busy |
-|            |            |       |      |     | 0x9 | halt   |
-|            |            |       |      | 0x1 | 0x9 | ie     |
-|            |            |       |      | 0x2 | 0x9 | ide    |
-|            |            | rs1   |      | 0x3 | 0x9 | ivec   |
-|            |            |       |      | 0x4 | 0x9 | iret   |
+|            |            | rs1   | rd   |     | 0x2 | jalr   |
+|            | rs2        | rs1   |      |     | 0x3 | jeq    |
+|            | rs2        | rs1   |      | 0x1 | 0x3 | jneq   |
+|            | rs2        | rs1   |      | 0x2 | 0x3 | jgt    |
+|            | rs2        | rs1   |      | 0x3 | 0x3 | jle    |
+|            |            | rs1   | rd   |     | 0x4 | lw     |
+|            | rs2        | rs1   |      |     | 0x5 | sw     |
+|            |            | rs1   | rd   |     | 0x6 | r io   |
+|            | rs2        | rs1   |      |     | 0x7 | w io   |
+|            | rs2        | rs1   |      |     | 0x8 | w intr |
+|            |            |       |      |     | 0x9 | iret   |

@@ -21,10 +21,11 @@ parse_table = {
   "jalr":  f"{RD}=pc\+4,pc={RS1}",
   "jcc":   f"if\({RS2}{COMP}0\)pc={RS1}",
   "jmp":   f"pc={RS1}",
-  "keyboard":     f"{RD}=keyboard\(\)",
-  "monitor":      f"monitor\({RS2}\)",
-  "monitor_busy": f"{RD}=monitor_busy\(\)",
-  "priv":  f"{PRIV}\(\)"
+  "r_io":  f"{RD}=io\({RS1}\)",
+  "w_io":  f"io\({RS1}\)={RS2}",
+  "w_intr":f"intr\({RS1}\)={RS2}",
+  "iret":  f"iret\(\)",
+  "halt":  f"halt\(\)"
 }
 
 num_opcode = {
@@ -33,15 +34,16 @@ num_opcode = {
   "movl"  : 0,
   "calcr" : 1,
   "movr"  : 1,
-  "load"  : 2,
-  "store" : 3,
-  "jalr"  : 4,
-  "jcc"   : 5,
-  "jmp"   : 5,
-  "keyboard"     : 6,
-  "monitor"      : 7,
-  "monitor_busy" : 8,
-  "priv"  : 9
+  "jalr"  : 2,
+  "jcc"   : 3,
+  "jmp"   : 3,
+  "load"  : 4,
+  "store" : 5,
+  "r_io"  : 6,
+  "w_io"  : 7,
+  "w_intr": 8,
+  "iret"  : 9,
+  "halt"  : 10
 }
 
 num_reg = {

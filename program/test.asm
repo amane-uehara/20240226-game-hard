@@ -5,9 +5,6 @@ zero = zero + 3
 a = b + c
 a = b
 
-h = mem[i]
-mem[f] = g
-
 b = label_1
 a = pc + 4, pc = b
 label_1:
@@ -32,20 +29,29 @@ d = label_6
 if (h <  0) pc = d
 label_6:
 
-label_hoge:
-a = label_fuga
-label_piyo:
-b = label_moge
-label_fuga:
-c = label_piyo
-label_moge:
+h = mem[i]
+mem[f] = g
 
-a = keyboard()
-monitor(b)
-c = monitor_busy()
+a = 0
+b = io(a)
 
-ien()
-idis()
-iack()
+a = 1
+b = io(a)
+
+io(zero) = c
+
+a = 0
+b = 1
+intr(a) = b
+
+a = 1
+intr(a) = b
+
+a = 2
+b = label_iret
+intr(a) = b
+
 iret()
+label_iret:
+
 halt()

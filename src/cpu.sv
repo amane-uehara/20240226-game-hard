@@ -28,14 +28,15 @@ module cpu (
 
   always_ff @(posedge clk) begin
     if (reset) begin
-      sr         <= '0;
+      sr          <= '0;
     end else if (is_update_reg) begin
-      sr.pc      <= ex.pc;
-      sr.irr     <= irr;
-      sr.intr_en <= ex.intr_en;
-      sr.intr_pc <= ex.intr_pc;
-      sr.w_busy  <= w_busy;
-      sr.r_data  <= r_data;
+      sr.pc       <= ex.pc;
+      sr.irr      <= irr;
+      sr.intr_en  <= ex.intr_en;
+      sr.intr_pc  <= ex.intr_pc;
+      sr.intr_vec <= ex.intr_vec;
+      sr.w_busy   <= w_busy;
+      sr.r_data   <= r_data;
     end
   end
 

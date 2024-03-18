@@ -62,12 +62,12 @@ module show import lib_cpu :: *;(
     OTHER, NOP,
     MOV_I, ADD_I, SUB_I, SLL_I, SRA_I, SRL_I, AND_I, OR_I, XOR_I,
     ADD_R, SUB_R, SLL_R, SRA_R, SRL_R, AND_R, OR_R, XOR_R,
-    SW,
-    LW,
-    KEYBOARD, MONITOR, MONITOR_BUSY,
     JALR,
     JZ, JNZ, JGE, JLT,
-    HALT, IEN, IDIS, IACK
+    LW, SW,
+    R_IO, W_IO,
+    W_INTR,
+    IRET
   } ENUM_OP;
 
   typedef enum logic [3:0] {
@@ -100,20 +100,17 @@ module show import lib_cpu :: *;(
       {4'h4, 4'h1}: op = AND_R;
       {4'h5, 4'h1}: op = OR_R;
       {4'h6, 4'h1}: op = XOR_R;
-      {4'h0, 4'h2}: op = SW;
-      {4'h0, 4'h3}: op = LW;
-      {4'h0, 4'h4}: op = JALR;
-      {4'h0, 4'h5}: op = JZ;
-      {4'h1, 4'h5}: op = JNZ;
-      {4'h2, 4'h5}: op = JGE;
-      {4'h3, 4'h5}: op = JLT;
-      {4'h0, 4'h6}: op = KEYBOARD;
-      {4'h0, 4'h7}: op = MONITOR;
-      {4'h0, 4'h8}: op = MONITOR_BUSY;
-      {4'h0, 4'h9}: op = HALT;
-      {4'h1, 4'h9}: op = IEN;
-      {4'h2, 4'h9}: op = IDIS;
-      {4'h3, 4'h9}: op = IACK;
+      {4'h0, 4'h2}: op = JALR;
+      {4'h0, 4'h3}: op = JZ;
+      {4'h1, 4'h3}: op = JNZ;
+      {4'h2, 4'h3}: op = JGE;
+      {4'h3, 4'h3}: op = JLT;
+      {4'h0, 4'h4}: op = SW;
+      {4'h0, 4'h5}: op = LW;
+      {4'h0, 4'h6}: op = R_IO;
+      {4'h0, 4'h7}: op = W_IO;
+      {4'h0, 4'h8}: op = W_INTR;
+      {4'h0, 4'h9}: op = IRET;
       default:      op = OTHER;
     endcase
   end

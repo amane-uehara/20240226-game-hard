@@ -6,16 +6,17 @@ package lib_alu;
   import lib_cpu :: *;
 
   function automatic EXECUTE fn_nop (input DECODE de);
-    fn_nop.pc       = de.sr.pc + 32'd1;
-    fn_nop.w_req    = 1'b0;
-    fn_nop.w_data   = 8'd0;
-    fn_nop.ack      = 1'b0;
-    fn_nop.w_rd     = 1'b0;
-    fn_nop.x_rd     = 32'd0;
-    fn_nop.mem_addr = de.gr.x_rs1[5:0];
-    fn_nop.mem_val  = de.gr.mem_val;
-    fn_nop.intr_en  = de.sr.intr_en;
-    fn_nop.intr_pc  = de.sr.intr_pc;
+    fn_nop.pc        = de.sr.pc + 32'd1;
+    fn_nop.w_req     = 1'b0;
+    fn_nop.w_data    = 8'd0;
+    fn_nop.ack       = 1'b0;
+    fn_nop.w_rd      = 1'b0;
+    fn_nop.x_rd      = 32'd0;
+    fn_nop.mem_addr  = de.gr.x_rs1[5:0];
+    fn_nop.mem_val   = de.gr.mem_val;
+    fn_nop.intr_en   = de.sr.intr_en;
+    fn_nop.intr_pc   = de.sr.intr_pc;
+    fn_nop.intr_vec  = de.sr.intr_vec;
   endfunction
 
   function automatic logic [31:0] fn_calc (
@@ -50,35 +51,6 @@ package lib_alu;
     fn_calcr.x_rd = fn_calc(de.opt, de.gr.x_rs1, de.gr.x_rs2);
   endfunction
 
-  function automatic EXECUTE fn_lw (input DECODE de);
-    fn_lw = fn_nop(de);
-    fn_lw.w_rd = 1'b1;
-    fn_lw.x_rd = de.gr.mem_val;
-  endfunction
-
-  function automatic EXECUTE fn_sw (input DECODE de);
-    fn_sw = fn_nop(de);
-    fn_sw.mem_val = de.gr.x_rs1;
-  endfunction
-
-  function automatic EXECUTE fn_keyboard (input DECODE de);
-    fn_keyboard = fn_nop(de);
-    fn_keyboard.w_rd = 1'b1;
-    fn_keyboard.x_rd = de.sr.r_data;
-  endfunction
-
-  function automatic EXECUTE fn_monitor (input DECODE de);
-    fn_monitor = fn_nop(de);
-    fn_monitor.w_req  = 1'b1;
-    fn_monitor.w_data = de.gr.x_rs1;
-  endfunction
-
-  function automatic EXECUTE fn_monitor_busy (input DECODE de);
-    fn_monitor_busy = fn_nop(de);
-    fn_monitor_busy.w_rd = 1'b1;
-    fn_monitor_busy.x_rd = de.sr.w_busy;
-  endfunction
-
   function automatic EXECUTE fn_jalr (input DECODE de);
     fn_jalr = fn_nop(de);
     fn_jalr.w_rd = 1'b1;
@@ -100,9 +72,48 @@ package lib_alu;
       fn_jcc.pc = is_jmp ? de.gr.x_rs1 : de.sr.pc + 32'd1;
   endfunction
 
+  function automatic EXECUTE fn_lw (input DECODE de);
+    fn_lw = fn_nop(de);
+    fn_lw.w_rd = 1'b1;
+    fn_lw.x_rd = de.gr.mem_val;
+  endfunction
+
+  function automatic EXECUTE fn_sw (input DECODE de);
+    fn_sw = fn_nop(de);
+    fn_sw.mem_val = de.gr.x_rs2;
+  endfunction
+
+  function automatic EXECUTE fn_r_io (input DECODE de);
+    fn_r_io = fn_nop(de);
+    fn_r_io.w_rd = 1'b1;
+
+    case (de.gr.x_rs1)
+      32'd0: fn_r_io.x_rd = de.sr.w_busy;
+      32'd1: fn_r_io.x_rd = de.sr.r_data;
+    endcase
+  endfunction
+
+  function automatic EXECUTE fn_w_io (input DECODE de);
+    fn_w_io = fn_nop(de);
+    fn_w_io.w_req = 1'b1;
+
+    case (de.gr.x_rs1)
+      32'd0: fn_w_io.w_data = de.gr.x_rs2;
+    endcase
+  endfunction
+
+  function automatic EXECUTE fn_w_intr (input DECODE de);
+    fn_w_intr = fn_nop(de);
+    case (de.gr.x_rs1)
+      32'h0: fn_w_intr.ack      = de.gr.x_rs2[0];
+      32'h1: fn_w_intr.intr_en  = de.gr.x_rs2[0];
+      32'h2: fn_w_intr.intr_vec = de.gr.x_rs2;
+    endcase
+  endfunction
+
   function automatic EXECUTE fn_icall (input DECODE de);
     fn_icall         = fn_nop(de);
-    fn_icall.pc      = 32'd0;
+    fn_icall.pc      = de.sr.intr_vec;
     fn_icall.intr_pc = de.sr.pc;
     fn_icall.intr_en = 1'b0;
   endfunction
@@ -112,18 +123,5 @@ package lib_alu;
     fn_iret.pc      = de.sr.intr_pc;
     fn_iret.intr_en = 1'b1;
   endfunction
-
-  function automatic EXECUTE fn_priviledge (input DECODE de);
-    fn_priviledge = fn_nop(de);
-
-    case (de.opt)
-      4'h0: fn_priviledge.pc      = de.sr.pc; // halt
-      4'h1: fn_priviledge.intr_en = 1'b1; // ien
-      4'h2: fn_priviledge.intr_en = 1'b0; // idis
-      4'h3: fn_priviledge.ack     = 1'b1; // iack
-      4'h4: fn_priviledge         = fn_iret(de);
-    endcase
-  endfunction
-
 endpackage
 `endif
