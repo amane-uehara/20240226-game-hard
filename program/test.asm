@@ -48,10 +48,20 @@ a = 1
 intr(a) = b
 
 a = 2
-b = label_iret
+b = label_trap
 intr(a) = b
 
-iret()
-label_iret:
+a = 0
+halt()
 
+label_trap:
+b = 0
+c = 1
+intr(b) = c
+a = 1
+iret()
+a = 2
+
+label_not_reach:
+a = 3
 halt()

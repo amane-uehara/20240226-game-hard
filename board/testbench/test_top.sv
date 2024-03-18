@@ -36,7 +36,7 @@ module test_top ();
 
   initial begin
     uart_rx = 1'b1; // no signal
-    #100;
+    #2000;
     uart_rx = 1'b0; // start bit
     #(WAIT*CLOCK_PERIOD);
     uart_rx = 1'b1; // r_data[0]
@@ -58,7 +58,7 @@ module test_top ();
     uart_rx = 1'b1; // stop bit
     #(WAIT*CLOCK_PERIOD);
     uart_rx = 1'b1; // no signal
-    #2000;
+    #400;
     $finish();
   end
 
