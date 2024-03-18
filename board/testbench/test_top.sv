@@ -179,8 +179,4 @@ module show import lib_cpu :: *;(
 
   logic [31:0] imm;
   assign imm = {{20{rom_data[31]}}, rom_data[31:20]};
-
-  always begin
-    if (op == HALT) $stop();
-  end
 endmodule;
