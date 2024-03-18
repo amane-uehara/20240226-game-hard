@@ -15,7 +15,7 @@ module top (
   /* CLOCK:27MHz, UART_BAUD_RATE:115200 ROM:2KiB */
   localparam CLOCK_HZ       = 27_000_000;
   localparam UART_BAUD_RATE = 115200;
-  localparam FILENAME       = "../../mem/rom.mem";
+  localparam FILENAME       = "rom.mem";
 
   mother_board #(
     .WAIT(CLOCK_HZ/UART_BAUD_RATE),
