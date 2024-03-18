@@ -7,7 +7,7 @@ package lib_cpu;
     logic        irr;
     logic        intr_en;
     logic        intr_pc;
-    logic        intr_vec;
+    logic [31:0] intr_vec;
     logic        w_busy;
     logic [ 7:0] r_data;
   } SPECIAL_REG;
