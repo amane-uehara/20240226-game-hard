@@ -44,6 +44,7 @@
 | `w_io rs1 rs2`               | `io[x[rs1]] = x[rs2]`           |
 | `w_intr rs1 rs2`             | `intr[x[rs1]] = x[rs2]`         |
 | `iret`                       | `pc = intr_pc; intr_en = 1`     |
+| `halt`                       | `pc = pc`                       |
 | `icall`                      | `intr_pc = pc; pc = intr_vec; intr_en = 0`|
 
 
@@ -74,3 +75,4 @@
 |            | rs2        | rs1   |      |     | 0x7 | w io   |
 |            | rs2        | rs1   |      |     | 0x8 | w intr |
 |            |            |       |      |     | 0x9 | iret   |
+|            |            |       |      |     | 0xA | halt   |

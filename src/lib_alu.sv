@@ -123,5 +123,10 @@ package lib_alu;
     fn_iret.pc      = de.sr.intr_pc;
     fn_iret.intr_en = 1'b1;
   endfunction
+
+  function automatic EXECUTE fn_halt (input DECODE de);
+    fn_halt    = fn_nop(de);
+    fn_halt.pc = de.sr.pc;
+  endfunction
 endpackage
 `endif

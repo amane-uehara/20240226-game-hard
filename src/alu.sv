@@ -23,6 +23,7 @@ module alu import lib_cpu :: *; (
       4'h7:    next_ex = fn_w_io(de);
       4'h8:    next_ex = fn_w_intr(de);
       4'h9:    next_ex = fn_iret(de);
+      4'hA:    next_ex = fn_halt(de);
       default: next_ex = fn_nop(de);
     endcase
   end

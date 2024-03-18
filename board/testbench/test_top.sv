@@ -36,7 +36,7 @@ module test_top ();
 
   initial begin
     uart_rx = 1'b1;
-    #100;
+    #2000;
     $finish();
   end
 
@@ -67,7 +67,8 @@ module show import lib_cpu :: *;(
     LW, SW,
     R_IO, W_IO,
     W_INTR,
-    IRET
+    IRET,
+    HALT
   } ENUM_OP;
 
   typedef enum logic [3:0] {
@@ -111,6 +112,7 @@ module show import lib_cpu :: *;(
       {4'h0, 4'h7}: op = W_IO;
       {4'h0, 4'h8}: op = W_INTR;
       {4'h0, 4'h9}: op = IRET;
+      {4'h0, 4'hA}: op = HALT;
       default:      op = OTHER;
     endcase
   end
@@ -178,4 +180,7 @@ module show import lib_cpu :: *;(
   logic [31:0] imm;
   assign imm = {{20{rom_data[31]}}, rom_data[31:20]};
 
+  always begin
+    if (op == HALT) $stop();
+  end
 endmodule;
