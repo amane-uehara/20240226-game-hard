@@ -7,12 +7,12 @@ module test_top ();
   logic uart_tx;
   logic uart_rx;
 
-  localparam CLOCK_HZ       = 100_000_000;
-  localparam UART_BAUD_RATE = 32;
-  localparam FILENAME       = "rom.mem";
+  localparam FILENAME = "rom.mem";
+  localparam WAIT = 8;
+  localparam CLOCK_PERIOD = 10;
 
   mother_board #(
-    .WAIT(CLOCK_HZ/UART_BAUD_RATE),
+    .WAIT(WAIT),
     .FILENAME(FILENAME)
   ) mother_board (.*);
 
@@ -25,8 +25,8 @@ module test_top ();
   //  mother_board.rom.mem[4] = 32'h54322201;
   //end
 
-  always #5 clk = ~clk;
-  initial   clk = 1'b0;
+  always #(CLOCK_PERIOD/2) clk = ~clk;
+  initial clk = 1'b0;
 
   initial begin
     reset = 1'b1;
@@ -35,7 +35,29 @@ module test_top ();
   end
 
   initial begin
-    uart_rx = 1'b1;
+    uart_rx = 1'b1; // no signal
+    #100;
+    uart_rx = 1'b0; // start bit
+    #(WAIT*CLOCK_PERIOD);
+    uart_rx = 1'b1; // r_data[0]
+    #(WAIT*CLOCK_PERIOD);
+    uart_rx = 1'b1; // r_data[1]
+    #(WAIT*CLOCK_PERIOD);
+    uart_rx = 1'b1; // r_data[2]
+    #(WAIT*CLOCK_PERIOD);
+    uart_rx = 1'b1; // r_data[3]
+    #(WAIT*CLOCK_PERIOD);
+    uart_rx = 1'b0; // r_data[4]
+    #(WAIT*CLOCK_PERIOD);
+    uart_rx = 1'b0; // r_data[5]
+    #(WAIT*CLOCK_PERIOD);
+    uart_rx = 1'b0; // r_data[6]
+    #(WAIT*CLOCK_PERIOD);
+    uart_rx = 1'b0; // r_data[7]
+    #(WAIT*CLOCK_PERIOD);
+    uart_rx = 1'b1; // stop bit
+    #(WAIT*CLOCK_PERIOD);
+    uart_rx = 1'b1; // no signal
     #2000;
     $finish();
   end
