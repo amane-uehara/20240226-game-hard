@@ -98,7 +98,7 @@ package lib_alu;
     fn_w_io.w_req = 1'b1;
 
     case (de.gr.x_rs1)
-      32'd0: fn_w_io.w_data = de.gr.x_rs2;
+      32'd0: fn_w_io.w_data = de.gr.x_rs2[7:0];
     endcase
   endfunction
 
