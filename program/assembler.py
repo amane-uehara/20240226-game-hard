@@ -128,8 +128,8 @@ def main():
         label = m.groupdict()["label"]
         label_table[label] = addr
 
-  print(*parsed_list, sep="\n")
-  print(label_table, sep="\n")
+  #print(*parsed_list, sep="\n")
+  #print(label_table, sep="\n")
   print(*to_hex(parsed_list, label_table), sep="\n")
 
 main()
