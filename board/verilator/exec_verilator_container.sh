@@ -8,6 +8,12 @@ docker start ${CONTAINER_NAME}
 
 docker exec -it ${CONTAINER_NAME} /bin/sh -c "\
   cd /root/tb && \
-  verilator --binary -j 0 -Wall ${VERILOG_FILE} \
+  verilator \
+    --binary \
+    -j 0 \
+    -Wall \
+    -I/root/src \
+    -I/root/mem \
+    ${VERILOG_FILE} \
   && ./obj_dir/V${VERILOG_WITHOUT_EXT} \
 "
