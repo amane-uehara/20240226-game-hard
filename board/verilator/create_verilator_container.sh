@@ -2,16 +2,19 @@
 
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 REPOSITORY_ROOT="${SCRIPT_DIR}/../.."
+IMAGE_NAME="hdlc/verilator"
 CONTAINER_NAME="my_verilator"
 
 docker rm -f ${CONTAINER_NAME}
+
+docker pull ${IMAGE_NAME}
 
 docker create \
   --volume ${REPOSITORY_ROOT}/src:/root/src \
   --volume ${REPOSITORY_ROOT}/mem:/root/mem \
   --volume ${REPOSITORY_ROOT}/board/verilator/tb:/root/tb \
   --name ${CONTAINER_NAME} \
-  -it hdlc/verilator /bin/sh
+  -it ${IMAGE_NAME} /bin/sh
 
 docker start ${CONTAINER_NAME}
 
