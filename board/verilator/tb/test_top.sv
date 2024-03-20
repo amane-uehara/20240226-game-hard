@@ -66,7 +66,7 @@ module test_top ();
     #(WAIT*CLOCK_PERIOD);
     $display("Current time = %t", $realtime);
     uart_rx = 1'b1; // no signal
-    #400;
+    #2000;
     $display("Current time = %t", $realtime);
     $finish();
   end
