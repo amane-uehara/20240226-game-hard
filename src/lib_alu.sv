@@ -88,8 +88,8 @@ package lib_alu;
     fn_r_io.w_rd = 1'b1;
 
     case (de.gr.x_rs1)
-      32'd0: fn_r_io.x_rd = de.sr.w_busy;
-      32'd1: fn_r_io.x_rd = de.sr.r_data;
+      32'd0: fn_r_io.x_rd = {31'd0, de.sr.w_busy};
+      32'd1: fn_r_io.x_rd = {24'd0, de.sr.r_data};
     endcase
   endfunction
 

@@ -42,3 +42,4 @@ module transmitter #(parameter WAIT) (
     end
   end
 endmodule
+
