@@ -7,6 +7,8 @@ VERILOG_WITHOUT_EXT=${VERILOG_FILE%.*}
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 WAVE_FILE="${SCRIPT_DIR}/tb/wave/${VERILOG_FILE}.vcd"
 
+rm -f ${WAVE_FILE}
+
 docker start ${CONTAINER_NAME}
 
 docker exec -it ${CONTAINER_NAME} /bin/sh -c "\
@@ -24,5 +26,4 @@ docker exec -it ${CONTAINER_NAME} /bin/sh -c "\
   && ./obj_dir/V${VERILOG_WITHOUT_EXT} \
 "
 
-rm ${WAVE_FILE}
 ${GTKWAVE} $(echo "${WAVE_FILE}" |sed -e 's@/mnt/c/@C:\\\\@' |sed -e 's@/@\\\\@g')
