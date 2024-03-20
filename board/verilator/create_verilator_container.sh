@@ -23,5 +23,7 @@ docker exec -it ${CONTAINER_NAME} /bin/sh -c "\
   apt remove -y clang; \
   apt install -y clang-9; \
   ln -s /usr/bin/clang++-9 /usr/bin/clang++ \
+  apt install -y perl-doc; \
+  verilator --help; \
 "
 
