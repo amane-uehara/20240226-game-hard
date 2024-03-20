@@ -17,7 +17,7 @@ module test_top ();
   ) mother_board (.*);
 
   initial begin
-    $dumpfile("wave/test_top.vcd");
+    $dumpfile({"./wave/", `__FILE__, ".vcd"});
     $dumpvars(0, mother_board);
   end
 

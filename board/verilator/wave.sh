@@ -1,8 +1,10 @@
 #!/bin/sh
 
+GTKWAVE="/mnt/c/iverilog/gtkwave/bin/gtkwave.exe"
 CONTAINER_NAME="my_verilator"
 VERILOG_FILE=$(basename $1)
 VERILOG_WITHOUT_EXT=${VERILOG_FILE%.*}
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 docker start ${CONTAINER_NAME}
 
@@ -20,3 +22,5 @@ docker exec -it ${CONTAINER_NAME} /bin/sh -c "\
     ${VERILOG_FILE} \
   && ./obj_dir/V${VERILOG_WITHOUT_EXT} \
 "
+
+${GTKWAVE} $(echo "${SCRIPT_DIR}/tb/wave/${VERILOG_FILE}.vcd" |sed -e 's@/mnt/c/@C:\\\\@' |sed -e 's@/@\\\\@g')
