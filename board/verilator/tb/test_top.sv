@@ -16,6 +16,11 @@ module test_top ();
     .FILENAME(FILENAME)
   ) mother_board (.*);
 
+  initial begin
+    $dumpfile("wave/test_top.vcd");
+    $dumpvars(0, mother_board);
+  end
+
   always #(CLOCK_PERIOD/2) clk <= ~clk;
   initial clk = 1'b0;
 
