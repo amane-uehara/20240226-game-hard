@@ -25,7 +25,7 @@ module test_top ();
   //  mother_board.rom.mem[4] = 32'h54322201;
   //end
 
-  always #(CLOCK_PERIOD/2) clk = ~clk;
+  always #(CLOCK_PERIOD/2) clk <= ~clk;
   initial clk = 1'b0;
 
   initial begin
