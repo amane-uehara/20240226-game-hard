@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+//`timescale 1ns/1ps
 `include "lib_cpu.sv"
 
 module test_top ();
@@ -7,7 +7,7 @@ module test_top ();
   logic uart_tx;
   logic uart_rx;
 
-  localparam FILENAME = "rom.mem";
+  localparam FILENAME = "../mem/rom.mem";
   localparam WAIT = 8;
   localparam CLOCK_PERIOD = 10;
 

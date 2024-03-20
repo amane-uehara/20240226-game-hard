@@ -11,9 +11,10 @@ docker exec -it ${CONTAINER_NAME} /bin/sh -c "\
   verilator \
     --binary \
     -j 0 \
-    -Wall \
     -I/root/src \
     -I/root/mem \
+    -Wall \
+    -Wno-UNUSEDSIGNAL \
     ${VERILOG_FILE} \
   && ./obj_dir/V${VERILOG_WITHOUT_EXT} \
 "
