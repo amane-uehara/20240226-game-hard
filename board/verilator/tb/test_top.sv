@@ -1,73 +1,24 @@
-//`timescale 1ns/1ps
-`include "lib_cpu.sv"
-
 module test_top ();
   logic clk;
-  logic reset;
-  logic uart_tx;
-  logic uart_rx;
 
-  localparam FILENAME = "../mem/rom.mem";
-  localparam WAIT = 8;
   localparam CLOCK_PERIOD = 10;
-
-  mother_board #(
-    .WAIT(WAIT),
-    .FILENAME(FILENAME)
-  ) mother_board (.*);
-
-  initial begin
-    $dumpfile({"./wave/", `__FILE__, ".vcd"});
-    $dumpvars(0, mother_board);
-  end
-
   always #(CLOCK_PERIOD/2) clk <= ~clk;
   initial clk = 1'b0;
 
-  initial begin
-    reset = 1'b1;
-    #10;
-    reset = 1'b0;
-  end
+  logic [31:0] tb1_pass, tb1_fail;
+  tb1 tb1(.pass(tb1_pass), .fail(tb1_fail));
+
+  logic [31:0] tb2_pass, tb2_fail;
+  tb2 tb2(.pass(tb2_pass), .fail(tb2_fail));
+
+  logic [31:0] total_pass, total_fail;
+  assign total_pass = tb1_pass + tb2_pass;
+  assign total_fail = tb1_fail + tb2_fail;
 
   initial begin
-    $display("Current time = %t", $realtime);
-    uart_rx = 1'b1; // no signal
-    #2000;
-    $display("Current time = %t", $realtime);
-    uart_rx = 1'b0; // start bit
-    #(WAIT*CLOCK_PERIOD);
-    $display("Current time = %t", $realtime);
-    uart_rx = 1'b1; // r_data[0]
-    #(WAIT*CLOCK_PERIOD);
-    $display("Current time = %t", $realtime);
-    uart_rx = 1'b1; // r_data[1]
-    #(WAIT*CLOCK_PERIOD);
-    $display("Current time = %t", $realtime);
-    uart_rx = 1'b1; // r_data[2]
-    #(WAIT*CLOCK_PERIOD);
-    $display("Current time = %t", $realtime);
-    uart_rx = 1'b1; // r_data[3]
-    #(WAIT*CLOCK_PERIOD);
-    $display("Current time = %t", $realtime);
-    uart_rx = 1'b0; // r_data[4]
-    #(WAIT*CLOCK_PERIOD);
-    $display("Current time = %t", $realtime);
-    uart_rx = 1'b0; // r_data[5]
-    #(WAIT*CLOCK_PERIOD);
-    $display("Current time = %t", $realtime);
-    uart_rx = 1'b0; // r_data[6]
-    #(WAIT*CLOCK_PERIOD);
-    $display("Current time = %t", $realtime);
-    uart_rx = 1'b0; // r_data[7]
-    #(WAIT*CLOCK_PERIOD);
-    $display("Current time = %t", $realtime);
-    uart_rx = 1'b1; // stop bit
-    #(WAIT*CLOCK_PERIOD);
-    $display("Current time = %t", $realtime);
-    uart_rx = 1'b1; // no signal
-    #2000;
-    $display("Current time = %t", $realtime);
-    $finish();
+    #(CLOCK_PERIOD*100);
+    $display("TOTAL PASS: %d", total_pass);
+    $display("TOTAL FAIL: %d", total_fail);
+    $finish;
   end
 endmodule
