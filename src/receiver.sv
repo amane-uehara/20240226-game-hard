@@ -45,5 +45,5 @@ module receiver #(parameter WAIT) (
 
   assign next.buff   = is_mid ? {uart_rx, curt.buff[9:1]} : curt.buff;
   assign next.update = is_end && uart_rx;
-  assign next.data   = next.update ? curt.buff[9:2] : curt.data;
+  assign next.data   = (is_end && uart_rx) ? curt.buff[9:2] : curt.data;
 endmodule
