@@ -78,11 +78,11 @@ module tb2 ();
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    mother_board.rom.mem[i++] = 32'h003___0___0___5___0___0; // addi ---- x[5] = x[0] + 3
+    mother_board.rom.mem[i++] = 32'h009___0___0___2___0___0; // addi ---- x[2] = x[0] + 9
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     task_reset_wait(i);
     check(`__LINE__, 32'd7, x[4]);
-    check(`__LINE__, 32'd3, x[5]);
+    check(`__LINE__, 32'd9, x[2]);
 
     i = 0; //                       imm  rs2 rs1 rd  opt opcode
     mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
@@ -92,10 +92,10 @@ module tb2 ();
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    mother_board.rom.mem[i++] = 32'h003___0___0___5___0___0; // addi ---- x[5] = x[0] + 3
+    mother_board.rom.mem[i++] = 32'h009___0___0___2___0___0; // addi ---- x[2] = x[0] + 9
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     task_reset_wait(i);
-    check(`__LINE__, 32'd3, x[5]);
+    check(`__LINE__, 32'd9, x[2]);
 
     i = 0; //                       imm  rs2 rs1 rd  opt opcode
     mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
@@ -105,9 +105,9 @@ module tb2 ();
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    mother_board.rom.mem[i++] = 32'h003___0___0___5___0___0; // addi ---- x[5] = x[0] + 3
+    mother_board.rom.mem[i++] = 32'h009___0___0___2___0___0; // addi ---- x[2] = x[0] + 9
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     task_reset_wait(i);
-    check(`__LINE__, 32'd0, x[5]);
+    check(`__LINE__, 32'd3, x[2]);
   end
 endmodule
