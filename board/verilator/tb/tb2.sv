@@ -77,6 +77,7 @@ module tb2 ();
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
+    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h003___0___0___5___0___0; // addi ---- x[5] = x[0] + 3
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     task_reset_wait(i);
@@ -90,6 +91,7 @@ module tb2 ();
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
+    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h003___0___0___5___0___0; // addi ---- x[5] = x[0] + 3
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     task_reset_wait(i);
@@ -99,6 +101,7 @@ module tb2 ();
     mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
     mother_board.rom.mem[i++] = 32'h004___0___2___3___0___0; // addi ---- x[3] = x[2] + 4
     mother_board.rom.mem[i++] = 32'h000___2___3___0___0___3; // jeq  ---- if opt(x[2]) {pc = x[3]}
+    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
