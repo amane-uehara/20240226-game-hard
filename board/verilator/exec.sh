@@ -10,7 +10,6 @@ cd ${SCRIPT_DIR}/tb \
       --timing \
       --binary -j 0 \
       -y ${SCRIPT_DIR}/../../src/ \
-      -y ${SCRIPT_DIR}/../../mem/ \
       ${VERILOG_FILE} \
   && ./obj_dir/V${VERILOG_WITHOUT_EXT} \
   && cd ${SCRIPT_DIR}
