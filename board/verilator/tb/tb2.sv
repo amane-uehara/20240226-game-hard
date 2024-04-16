@@ -52,5 +52,14 @@ module tb2 ();
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     task_reset_wait(i);
     check(`__LINE__, 32'd7, mem[3]);
+
+    i = 0; //                       imm  rs2 rs1 rd  opt opcode
+    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
+    mother_board.rom.mem[i++] = 32'h004___0___2___3___0___0; // addi ---- x[3] = x[2] + 4
+    mother_board.rom.mem[i++] = 32'h000___3___2___0___0___5; // sw   ---- mem[x[2]] = x[3]
+    mother_board.rom.mem[i++] = 32'h000___0___2___4___0___4; // lw   ---- x[4] = mem[x[2]]
+    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
+    task_reset_wait(i);
+    check(`__LINE__, 32'd7, x[4]);
   end
 endmodule
