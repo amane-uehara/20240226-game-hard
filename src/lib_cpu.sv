@@ -33,6 +33,7 @@ package lib_cpu;
     logic        ack;
     logic        w_rd;
     logic [31:0] x_rd;
+    logic        mem_w_req;
     logic [ 5:0] mem_addr;
     logic [31:0] mem_val;
     logic        intr_en;

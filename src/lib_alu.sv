@@ -12,6 +12,7 @@ package lib_alu;
     fn_nop.ack       = 1'b0;
     fn_nop.w_rd      = 1'b0;
     fn_nop.x_rd      = 32'd0;
+    fn_nop.mem_w_req = 1'b0;
     fn_nop.mem_addr  = de.gr.x_rs1[5:0];
     fn_nop.mem_val   = de.gr.mem_val;
     fn_nop.intr_en   = de.sr.intr_en;
@@ -80,6 +81,7 @@ package lib_alu;
 
   function automatic EXECUTE fn_sw (input DECODE de);
     fn_sw = fn_nop(de);
+    fn_sw.mem_w_req = 1'b1;
     fn_sw.mem_val = de.gr.x_rs2;
   endfunction
 

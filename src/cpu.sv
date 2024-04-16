@@ -53,7 +53,7 @@ module cpu (
 
   mem_file mem_file(
     .clk, .reset,
-    .w_en(is_update_reg & ex.w_req),
+    .w_en(is_update_reg & ex.mem_w_req),
     .addr(ex.mem_addr),
     .r_data(gr.mem_val),
     .w_data(ex.mem_val)
