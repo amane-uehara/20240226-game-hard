@@ -45,21 +45,19 @@ module tb3 ();
   task task_rom_intr(output int end_addr);
     int i;
     i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h002___0___0___1___0___0; // 0x0 | x[1] = 2
-    mother_board.rom.mem[i++] = 32'h009___0___0___2___0___0; // 0x1 | x[2] = label_trap
-    mother_board.rom.mem[i++] = 32'h002___0___2___0___0___8; // 0x2 | intr(2) = x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___0___3___0___0; // 0x3 | x[3] = 1
-    mother_board.rom.mem[i++] = 32'h001___0___0___4___0___0; // 0x4 | x[4] = 1
-    mother_board.rom.mem[i++] = 32'h001___0___4___0___0___8; // 0x5 | intr(1) = x[4]
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___a; // 0x6 | halt()
-    mother_board.rom.mem[i++] = 32'h006___0___0___5___0___0; // 0x7 | x[5] = 6   // unreach
-    mother_board.rom.mem[i++] = 32'h000___0___5___0___0___3; // 0x8 | pc = x[5]  // unreach
-    mother_board.rom.mem[i++] = 32'h001___0___0___6___0___0; // 0x9 | x[6] = 1   // label_trap
-    mother_board.rom.mem[i++] = 32'h001___0___0___7___0___6; // 0xa | x[7] = io(1)
-    mother_board.rom.mem[i++] = 32'h000___0___6___0___0___8; // 0xb | intr(0) = x[6]
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___9; // 0xc | iret()
-    mother_board.rom.mem[i++] = 32'h00d___0___0___8___0___0; // 0xd | x[8] = 0xd // unreach
-    mother_board.rom.mem[i++] = 32'h000___0___8___0___0___3; // 0xe | pc = x[8]  // unreach
+    mother_board.rom.mem[i++] = 32'h007___0___0___1___0___0; // 0x0            | x[1] = label_trap
+    mother_board.rom.mem[i++] = 32'h002___0___1___0___0___8; // 0x1            | intr(2) = x[1]
+    mother_board.rom.mem[i++] = 32'h001___0___0___2___0___0; // 0x2            | x[2] = 1
+    mother_board.rom.mem[i++] = 32'h001___0___2___0___0___8; // 0x3            | intr(1) = x[2]
+    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___a; // 0x4            | halt()
+    mother_board.rom.mem[i++] = 32'h006___0___0___3___0___0; // 0x5 unreach    | x[3] = 6
+    mother_board.rom.mem[i++] = 32'h000___0___3___0___0___3; // 0x6 unreach    | pc = x[3]
+    mother_board.rom.mem[i++] = 32'h001___0___0___4___0___6; // 0x7 label_trap | x[4] = io(1)
+    mother_board.rom.mem[i++] = 32'h001___0___0___5___0___0; // 0x8            | x[5] = 1
+    mother_board.rom.mem[i++] = 32'h000___0___5___0___0___8; // 0x9            | intr(0) = x[5]
+    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___9; // 0xa            | iret()
+    mother_board.rom.mem[i++] = 32'h00d___0___0___6___0___0; // 0xb unreach    | x[6] = 0xd
+    mother_board.rom.mem[i++] = 32'h000___0___6___0___0___3; // 0xc unreach    | pc = x[6]
     end_addr = i;
   endtask
 
@@ -70,67 +68,64 @@ module tb3 ();
     task_uart_rx(8'h8F);
     #(PERIOD_PER_INSTRUCT*end_addr);
 
-    `check32(32'd2, x[1]);
-    `check32(32'd9, x[2]);
-    `check32(32'd1, x[3]);
-    `check32(32'd1, x[4]);
-    `check32(32'd0, x[5]);
-    `check32(32'h1, x[6]);
-    `check32(32'h8F, x[7]);
-    `check32(32'd0, x[8]);
+    `check32(32'd7, x[1]);
+    `check32(32'd1, x[2]);
+    `check32(32'd0, x[3]);
+    `check32(32'h8F, x[4]);
+    `check32(32'd1, x[5]);
+    `check32(32'd0, x[6]);
     `check32(32'h8F, {24'd0, mother_board.cpu.r_data});
     `check32(32'b0, {31'd0, mother_board.cpu.irr});
 
     #(PERIOD_PER_INSTRUCT*4);
-    `check32(32'd0, x[5]);
+    `check32(32'd0, x[3]);
+    `check32(32'd0, x[6]);
   endtask
 
   task test_task_uart_intr_ack_off;
     int end_addr;
     task_rom_intr(end_addr);
-    mother_board.rom.mem[11] = 32'h0; // DELETE intr(0) = x[6]
+    mother_board.rom.mem[8] = 32'h0; // (intr(0) = 1) -> (intr(0) = 0)
 
     task_reset();
     task_uart_rx(8'h8F);
     #(PERIOD_PER_INSTRUCT*end_addr);
 
-    `check32(32'd2, x[1]);
-    `check32(32'd9, x[2]);
-    `check32(32'd1, x[3]);
-    `check32(32'd1, x[4]);
-    `check32(32'd0, x[5]);
-    `check32(32'h1, x[6]);
-    `check32(32'h8F, x[7]);
-    `check32(32'd0, x[8]);
+    `check32(32'd7, x[1]);
+    `check32(32'd1, x[2]);
+    `check32(32'd0, x[3]);
+    `check32(32'h8F, x[4]);
+    `check32(32'd0, x[5]); // ack off
+    `check32(32'd0, x[6]);
     `check32(32'h8F, {24'd0, mother_board.cpu.r_data});
     `check32(32'b1, {31'd0, mother_board.cpu.irr}); // ack off
 
     #(PERIOD_PER_INSTRUCT*4);
-    `check32(32'd0, x[5]);
+    `check32(32'd0, x[3]);
+    `check32(32'd0, x[6]);
   endtask
 
   task test_task_uart_intr_off;
     int end_addr;
     task_rom_intr(end_addr);
-    mother_board.rom.mem[4] = 32'h0; // DELETE x[4] = 1
+    mother_board.rom.mem[2] = 32'h0; // (intr(1) = 1) -> (intr(1) = 0)
 
     task_reset();
     task_uart_rx(8'h8F);
     #(PERIOD_PER_INSTRUCT*end_addr);
 
-    `check32(32'd2, x[1]);
-    `check32(32'd9, x[2]);
-    `check32(32'd1, x[3]);
-    `check32(32'd0, x[4]); // intr off
-    `check32(32'd0, x[5]);
+    `check32(32'd7, x[1]);
+    `check32(32'd0, x[2]); // intr off
+    `check32(32'd0, x[3]);
+    `check32(32'd0, x[4]); // io unreach
+    `check32(32'd0, x[5]); // ack unreach
     `check32(32'd0, x[6]);
-    `check32(32'd0, x[7]);
-    `check32(32'd0, x[8]);
     `check32(32'h8F, {24'd0, mother_board.cpu.r_data});
-    `check32(32'b1, {31'd0, mother_board.cpu.irr}); // ack off
+    `check32(32'b1, {31'd0, mother_board.cpu.irr}); // ack unreach
 
     #(PERIOD_PER_INSTRUCT*4);
-    `check32(32'd0, x[5]);
+    `check32(32'd0, x[3]);
+    `check32(32'd0, x[6]);
   endtask
 
   initial begin
