@@ -7,6 +7,7 @@ package test_package;
   localparam CLOCK_PER_INSTRUCT = 4;
   localparam PERIOD_PER_INSTRUCT = CLOCK_PERIOD*CLOCK_PER_INSTRUCT;
   localparam RESET_PERIOD = (CLOCK_PERIOD/2*3);
+  localparam WAIT = 8; // uart wait
 
   //global variable
   int total_fail_count = 0;
