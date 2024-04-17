@@ -5,6 +5,7 @@ module test_top ();
   tb1 tb1;
   tb2 tb2;
   tb3 tb3;
+  tb4 tb4;
 
   initial begin
     #(CLOCK_PERIOD*10000);
