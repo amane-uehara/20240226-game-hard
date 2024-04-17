@@ -18,8 +18,10 @@ module tb4 ();
   // uart task
   task automatic task_check_uart_1bit(input int line_number, input logic e, input logic a);
     fn_expected_actual_check(`__FILE__, line_number, {31'd0, e}, {31'd0, a});
+    fn_expected_actual_check(`__FILE__, line_number, 32'd1, {31'd0, mother_board.transmitter.busy});
     #(WAIT*CLOCK_PERIOD-1);
     fn_expected_actual_check(`__FILE__, line_number, {31'd0, e}, {31'd0, a});
+    fn_expected_actual_check(`__FILE__, line_number, 32'd1, {31'd0, mother_board.transmitter.busy});
     #1;
   endtask
 
@@ -49,8 +51,19 @@ module tb4 ();
     mother_board.rom.mem[i++] = 32'h000___0___1___0___0___7; // io(0) = x[1]
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     task_reset();
+
+    // before send
     #(PERIOD_PER_INSTRUCT*2);
+    `check32(32'd1, {31'd0, uart_tx});
+    `check32(32'd0, {31'd0, mother_board.transmitter.busy});
+
     #1;
+
+    // sending
     task_uart_tx(8'h5A);
+
+    // after send
+    `check32(32'd1, {31'd0, uart_tx});
+    `check32(32'd0, {31'd0, mother_board.transmitter.busy});
   end
 endmodule
