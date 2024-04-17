@@ -9,14 +9,6 @@ module tb3 ();
 
   mother_board #(.WAIT(WAIT), .FILENAME("")) mother_board(.*);
 
-  function void check(
-    input int line_number,
-    input logic [31:0] expected,
-    input logic [31:0] actual
-  );
-    fn_expected_actual_check(`__FILE__, line_number, expected, actual);
-  endfunction
-
   task automatic task_reset();
     reset = 1'b1;
     #RESET_PERIOD;
@@ -46,8 +38,8 @@ module tb3 ();
   task test_task_uart_receive;
     task_reset();
     task_uart_rx(8'h8F);
-    check(`__LINE__, 32'h8F, {24'd0, mother_board.cpu.r_data});
-    check(`__LINE__, 32'b1, {31'd0, mother_board.cpu.irr});
+    `check32(32'h8F, {24'd0, mother_board.cpu.r_data});
+    `check32(32'b1, {31'd0, mother_board.cpu.irr});
   endtask
 
   task task_rom_intr(output int end_addr);
@@ -78,19 +70,19 @@ module tb3 ();
     task_uart_rx(8'h8F);
     #(PERIOD_PER_INSTRUCT*end_addr);
 
-    check(`__LINE__, 32'd2, x[1]);
-    check(`__LINE__, 32'd9, x[2]);
-    check(`__LINE__, 32'd1, x[3]);
-    check(`__LINE__, 32'd1, x[4]);
-    check(`__LINE__, 32'd0, x[5]);
-    check(`__LINE__, 32'h1, x[6]);
-    check(`__LINE__, 32'h8F, x[7]);
-    check(`__LINE__, 32'd0, x[8]);
-    check(`__LINE__, 32'h8F, {24'd0, mother_board.cpu.r_data});
-    check(`__LINE__, 32'b0, {31'd0, mother_board.cpu.irr});
+    `check32(32'd2, x[1]);
+    `check32(32'd9, x[2]);
+    `check32(32'd1, x[3]);
+    `check32(32'd1, x[4]);
+    `check32(32'd0, x[5]);
+    `check32(32'h1, x[6]);
+    `check32(32'h8F, x[7]);
+    `check32(32'd0, x[8]);
+    `check32(32'h8F, {24'd0, mother_board.cpu.r_data});
+    `check32(32'b0, {31'd0, mother_board.cpu.irr});
 
     #(PERIOD_PER_INSTRUCT*4);
-    check(`__LINE__, 32'd6, x[5]);
+    `check32(32'd6, x[5]);
   endtask
 
   task test_task_uart_intr_ack_off;
@@ -102,16 +94,16 @@ module tb3 ();
     task_uart_rx(8'h8F);
     #(PERIOD_PER_INSTRUCT*end_addr);
 
-    check(`__LINE__, 32'd2, x[1]);
-    check(`__LINE__, 32'd9, x[2]);
-    check(`__LINE__, 32'd1, x[3]);
-    check(`__LINE__, 32'd1, x[4]);
-    check(`__LINE__, 32'd0, x[5]);
-    check(`__LINE__, 32'h1, x[6]);
-    check(`__LINE__, 32'h8F, x[7]);
-    check(`__LINE__, 32'd0, x[8]);
-    check(`__LINE__, 32'h8F, {24'd0, mother_board.cpu.r_data});
-    check(`__LINE__, 32'b1, {31'd0, mother_board.cpu.irr}); // ack off
+    `check32(32'd2, x[1]);
+    `check32(32'd9, x[2]);
+    `check32(32'd1, x[3]);
+    `check32(32'd1, x[4]);
+    `check32(32'd0, x[5]);
+    `check32(32'h1, x[6]);
+    `check32(32'h8F, x[7]);
+    `check32(32'd0, x[8]);
+    `check32(32'h8F, {24'd0, mother_board.cpu.r_data});
+    `check32(32'b1, {31'd0, mother_board.cpu.irr}); // ack off
   endtask
 
   task test_task_uart_intr_off;
@@ -123,16 +115,16 @@ module tb3 ();
     task_uart_rx(8'h8F);
     #(PERIOD_PER_INSTRUCT*end_addr);
 
-    check(`__LINE__, 32'd2, x[1]);
-    check(`__LINE__, 32'd9, x[2]);
-    check(`__LINE__, 32'd1, x[3]);
-    check(`__LINE__, 32'd0, x[4]); // intr off
-    check(`__LINE__, 32'd0, x[5]);
-    check(`__LINE__, 32'd0, x[6]);
-    check(`__LINE__, 32'd0, x[7]);
-    check(`__LINE__, 32'd0, x[8]);
-    check(`__LINE__, 32'h8F, {24'd0, mother_board.cpu.r_data});
-    check(`__LINE__, 32'b1, {31'd0, mother_board.cpu.irr}); // ack off
+    `check32(32'd2, x[1]);
+    `check32(32'd9, x[2]);
+    `check32(32'd1, x[3]);
+    `check32(32'd0, x[4]); // intr off
+    `check32(32'd0, x[5]);
+    `check32(32'd0, x[6]);
+    `check32(32'd0, x[7]);
+    `check32(32'd0, x[8]);
+    `check32(32'h8F, {24'd0, mother_board.cpu.r_data});
+    `check32(32'b1, {31'd0, mother_board.cpu.irr}); // ack off
   endtask
 
   initial begin

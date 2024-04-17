@@ -1,6 +1,8 @@
 `ifndef TEST_PACKAGE_SV
 `define TEST_PACKAGE_SV
 
+`define check32(E,A) fn_expected_actual_check(`__FILE__, `__LINE__, E, A)
+
 package test_package;
   // parameter
   localparam CLOCK_PERIOD = 10;
