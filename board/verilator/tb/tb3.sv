@@ -66,6 +66,8 @@ module tb3 ();
     mother_board.rom.mem[i++] = 32'h000___0___6___7___0___6; // 0xa | x[7] = io(x[6])
     mother_board.rom.mem[i++] = 32'h000___6___0___0___0___8; // 0xb | intr(zero) = x[6]
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___9; // 0xc | iret()
+    mother_board.rom.mem[i++] = 32'h00d___0___0___8___0___0; // 0xd | x[8] = 0xd // unreach
+    mother_board.rom.mem[i++] = 32'h000___0___8___0___0___3; // 0xe | pc = x[8]  // unreach
     end_addr = i;
   endtask
 
@@ -83,6 +85,7 @@ module tb3 ();
     check(`__LINE__, 32'd0, x[5]);
     check(`__LINE__, 32'h1, x[6]);
     check(`__LINE__, 32'h8F, x[7]);
+    check(`__LINE__, 32'd0, x[8]);
     check(`__LINE__, 32'h8F, {24'd0, mother_board.cpu.r_data});
     check(`__LINE__, 32'b0, {31'd0, mother_board.cpu.irr});
 
@@ -106,6 +109,7 @@ module tb3 ();
     check(`__LINE__, 32'd0, x[5]);
     check(`__LINE__, 32'h1, x[6]);
     check(`__LINE__, 32'h8F, x[7]);
+    check(`__LINE__, 32'd0, x[8]);
     check(`__LINE__, 32'h8F, {24'd0, mother_board.cpu.r_data});
     check(`__LINE__, 32'b1, {31'd0, mother_board.cpu.irr}); // ack off
   endtask
@@ -126,6 +130,7 @@ module tb3 ();
     check(`__LINE__, 32'd0, x[5]);
     check(`__LINE__, 32'd0, x[6]);
     check(`__LINE__, 32'd0, x[7]);
+    check(`__LINE__, 32'd0, x[8]);
     check(`__LINE__, 32'h8F, {24'd0, mother_board.cpu.r_data});
     check(`__LINE__, 32'b1, {31'd0, mother_board.cpu.irr}); // ack off
   endtask
