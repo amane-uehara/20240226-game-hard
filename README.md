@@ -40,9 +40,9 @@
 | `jcc opt rs2 rs1`            | `if opt(x[rs2]) {pc = x[rs1]}`  |
 | `lw rd rs1`                  | `x[rd] = mem[x[rs1]]`           |
 | `sw rs2 rs1`                 | `mem[x[rs1]] = x[rs2]`          |
-| `r_io rd rs1`                | `x[rd] = io[x[rs1]]`            |
-| `w_io rs1 rs2`               | `io[x[rs1]] = x[rs2]`           |
-| `w_intr rs1 rs2`             | `intr[x[rs1]] = x[rs2]`         |
+| `r_io rd imm`                | `x[rd] = io[imm]`               |
+| `w_io rs1 imm`               | `io[imm] = x[rs1]`              |
+| `w_intr rs1 imm`             | `intr[imm] = x[rs1]`            |
 | `iret`                       | `pc = intr_pc; intr_en = 1`     |
 | `halt`                       | `pc = pc`                       |
 | `icall`                      | `intr_pc = pc; pc = intr_vec; intr_en = 0`|
@@ -71,8 +71,8 @@
 |            | rs2        | rs1   |      | 0x3 | 0x3 | jle    |
 |            |            | rs1   | rd   |     | 0x4 | lw     |
 |            | rs2        | rs1   |      |     | 0x5 | sw     |
-|            |            | rs1   | rd   |     | 0x6 | r io   |
-|            | rs2        | rs1   |      |     | 0x7 | w io   |
-|            | rs2        | rs1   |      |     | 0x8 | w intr |
+| imm[11:0]  |            |       | rd   |     | 0x6 | r io   |
+| imm[11:0]  |            | rs1   |      |     | 0x7 | w io   |
+| imm[11:0]  |            | rs1   |      |     | 0x8 | w intr |
 |            |            |       |      |     | 0x9 | iret   |
 |            |            |       |      |     | 0xA | halt   |

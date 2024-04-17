@@ -89,9 +89,10 @@ package lib_alu;
     fn_r_io = fn_nop(de);
     fn_r_io.w_rd = 1'b1;
 
-    case (de.gr.x_rs1)
-      32'd0: fn_r_io.x_rd = {31'd0, de.sr.w_busy};
-      32'd1: fn_r_io.x_rd = {24'd0, de.sr.r_data};
+    case (de.imm)
+      12'd0:   fn_r_io.x_rd = {31'd0, de.sr.w_busy};
+      12'd1:   fn_r_io.x_rd = {24'd0, de.sr.r_data};
+      default: fn_r_io.w_rd = 1'b0;
     endcase
   endfunction
 
@@ -99,18 +100,17 @@ package lib_alu;
     fn_w_io = fn_nop(de);
     fn_w_io.w_req = 1'b1;
 
-    case (de.gr.x_rs1)
-      32'd0: fn_w_io.w_data = de.gr.x_rs2[7:0];
+    case (de.imm)
+      12'd0:   fn_w_io.w_data = de.gr.x_rs1[7:0];
+      default: fn_w_io.w_req  = 1'b0;
     endcase
   endfunction
 
   function automatic EXECUTE fn_w_intr (input DECODE de);
     fn_w_intr = fn_nop(de);
-    case (de.gr.x_rs1)
-      32'h0: fn_w_intr.ack      = de.gr.x_rs2[0];
-      32'h1: fn_w_intr.intr_en  = de.gr.x_rs2[0];
-      32'h2: fn_w_intr.intr_vec = de.gr.x_rs2;
-    endcase
+    fn_w_intr.ack      = (de.imm == 12'd0) ? de.gr.x_rs1[0] : 1'b0;
+    fn_w_intr.intr_en  = (de.imm == 12'd1) ? de.gr.x_rs1[0] : 1'b0;
+    fn_w_intr.intr_vec = (de.imm == 12'd2) ? de.gr.x_rs1    : de.sr.intr_vec;
   endfunction
 
   function automatic EXECUTE fn_icall (input DECODE de);
