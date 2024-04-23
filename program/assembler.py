@@ -2,9 +2,9 @@ import re
 import sys
 
 LABEL = "(?P<label>(label[_0-9a-z]*))"
-RS1 = "(?P<rs1>([a-z]|zero))"
-RS2 = "(?P<rs2>([a-z]|zero))"
-RD  = "(?P<rd>([a-z]|zero))"
+RS1 = "(?P<rs1>([a-z]|zero|ra|sp|tptr|tcmp))"
+RS2 = "(?P<rs2>([a-z]|zero|ra|sp|tptr|tcmp))"
+RD  = "(?P<rd>([a-z]|zero|ra|sp|tptr|tcmp))"
 IMM = "(?P<imm>[+-]?\d+)"
 CALC = "(?P<opt>(\+|-))"
 COMP = "(?P<opt>(==|!=|>=|<))"
