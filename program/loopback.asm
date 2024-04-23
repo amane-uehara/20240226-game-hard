@@ -1,23 +1,19 @@
 label_start:
-  a = 2
-  b = label_trap
-  intr(a) = b
-
+  intr_en(zero)
+  a = label_trap
+  intr_trap(a)
   a = 1
-  b = 1
-  intr(a) = b
+  intr_en(a)
 
 label_halt:
-  a = label_halt:
   halt()
+  a = label_halt
   pc = a
 
 label_trap:
-  a = 1
-  b = io(a)
-
-  intr(zero) = a
-
-  b = b + 2
-  io(zero) = b
+  a = keyboard()
+  b = 1
+  intr_ack(b)
+  a = a + 2
+  monitor(a)
   iret()

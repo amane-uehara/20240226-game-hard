@@ -10,41 +10,34 @@ CALC = "(?P<opt>(\+|-))"
 COMP = "(?P<opt>(==|!=|>=|<))"
 PRIV = "(?P<opt>(halt|ien|idis|iack|iret))"
 
-parse_table = {
-  "calci": f"{RD}={RS1}{CALC}{IMM}",
-  "movi":  f"{RD}={IMM}",
-  "movl":  f"{RD}={LABEL}",
-  "calcr": f"{RD}={RS1}{CALC}{RS2}",
-  "movr":  f"{RD}={RS1}",
-  "load":  f"{RD}=mem\[{RS1}\]",
-  "store": f"mem\[{RS1}\]={RS2}",
-  "jalr":  f"{RD}=pc\+4,pc={RS1}",
-  "jcc":   f"if\({RS2}{COMP}0\)pc={RS1}",
-  "jmp":   f"pc={RS1}",
-  "r_io":  f"{RD}=io\({RS1}\)",
-  "w_io":  f"io\({RS1}\)={RS2}",
-  "w_intr":f"intr\({RS1}\)={RS2}",
-  "iret":  f"iret\(\)",
-  "halt":  f"halt\(\)"
+nop = {
+  "rs1":"zero",
+  "rs2":"zero",
+  "rd":"zero",
+  "imm":"0",
+  "opt":"null"
 }
 
-num_opcode = {
-  "calci" : 0,
-  "movi"  : 0,
-  "movl"  : 0,
-  "calcr" : 1,
-  "movr"  : 1,
-  "jalr"  : 2,
-  "jcc"   : 3,
-  "jmp"   : 3,
-  "load"  : 4,
-  "store" : 5,
-  "r_io"  : 6,
-  "w_io"  : 7,
-  "w_intr": 8,
-  "iret"  : 9,
-  "halt"  : 10
-}
+parse_table = [
+  {"opcode": 0, **nop, "regex":f"{RD}={RS1}{CALC}{IMM}"},
+  {"opcode": 1, **nop, "regex":f"{RD}={RS1}{CALC}{RS2}"},
+  {"opcode": 2, **nop, "regex":f"{RD}=pc\+4,pc={RS1}"},
+  {"opcode": 3, **nop, "regex":f"if\({RS2}{COMP}0\)pc={RS1}"},
+  {"opcode": 4, **nop, "regex":f"{RD}=mem\[{RS1}\]"},
+  {"opcode": 5, **nop, "regex":f"mem\[{RS1}\]={RS2}"},
+  {"opcode": 9, **nop, "regex":f"iret\(\)"},
+  {"opcode":10, **nop, "regex":f"halt\(\)"},
+  {"opcode": 0, **nop, "regex":f"{RD}={IMM}"},
+  {"opcode": 0, **nop, "regex":f"{RD}={LABEL}"},
+  {"opcode": 1, **nop, "regex":f"{RD}={RS1}"},
+  {"opcode": 3, **nop, "regex":f"pc={RS1}"},
+  {"opcode": 6, **nop, "imm": "0", "regex":f"{RD}=monitor_busy\(\)"},
+  {"opcode": 6, **nop, "imm": "1", "regex":f"{RD}=keyboard\(\)"},
+  {"opcode": 7, **nop, "imm": "0", "regex":f"monitor\({RS1}\)"},
+  {"opcode": 8, **nop, "imm": "0", "regex":f"intr_ack\({RS1}\)"},
+  {"opcode": 8, **nop, "imm": "1", "regex":f"intr_en\({RS1}\)"},
+  {"opcode": 8, **nop, "imm": "2", "regex":f"intr_trap\({RS1}\)"},
+]
 
 num_reg = {
   "zero" : 0,
@@ -67,17 +60,17 @@ num_reg = {
 
 num_opt = {
   "null": 0,
-  "+": 0, "-": 1, "<<": 2, ">>": 3, "&": 4, "|": 5, "^": 6,
-  "==": 0, "!=": 1, ">=": 2, "<": 3
-}
-
-nop_parsed = {
-  "opcode":"calcr",
-  "rs1":"zero",
-  "rs2":"zero",
-  "rd":"zero",
-  "imm":"0",
-  "opt":"null"
+  "+":    0,
+  "-":    1,
+  "<<":   2,
+  ">>":   3,
+  "&":    4,
+  "|":    5,
+  "^":    6,
+  "==":   0,
+  "!=":   1,
+  ">=":   2,
+  "<":    3
 }
 
 def hex_format(a, width):
@@ -85,51 +78,68 @@ def hex_format(a, width):
 
 def to_hex(parsed_list, label_table):
   ret = []
+  addr = 0
   for parsed in parsed_list:
-    if parsed["opcode"] == "movl":
+    opcode = hex_format(parsed["opcode"], 1)
+    opt    = hex_format(num_opt[parsed["opt"]], 1)
+    rd     = hex_format(num_reg[parsed["rd"]], 1)
+    rs1    = hex_format(num_reg[parsed["rs1"]], 1)
+    rs2    = hex_format(num_reg[parsed["rs2"]], 1)
+
+    if "label" in parsed:
       imm = hex_format(label_table[parsed["label"]], 3)
     else:
       imm = hex_format(int(parsed["imm"]), 3)
 
-    rs2    = hex_format(num_reg[parsed["rs2"]], 1)
-    rs1    = hex_format(num_reg[parsed["rs1"]], 1)
-    rd     = hex_format(num_reg[parsed["rd"]], 1)
-    opt    = hex_format(num_opt[parsed["opt"]], 1)
-    opcode = hex_format(num_opcode[parsed["opcode"]], 1)
-    ret.append(f"{imm}{rs2}{rs1}{rd}{opt}{opcode} // {parsed['addr']:4x} | {parsed['line_num']:4d} | {parsed['line_raw']}")
+    ret.append(f"{imm}{rs2}{rs1}{rd}{opt}{opcode} // 0x{addr:04x} | {parsed['line_num']:4d} | {parsed['line_raw']}")
+    addr += 1
   return ret
 
-def main():
+def create_parsed_list(filename):
   parsed_list = []
-  label_table = {}
-
-  with open(sys.argv[1]) as f:
+  with open(filename) as f:
     line_num = -1
-    addr = 0
     for line_raw in f:
       line_num += 1
       line = line_raw.replace(" ","")
 
       line_dict = {}
-      line_dict["addr"]     = addr
       line_dict["line_num"] = line_num
       line_dict["line_raw"] = line_raw.strip()
 
-      for k, v in parse_table.items():
-        m = re.match(f"^{v}$", line)
+      for parse in parse_table:
+        m = re.match(f"^{parse['regex']}$", line)
         if m:
-          parsed = {**line_dict, **nop_parsed, "opcode":k, **m.groupdict()}
+          parsed = {**line_dict, **parse, **m.groupdict()}
           parsed_list.append(parsed)
-          addr += 1
           break
+  return parsed_list
+
+def create_label_table(filename):
+  label_table = {}
+  with open(filename) as f:
+    addr = 0
+    for line_raw in f:
+      line = line_raw.replace(" ","")
 
       m = re.match(f'^{LABEL}:$', line)
       if m:
         label = m.groupdict()["label"]
         label_table[label] = addr
+      else:
+        for parse in parse_table:
+          if re.match(f"^{parse['regex']}$", line):
+            addr += 1
+            break
+  return label_table
 
-  #print(*parsed_list, sep="\n")
-  #print(label_table, sep="\n")
+def main():
+  parsed_list = create_parsed_list(sys.argv[1])
+  # print(*parsed_list, sep="\n")
+
+  label_table = create_label_table(sys.argv[1])
+  print(label_table, sep="\n")
+
   print(*to_hex(parsed_list, label_table), sep="\n")
 
 main()
