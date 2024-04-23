@@ -1,19 +1,13 @@
 label_start:
+  b = 69
   a = 72
-  sp = sp - 4
-  mem[sp] = ra
-  ra = label_putchar
-  (pc, ra) = (ra, pc + 4)
-  ra = mem[sp]
-  sp = sp + 4
+  push(a,b)
 
-  a = 69
-  sp = sp - 4
-  mem[sp] = ra
-  ra = label_putchar
-  (pc, ra) = (ra, pc + 4)
-  ra = mem[sp]
-  sp = sp + 4
+  pop(a)
+  call(label_putchar)
+
+  pop(a)
+  call(label_putchar)
 
 label_putchar:
   label_do_while_1_bgn:

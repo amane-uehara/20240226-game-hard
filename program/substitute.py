@@ -27,7 +27,7 @@ def substitute_push(line):
 
 def substitute_pop(line):
   ret = []
-  m = re.match(f"^push\((?P<regs>.*)\)$", line)
+  m = re.match(f"^pop\((?P<regs>.*)\)$", line)
   if m:
     for reg in m.groupdict()["regs"].split(","):
       ret.append(f"{reg} = mem[sp]")
