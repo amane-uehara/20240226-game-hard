@@ -21,7 +21,7 @@ nop = {
 parse_table = [
   {"opcode": 0, **nop, "regex":f"{RD}={RS1}{CALC}{IMM}"},
   {"opcode": 1, **nop, "regex":f"{RD}={RS1}{CALC}{RS2}"},
-  {"opcode": 2, **nop, "regex":f"{RD}=pc\+4,pc={RS1}"},
+  {"opcode": 2, **nop, "regex":f"\(pc,{RD}\)=\({RS1},pc\+1\)"},
   {"opcode": 3, **nop, "regex":f"if\({RS2}{COMP}0\)pc={RS1}"},
   {"opcode": 4, **nop, "regex":f"{RD}=mem\[{RS1}\]"},
   {"opcode": 5, **nop, "regex":f"mem\[{RS1}\]={RS2}"},
