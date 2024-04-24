@@ -1,13 +1,13 @@
 def label_start() {
   a = 1
-  for (b=2; c<0; d=e+1) {
+  for (b=2; c<4; d=e+1) {
     a = 2
-    if (f == 0) {
+    if (f <= g) {
       a = 3
       call(label_func)
     }
     a = 4
-    if (g > 0) {
+    if (h > 3) {
       a = 5
     }
     a = 6

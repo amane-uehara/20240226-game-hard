@@ -1,10 +1,9 @@
 import re
 import sys
 
-LABEL = "(?P<label>(label[_0-9a-z]*))"
-
 def substitute_call(line):
   ret = []
+  LABEL = "(?P<label>(label[_0-9a-z]*))"
   m = re.match(f"^call\({LABEL}\)$", line)
   if m:
     label = m.groupdict()["label"]
@@ -14,6 +13,23 @@ def substitute_call(line):
     ret.append("(pc, ra) = (ra, pc + 1)")
     ret.append("ra = mem[sp]")
     ret.append("sp = sp + 1")
+  return ret
+
+def substitute_comp(line):
+  ret = []
+  SRC1 = "(?P<src1>([^=!<>]*))"
+  SRC2 = "(?P<src2>([^=!<>]*))"
+  SRC3 = "(?P<src3>(.*))"
+  COMP = "(?P<opt>(==|!=|>|>=|<|<=))"
+  m = re.match(f"if\({SRC1}{COMP}{SRC2}\)pc={SRC3}", line)
+  if m:
+    src1 = m.groupdict()["src1"]
+    src2 = m.groupdict()["src2"]
+    src3 = m.groupdict()["src3"]
+    opt  = m.groupdict()["opt"]
+
+    ret.append(f"tcmp = {src1} - {src2}")
+    ret.append(f"if (tcmp {opt} 0) pc = {src3}")
   return ret
 
 def substitute_push(line):
@@ -43,6 +59,7 @@ def main():
       line = line_raw.replace(" ","")
       substitute = []
       substitute += substitute_call(line)
+      substitute += substitute_comp(line)
       substitute += substitute_push(line)
       substitute += substitute_pop(line)
 
