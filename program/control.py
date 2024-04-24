@@ -43,6 +43,14 @@ def substitute_if(line, label):
 
   return (bgn, end)
 
+def substitute_def(line):
+  bgn = []
+  m = re.match("^def(?P<label>(.*))\(\)\{$", line)
+  if m:
+    bgn.append(m.groupdict()["label"])
+
+  return (bgn, [])
+
 def main():
   code = []
   stack = []
@@ -55,6 +63,7 @@ def main():
 
       (bgn_for, end_for) = substitute_for(line, f"label_{label_count}")
       (bgn_if, end_if) = substitute_if(line, f"label_{label_count}")
+      (bgn_def, end_def) = substitute_def(line)
 
       if re.match("\}$", line):
         code += stack.pop()
@@ -66,6 +75,9 @@ def main():
         code += bgn_if
         stack.append(end_if)
         label_count += 1
+      elif bgn_def:
+        code += bgn_def
+        stack.append(end_def)
       else:
         code.append(line_raw.strip())
 
