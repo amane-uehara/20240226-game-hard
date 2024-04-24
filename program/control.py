@@ -31,7 +31,7 @@ def substitute_if(line, label):
   end = []
   m = re.match("^if\((?P<condition>(.*))\)\{$", line)
   if m:
-    condition = m.groupdict()["condition"].split(";")
+    condition = m.groupdict()["condition"]
 
     bgn.append(f"tptr = {label}_if_bgn")
     bgn.append(f"if ({condition}) pc = tptr")
