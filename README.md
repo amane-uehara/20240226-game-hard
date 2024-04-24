@@ -67,8 +67,10 @@
 |            |            | rs1   | rd   |     | 0x2 | jalr   |
 |            | rs2        | rs1   |      |     | 0x3 | jeq    |
 |            | rs2        | rs1   |      | 0x1 | 0x3 | jneq   |
-|            | rs2        | rs1   |      | 0x2 | 0x3 | jgt    |
-|            | rs2        | rs1   |      | 0x3 | 0x3 | jle    |
+|            | rs2        | rs1   |      | 0x2 | 0x3 | jge    |
+|            | rs2        | rs1   |      | 0x3 | 0x3 | jlt    |
+|            | rs2        | rs1   |      | 0x4 | 0x3 | jgt    |
+|            | rs2        | rs1   |      | 0x5 | 0x3 | jle    |
 |            |            | rs1   | rd   |     | 0x4 | lw     |
 |            | rs2        | rs1   |      |     | 0x5 | sw     |
 | imm[11:0]  |            |       | rd   |     | 0x6 | r io   |

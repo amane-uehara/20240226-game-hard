@@ -60,12 +60,17 @@ package lib_alu;
   endfunction
 
   function automatic EXECUTE fn_jcc (input DECODE de);
-      logic is_jmp;
+      logic zf, sf, is_jmp;
+      zf = (de.gr.x_rs2 == 32'd0);
+      sf = (de.gr.x_rs2[31] == 1'b0);
+
       unique case (de.opt)
-        4'h0:    is_jmp = (de.gr.x_rs2 == 32'd0);
-        4'h1:    is_jmp = (de.gr.x_rs2 != 32'd0);
-        4'h2:    is_jmp = (de.gr.x_rs2[31] == 1'b0); // de.gr.x_rs1 >= 0
-        4'h3:    is_jmp = (de.gr.x_rs2[31] != 1'b0); // de.gr.x_rs1 <  0
+        4'h0:    is_jmp =  zf;
+        4'h1:    is_jmp = ~zf;
+        4'h2:    is_jmp =  sf;        // de.gr.x_rs1 >= 0
+        4'h3:    is_jmp = ~sf;        // de.gr.x_rs1 <  0
+        4'h4:    is_jmp =  sf && ~zf; // de.gr.x_rs1 >  0
+        4'h5:    is_jmp = ~sf ||  zf; // de.gr.x_rs1 <= 0
         default: is_jmp = 1'b0;
       endcase
 
