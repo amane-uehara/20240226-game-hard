@@ -47,7 +47,8 @@ def substitute_def(line):
   bgn = []
   m = re.match("^def(?P<label>(.*))\(\)\{$", line)
   if m:
-    bgn.append(m.groupdict()["label"])
+    label = m.groupdict()["label"]
+    bgn.append(f"{label}:")
 
   return (bgn, [])
 
