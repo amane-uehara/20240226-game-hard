@@ -49,21 +49,31 @@ def label_trap_handler() {
   iret()
 }
 
+def putchar() {
+  push(a,b)
+  b = 0
+  for (;b == 0;) {
+    b = monitor_busy()
+  }
+  monitor(a)
+  pop(b,a)
+}
+
 def label_print_board() {
-  push(a,b,c,d,e)
-  for (a=0; a<4; a=a+1) {
-    b = a << 2
+  push(a,b,c,d,i)
+  for (i=0; i<4; i=i+1) {
+    b = i << 2
     for (c=0; c<4; c=c+1) {
       d = b + c
-      e = mem[d]
-      monitor(e)
+      a = mem[d]
+      putchar()
     }
-    e = 10
-    monitor(e)
+    a = 10
+    putchar()
   }
-  e = 10
-  monitor(e)
-  pop(e,d,c,b,a)
+  a = 10
+  putchar()
+  pop(i,d,c,b,a)
 }
 
 def label_add_new() {
