@@ -1,0 +1,221 @@
+def label_main() {
+  intr_en(zero)
+  a = label_trap_handler
+  intr_trap(a)
+
+  call(label_init_game)
+  call(label_print_board)
+
+  a = 1
+  intr_en(a)
+  halt()
+}
+
+def label_init_game() {
+  push(a,b,i)
+  for (i=0; i<16; i=i+1) {
+    mem[i] = zero
+  }
+  a = 50
+  b = 16
+  mem[b] = a
+  call(label_add_new)
+  pop(i,b,a)
+}
+
+def label_trap_handler() {
+  push(a,b)
+  a = keyboard()
+  b = 1
+  intr_ack(b)
+
+  if (a == 119) {
+    call(label_move_up)
+  }
+  if (a == 115) {
+    call(label_move_down)
+  }
+  if (a == 97) {
+    call(label_move_left)
+  }
+  if (a == 100) {
+    call(label_move_right)
+  }
+  call(label_init_if_game_over)
+  call(label_add_new)
+  call(label_print_board)
+
+  pop(b,a)
+  iret()
+}
+
+def label_print_board() {
+  push(a,b,c,d,e)
+  for (a=0; a<4; a=a+1) {
+    b = a << 2
+    for (c=0; c<4; c=c+1) {
+      d = b + c
+      e = mem[d]
+      monitor(e)
+    }
+    e = 10
+    monitor(e)
+  }
+  e = 10
+  monitor(e)
+  pop(e,d,c,b,a)
+}
+
+def label_add_new() {
+  push(a,b,c,d,e,f)
+  f = 1
+  call(label_rand_16)
+  for (b=0; b<16; b=b+1) {
+    c = a + b
+    d = 15
+    d = c & d
+    e = mem[d]
+    if (e == 0) {
+      mem[d] = f
+      f = 0
+    }
+  }
+  pop(f,e,d,c,b,a)
+}
+
+def label_init_if_game_over() {
+  push(a,b,c)
+  a = 1
+  for (b=0; b<16; b=b+1) {
+    c = mem[b]
+    if (c == 0) {
+      a = 0
+    }
+  }
+  if (a == 1) {
+    call(label_init_game)
+  }
+  pop(c,b,a)
+}
+
+def label_rand_16() {
+  push(b,c)
+  c = 16
+  a = mem[c]
+
+  b = a << 13
+  a = a ^ b
+
+  b = a >> 17
+  a = a ^ b
+
+  b = a << 5
+  a = a ^ b
+
+  mem[c] = a
+  b = 15
+  a = a & b
+  pop(c,b)
+}
+
+def label_compress() {
+  push(a,b,c,d,e,f,h)
+  for (a=0; a<4; a=a+1) {
+    b = a << 2
+    h = 0
+    for (c=0; c<4; c=c+1) {
+      d = b + c
+      e = mem[d]
+      if (e != 0) {
+        f = b + h
+        mem[f] = e
+        if (h != c) {
+          mem[d] = zero
+        }
+        h = h + 1
+      }
+    }
+  }
+  pop(h,f,e,d,c,b,a)
+}
+
+def label_merge() {
+  push(a,b,c,d,e,f,g)
+  for (a=0; a<4; a=a+1) {
+    b = a << 2
+    for (c=0; c<3; c=c+1) {
+      d = b + c
+      e = mem[d]
+      if (e != 0) {
+        f = d + 1
+        g = mem[f]
+        if (e == g) {
+          e = e + 1
+          mem[d] = e
+          mem[f] = zero
+        }
+      }
+    }
+  }
+  pop(g,f,e,d,c,b,a)
+}
+
+def label_reverse() {
+  push(a,b,c,d,e,f,g)
+  for (a=0; a<4; a=a+1) {
+    b = a << 2
+    for (c=0; c<2; c=c+1) {
+      d = b + c
+      e = mem[d]
+      f = b - c
+      f = f + 3
+      g = mem[f]
+      mem[d] = g
+      mem[f] = e
+    }
+  }
+  pop(g,f,e,d,c,b,a)
+}
+
+def label_transpose() {
+  push(a,b,c,d,e,f,g)
+  for (a=0; a<4; a=a+1) {
+    b = a << 2
+    for (c=0; c<4; c=c+1) {
+      if (a < c) {
+        d = b + c
+        e = mem[d]
+        f = c << 2
+        f = f + a
+        g = mem[f]
+        mem[d] = g
+        mem[f] = e
+      }
+    }
+  }
+  pop(g,f,e,d,c,b,a)
+}
+
+def label_move_left() {
+  call(label_compress)
+  call(label_merge)
+  call(label_compress)
+}
+
+def label_move_right() {
+  call(label_reverse)
+  call(label_move_left)
+  call(label_reverse)
+}
+
+def label_move_up() {
+  call(label_transpose)
+  call(label_move_left)
+  call(label_transpose)
+}
+
+def label_move_down() {
+  call(label_transpose)
+  call(label_move_right)
+  call(label_transpose)
+}
