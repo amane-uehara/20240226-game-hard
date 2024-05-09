@@ -45,12 +45,14 @@ def substitute_if(line, label):
 
 def substitute_def(line):
   bgn = []
+  end = []
   m = re.match("^def(?P<label>(.*))\(\)\{$", line)
   if m:
     label = m.groupdict()["label"]
     bgn.append(f"{label}:")
+    end.append("pc = ra")
 
-  return (bgn, [])
+  return (bgn, end)
 
 def main():
   code = []
