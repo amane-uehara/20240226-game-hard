@@ -49,7 +49,7 @@ def label_trap_handler() {
   iret()
 }
 
-def putchar() {
+def label_putchar() {
   push(a,b)
   b = 0
   for (;b == 0;) {
@@ -66,13 +66,13 @@ def label_print_board() {
     for (c=0; c<4; c=c+1) {
       d = b + c
       a = mem[d]
-      call(putchar)
+      call(label_putchar)
     }
     a = 10
-    call(putchar)
+    call(label_putchar)
   }
   a = 10
-  call(putchar)
+  call(label_putchar)
   pop(i,d,c,b,a)
 }
 
