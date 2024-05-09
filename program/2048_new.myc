@@ -2,13 +2,29 @@ def label_main() {
   intr_en(zero)
   a = label_trap_handler
   intr_trap(a)
-
+  call(label_vt100_mode)
   call(label_init_game)
   call(label_print_board)
-
   a = 1
   intr_en(a)
   halt()
+}
+
+def label_vt100_mode() {
+  a = 27
+  call(label_putchar)
+
+  a = 91
+  call(label_putchar)
+
+  a = 50
+  call(label_putchar)
+
+  a = 48
+  call(label_putchar)
+
+  a = 104
+  call(label_putchar)
 }
 
 def label_init_game() {
@@ -51,8 +67,8 @@ def label_trap_handler() {
 
 def label_putchar() {
   push(a,b)
-  b = 0
-  for (;b == 0;) {
+  b = 1
+  for (;b == 1;) {
     b = monitor_busy()
   }
   monitor(a)
@@ -66,6 +82,7 @@ def label_print_board() {
     for (c=0; c<4; c=c+1) {
       d = b + c
       a = mem[d]
+      a = a + 48
       call(label_putchar)
     }
     a = 10
@@ -79,7 +96,7 @@ def label_print_board() {
 def label_add_new() {
   push(a,b,c,d,e,f)
   f = 1
-  call(label_rand_16)
+  call(label_rand)
   for (b=0; b<16; b=b+1) {
     c = a + b
     d = 15
@@ -108,7 +125,7 @@ def label_init_if_game_over() {
   pop(c,b,a)
 }
 
-def label_rand_16() {
+def label_rand() {
   push(b,c)
   c = 16
   a = mem[c]
@@ -123,8 +140,6 @@ def label_rand_16() {
   a = a ^ b
 
   mem[c] = a
-  b = 15
-  a = a & b
   pop(c,b)
 }
 
