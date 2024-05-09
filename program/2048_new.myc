@@ -66,13 +66,13 @@ def label_print_board() {
     for (c=0; c<4; c=c+1) {
       d = b + c
       a = mem[d]
-      putchar()
+      call(putchar)
     }
     a = 10
-    putchar()
+    call(putchar)
   }
   a = 10
-  putchar()
+  call(putchar)
   pop(i,d,c,b,a)
 }
 
