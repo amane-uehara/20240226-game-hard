@@ -6,7 +6,7 @@ RS1 = "(?P<rs1>([a-z]|zero|ra|sp|tptr|tcmp))"
 RS2 = "(?P<rs2>([a-z]|zero|ra|sp|tptr|tcmp))"
 RD  = "(?P<rd>([a-z]|zero|ra|sp|tptr|tcmp))"
 IMM = "(?P<imm>[+-]?\d+)"
-CALC = "(?P<opt>(\+|-))"
+CALC = "(?P<opt>(\+|-|<<|>>|&|\||\^))"
 COMP = "(?P<opt>(==|!=|>=|<))"
 PRIV = "(?P<opt>(halt|ien|idis|iack|iret))"
 
