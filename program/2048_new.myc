@@ -32,7 +32,7 @@ def label_init_game() {
   for (i=0; i<16; i=i+1) {
     mem[i] = zero
   }
-  a = 50
+  a = 4093
   b = 16
   mem[b] = a
   call(label_add_new)
@@ -40,28 +40,36 @@ def label_init_game() {
 }
 
 def label_trap_handler() {
-  push(a,b)
+  push(a,b,c)
   a = keyboard()
   b = 1
   intr_ack(b)
 
+  c = 0
   if (a == 119) {
     call(label_move_up)
+    c = 1
   }
   if (a == 115) {
     call(label_move_down)
+    c = 1
   }
   if (a == 97) {
     call(label_move_left)
+    c = 1
   }
   if (a == 100) {
     call(label_move_right)
+    c = 1
   }
-  call(label_init_if_game_over)
-  call(label_add_new)
-  call(label_print_board)
 
-  pop(b,a)
+  if (c != 0) {
+    call(label_init_if_game_over)
+    call(label_add_new)
+    call(label_print_board)
+  }
+
+  pop(c,b,a)
   iret()
 }
 
