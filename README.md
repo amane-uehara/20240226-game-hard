@@ -52,18 +52,20 @@
 | ---------- | ---------- | ----- | ---- | --- | --- | -----  |
 | imm[11:0]  |            | rs1   | rd   |     | 0x0 | addi   |
 | imm[11:0]  |            | rs1   | rd   | 0x1 | 0x0 | subi   |
-| imm[11:0]  |            | rs1   | rd   | 0x2 | 0x0 | slai   |
-| imm[11:0]  |            | rs1   | rd   | 0x3 | 0x0 | srai   |
-| imm[11:0]  |            | rs1   | rd   | 0x4 | 0x0 | andi   |
-| imm[11:0]  |            | rs1   | rd   | 0x5 | 0x0 | ori    |
-| imm[11:0]  |            | rs1   | rd   | 0x6 | 0x0 | xori   |
+| imm[11:0]  |            | rs1   | rd   | 0x2 | 0x0 | slli   |
+| imm[11:0]  |            | rs1   | rd   | 0x3 | 0x0 | srli   |
+| imm[11:0]  |            | rs1   | rd   | 0x4 | 0x0 | srai   |
+| imm[11:0]  |            | rs1   | rd   | 0x5 | 0x0 | andi   |
+| imm[11:0]  |            | rs1   | rd   | 0x6 | 0x0 | ori    |
+| imm[11:0]  |            | rs1   | rd   | 0x7 | 0x0 | xori   |
 |            | rs2        | rs1   | rd   |     | 0x1 | add    |
 |            | rs2        | rs1   | rd   | 0x1 | 0x1 | sub    |
-|            | rs2        | rs1   | rd   | 0x2 | 0x1 | sla    |
-|            | rs2        | rs1   | rd   | 0x3 | 0x1 | sra    |
-|            | rs2        | rs1   | rd   | 0x4 | 0x1 | and    |
-|            | rs2        | rs1   | rd   | 0x5 | 0x1 | or     |
-|            | rs2        | rs1   | rd   | 0x6 | 0x1 | xor    |
+|            | rs2        | rs1   | rd   | 0x2 | 0x1 | sll    |
+|            | rs2        | rs1   | rd   | 0x3 | 0x1 | srl    |
+|            | rs2        | rs1   | rd   | 0x4 | 0x1 | sra    |
+|            | rs2        | rs1   | rd   | 0x5 | 0x1 | and    |
+|            | rs2        | rs1   | rd   | 0x6 | 0x1 | or     |
+|            | rs2        | rs1   | rd   | 0x7 | 0x1 | xor    |
 |            |            | rs1   | rd   |     | 0x2 | jalr   |
 |            | rs2        | rs1   |      |     | 0x3 | jeq    |
 |            | rs2        | rs1   |      | 0x1 | 0x3 | jneq   |
