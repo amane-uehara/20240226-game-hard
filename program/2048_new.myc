@@ -95,21 +95,47 @@ def label_putchar() {
 }
 
 def label_print_board() {
-  push(a,b,c,d,i)
+  push(a,b,c,d,e,i)
+  call(label_print_line)
+  
   for (i=0; i<4; i=i+1) {
+    a = 124
+    call(label_putchar)
+
     b = i << 2
     for (c=0; c<4; c=c+1) {
+      a = 32
+      call(label_putchar)
+
       d = b + c
-      a = mem[d]
-      a = a + 48
+      e = mem[d]
+      a = e + 48
+      if (e == 0) {
+        a = 32
+      }
+      call(label_putchar)
+
+      a = 124
       call(label_putchar)
     }
     a = 10
     call(label_putchar)
+    call(label_print_line)
   }
   a = 10
   call(label_putchar)
-  pop(i,d,c,b,a)
+  pop(i,e,d,c,b,a)
+}
+
+def label_print_line() {
+  push(a,i)
+  a = 45
+  for (i=0; i<13; i=i+1) {
+    call(label_putchar)
+  }
+  a = 10
+  call(label_putchar)
+  pop(i,a)
 }
 
 def label_add_new() {
