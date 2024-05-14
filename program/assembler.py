@@ -140,7 +140,7 @@ def main():
   # print(*parsed_list, sep="\n")
 
   label_table = create_label_table(sys.argv[1])
-  print(label_table, sep="\n")
+  # print(label_table, sep="\n")
 
   print(*to_hex(parsed_list, label_table), sep="\n")
 
