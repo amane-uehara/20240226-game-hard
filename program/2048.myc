@@ -11,20 +11,11 @@ def main() {
 }
 
 def vt100_mode() {
-  a = 27
-  call(putchar)
-
-  a = 91
-  call(putchar)
-
-  a = 50
-  call(putchar)
-
-  a = 48
-  call(putchar)
-
-  a = 104
-  call(putchar)
+  call(putchar, 27)
+  call(putchar, 91)
+  call(putchar, 50)
+  call(putchar, 48)
+  call(putchar, 104)
 }
 
 def init_game() {
@@ -99,13 +90,11 @@ def print_board() {
   call(print_line)
   
   for (i=0; i<4; i=i+1) {
-    a = 124
-    call(putchar)
+    call(putchar, 124)
 
     b = i << 2
     for (c=0; c<4; c=c+1) {
-      a = 32
-      call(putchar)
+      call(putchar, 32)
 
       d = b + c
       e = mem[d]
@@ -115,15 +104,12 @@ def print_board() {
       }
       call(putchar)
 
-      a = 124
-      call(putchar)
+      call(putchar, 124)
     }
-    a = 10
-    call(putchar)
+    call(putchar, 10)
     call(print_line)
   }
-  a = 10
-  call(putchar)
+  call(putchar, 10)
   pop(i,e,d,c,b,a)
 }
 
@@ -133,8 +119,7 @@ def print_line() {
   for (i=0; i<13; i=i+1) {
     call(putchar)
   }
-  a = 10
-  call(putchar)
+  call(putchar, 10)
   pop(i,a)
 }
 
