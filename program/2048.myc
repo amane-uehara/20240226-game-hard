@@ -115,9 +115,8 @@ def print_board() {
 
 def print_line() {
   push(a,i)
-  a = 45
   for (i=0; i<13; i=i+1) {
-    call(putchar)
+    call(putchar, 45)
   }
   call(putchar, 10)
   pop(i,a)
