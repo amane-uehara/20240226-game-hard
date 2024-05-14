@@ -3,15 +3,28 @@ import sys
 
 def substitute_call(line):
   ret = []
-  m = re.match(f"^call\((?P<func_name>(.*))\)$", line)
+  func_name = ""
+  FUNC_NAME = "(?P<func_name>([^,]*))"
+  ARGUMENT  = "(?P<argument>([^,]*))"
+
+  m = re.match(f"^call\({FUNC_NAME}\)$", line)
   if m:
     func_name = m.groupdict()["func_name"]
+
+  m = re.match(f"^call\({FUNC_NAME},{ARGUMENT}\)$", line)
+  if m:
+    func_name = m.groupdict()["func_name"]
+    argument = m.groupdict()["argument"]
+    ret.append(f"a = {argument}")
+
+  if func_name:
     ret.append("sp = sp - 1")
     ret.append("mem[sp] = ra")
     ret.append(f"ra = label_{func_name}")
     ret.append("(pc, ra) = (ra, pc + 1)")
     ret.append("ra = mem[sp]")
     ret.append("sp = sp + 1")
+
   return ret
 
 def substitute_comp(line):
