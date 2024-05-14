@@ -125,7 +125,7 @@ def print_line() {
 def add_new() {
   push(a,b,c,d,e,f)
   f = 1
-  a = call(rand)
+  call(rand)
   for (b=0; b<16; b=b+1) {
     c = a + b
     d = 15

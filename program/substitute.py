@@ -7,11 +7,11 @@ def substitute_call(line):
   FUNC_NAME = "(?P<func_name>([^,]*))"
   ARGUMENT  = "(?P<argument>([^,]*))"
 
-  m = re.match(f"^(a=)?call\({FUNC_NAME}\)$", line)
+  m = re.match(f"^call\({FUNC_NAME}\)$", line)
   if m:
     func_name = m.groupdict()["func_name"]
 
-  m = re.match(f"^(a=)?call\({FUNC_NAME},{ARGUMENT}\)$", line)
+  m = re.match(f"^call\({FUNC_NAME},{ARGUMENT}\)$", line)
   if m:
     func_name = m.groupdict()["func_name"]
     argument = m.groupdict()["argument"]
