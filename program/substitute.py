@@ -3,13 +3,12 @@ import sys
 
 def substitute_call(line):
   ret = []
-  LABEL = "(?P<label>(label[_0-9a-z]*))"
-  m = re.match(f"^call\({LABEL}\)$", line)
+  m = re.match(f"^call\((?P<func_name>(.*))\)$", line)
   if m:
-    label = m.groupdict()["label"]
+    func_name = m.groupdict()["func_name"]
     ret.append("sp = sp - 1")
     ret.append("mem[sp] = ra")
-    ret.append(f"ra = {label}")
+    ret.append(f"ra = label_{func_name}")
     ret.append("(pc, ra) = (ra, pc + 1)")
     ret.append("ra = mem[sp]")
     ret.append("sp = sp + 1")

@@ -46,10 +46,10 @@ def substitute_if(line, label):
 def substitute_def(line):
   bgn = []
   end = []
-  m = re.match("^def(?P<label>(.*))\(\)\{$", line)
+  m = re.match("^def(?P<func_name>(.*))\(\)\{$", line)
   if m:
-    label = m.groupdict()["label"]
-    bgn.append(f"{label}:")
+    func_name = m.groupdict()["func_name"]
+    bgn.append(f"label_{func_name}:")
     end.append("pc = ra")
 
   return (bgn, end)

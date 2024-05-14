@@ -1,33 +1,33 @@
-def label_main() {
+def main() {
   intr_en(zero)
   a = label_trap_handler
   intr_trap(a)
-  call(label_vt100_mode)
-  call(label_init_game)
-  call(label_print_board)
+  call(vt100_mode)
+  call(init_game)
+  call(print_board)
   a = 1
   intr_en(a)
   halt()
 }
 
-def label_vt100_mode() {
+def vt100_mode() {
   a = 27
-  call(label_putchar)
+  call(putchar)
 
   a = 91
-  call(label_putchar)
+  call(putchar)
 
   a = 50
-  call(label_putchar)
+  call(putchar)
 
   a = 48
-  call(label_putchar)
+  call(putchar)
 
   a = 104
-  call(label_putchar)
+  call(putchar)
 }
 
-def label_init_game() {
+def init_game() {
   push(a,b,i)
   for (i=0; i<16; i=i+1) {
     mem[i] = zero
@@ -35,11 +35,11 @@ def label_init_game() {
   a = 4093
   b = 16
   mem[b] = a
-  call(label_add_new)
+  call(add_new)
   pop(i,b,a)
 }
 
-def label_trap_handler() {
+def trap_handler() {
   push(a,b,c,d,e,i)
   a = keyboard()
   b = 1
@@ -52,16 +52,16 @@ def label_trap_handler() {
   }
 
   if (a == 119) {
-    call(label_move_up)
+    call(move_up)
   }
   if (a == 115) {
-    call(label_move_down)
+    call(move_down)
   }
   if (a == 97) {
-    call(label_move_left)
+    call(move_left)
   }
   if (a == 100) {
-    call(label_move_right)
+    call(move_right)
   }
 
   e = 0
@@ -75,16 +75,16 @@ def label_trap_handler() {
   }
 
   if (e != 0) {
-    call(label_init_if_game_over)
-    call(label_add_new)
-    call(label_print_board)
+    call(init_if_game_over)
+    call(add_new)
+    call(print_board)
   }
 
   pop(i,e,d,c,b,a)
   iret()
 }
 
-def label_putchar() {
+def putchar() {
   push(a,b)
   b = 1
   for (;b == 1;) {
@@ -94,18 +94,18 @@ def label_putchar() {
   pop(b,a)
 }
 
-def label_print_board() {
+def print_board() {
   push(a,b,c,d,e,i)
-  call(label_print_line)
+  call(print_line)
   
   for (i=0; i<4; i=i+1) {
     a = 124
-    call(label_putchar)
+    call(putchar)
 
     b = i << 2
     for (c=0; c<4; c=c+1) {
       a = 32
-      call(label_putchar)
+      call(putchar)
 
       d = b + c
       e = mem[d]
@@ -113,35 +113,35 @@ def label_print_board() {
       if (e == 0) {
         a = 32
       }
-      call(label_putchar)
+      call(putchar)
 
       a = 124
-      call(label_putchar)
+      call(putchar)
     }
     a = 10
-    call(label_putchar)
-    call(label_print_line)
+    call(putchar)
+    call(print_line)
   }
   a = 10
-  call(label_putchar)
+  call(putchar)
   pop(i,e,d,c,b,a)
 }
 
-def label_print_line() {
+def print_line() {
   push(a,i)
   a = 45
   for (i=0; i<13; i=i+1) {
-    call(label_putchar)
+    call(putchar)
   }
   a = 10
-  call(label_putchar)
+  call(putchar)
   pop(i,a)
 }
 
-def label_add_new() {
+def add_new() {
   push(a,b,c,d,e,f)
   f = 1
-  call(label_rand)
+  call(rand)
   for (b=0; b<16; b=b+1) {
     c = a + b
     d = 15
@@ -155,7 +155,7 @@ def label_add_new() {
   pop(f,e,d,c,b,a)
 }
 
-def label_init_if_game_over() {
+def init_if_game_over() {
   push(a,b,c)
   a = 1
   for (b=0; b<16; b=b+1) {
@@ -165,12 +165,12 @@ def label_init_if_game_over() {
     }
   }
   if (a == 1) {
-    call(label_init_game)
+    call(init_game)
   }
   pop(c,b,a)
 }
 
-def label_rand() {
+def rand() {
   push(b,c)
   c = 16
   a = mem[c]
@@ -188,7 +188,7 @@ def label_rand() {
   pop(c,b)
 }
 
-def label_compress() {
+def compress() {
   push(a,b,c,d,e,f,h)
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -209,7 +209,7 @@ def label_compress() {
   pop(h,f,e,d,c,b,a)
 }
 
-def label_merge() {
+def merge() {
   push(a,b,c,d,e,f,g)
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -230,7 +230,7 @@ def label_merge() {
   pop(g,f,e,d,c,b,a)
 }
 
-def label_reverse() {
+def reverse() {
   push(a,b,c,d,e,f,g)
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -247,7 +247,7 @@ def label_reverse() {
   pop(g,f,e,d,c,b,a)
 }
 
-def label_transpose() {
+def transpose() {
   push(a,b,c,d,e,f,g)
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -266,26 +266,26 @@ def label_transpose() {
   pop(g,f,e,d,c,b,a)
 }
 
-def label_move_left() {
-  call(label_compress)
-  call(label_merge)
-  call(label_compress)
+def move_left() {
+  call(compress)
+  call(merge)
+  call(compress)
 }
 
-def label_move_right() {
-  call(label_reverse)
-  call(label_move_left)
-  call(label_reverse)
+def move_right() {
+  call(reverse)
+  call(move_left)
+  call(reverse)
 }
 
-def label_move_up() {
-  call(label_transpose)
-  call(label_move_left)
-  call(label_transpose)
+def move_up() {
+  call(transpose)
+  call(move_left)
+  call(transpose)
 }
 
-def label_move_down() {
-  call(label_transpose)
-  call(label_move_right)
-  call(label_transpose)
+def move_down() {
+  call(transpose)
+  call(move_right)
+  call(transpose)
 }
