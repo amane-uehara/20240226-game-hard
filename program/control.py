@@ -43,13 +43,13 @@ def substitute_if(line, label):
 
   return (bgn, end)
 
-def substitute_def(line):
+def substitute_fn_def(line):
   bgn = []
   end = []
-  m = re.match("^def(?P<func_name>(func_.*))\(\)\{$", line)
+  m = re.match("^(?P<fn_name>(fn_[a-z0-9_]*))\{$", line)
   if m:
-    func_name = m.groupdict()["func_name"]
-    bgn.append(f"label_{func_name}:")
+    fn_name = m.groupdict()["fn_name"]
+    bgn.append(f"label_{fn_name}:")
     end.append("pc = ra")
 
   return (bgn, end)
@@ -66,7 +66,7 @@ def main():
 
       (bgn_for, end_for) = substitute_for(line, f"label_{label_count}")
       (bgn_if, end_if) = substitute_if(line, f"label_{label_count}")
-      (bgn_def, end_def) = substitute_def(line)
+      (bgn_def, end_def) = substitute_fn_def(line)
 
       if re.match("\}$", line):
         code += stack.pop()

@@ -3,22 +3,22 @@ import sys
 
 def substitute_call(line):
   ret = []
-  func_name = ""
+  fn_name = ""
   DST = "(?P<dst>([a-z]|zero|sp|ra|rv|tptr|tcmp))"
-  FUNC_NAME = "(?P<func_name>(func_.*))"
+  FN_NAME = "(?P<fn_name>(fn_[a-z0-9_]*))"
   ARGUMENT  = "(?P<argument>(..*))"
 
-  m = re.match(f"^({DST}=)?{FUNC_NAME}\({ARGUMENT}?\)$", line)
+  m = re.match(f"^({DST}=)?{FN_NAME}\({ARGUMENT}?\)$", line)
 
   if m:
     if m.groupdict()["argument"]:
       argument = m.groupdict()["argument"]
       ret.append(f"rv = {argument}")
 
-    func_name = m.groupdict()["func_name"]
+    fn_name = m.groupdict()["fn_name"]
     ret.append("sp = sp - 1")
     ret.append("mem[sp] = ra")
-    ret.append(f"ra = label_{func_name}")
+    ret.append(f"ra = label_{fn_name}")
     ret.append("(pc, ra) = (ra, pc + 1)")
     ret.append("ra = mem[sp]")
     ret.append("sp = sp + 1")

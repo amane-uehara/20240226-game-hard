@@ -1,70 +1,70 @@
-def func_main() {
+fn_main {
   intr_en(zero)
-  a = label_func_trap_handler
+  a = label_fn_trap_handler
   intr_trap(a)
-  func_set_rand_seed(4000)
-  func_vt100_mode()
-  func_init_game()
-  func_print_board()
+  fn_set_rand_seed(4000)
+  fn_vt100_mode()
+  fn_init_game()
+  fn_print_board()
   a = 1
   intr_en(a)
   halt()
 }
 
-def func_vt100_mode() {
-  func_putchar(27)
-  func_putchar(91)
-  func_putchar(50)
-  func_putchar(48)
-  func_putchar(104)
+fn_vt100_mode {
+  fn_putchar(27)
+  fn_putchar(91)
+  fn_putchar(50)
+  fn_putchar(48)
+  fn_putchar(104)
 }
 
-def func_init_game() {
+fn_init_game {
   push(a,b,i)
   for (i=0; i<16; i=i+1) {
     mem[i] = zero
   }
-  func_add_new()
+  fn_add_new()
   pop(i,b,a)
 }
 
-def func_set_rand_seed() {
+fn_set_rand_seed {
   push(a)
   a = 16
   mem[a] = rv
   pop(a)
 }
 
-def func_trap_handler() {
+fn_trap_handler {
   push(a,b,c,d,e,i)
   a = keyboard()
   b = 1
   intr_ack(b)
 
   if (a == 119) {
-    e = func_move_up()
+    e = fn_move_up()
   }
   if (a == 115) {
-    e = func_move_down()
+    e = fn_move_down()
   }
   if (a == 97) {
-    e = func_move_left()
+    e = fn_move_left()
   }
   if (a == 100) {
-    e = func_move_right()
+    e = fn_move_right()
   }
 
   if (e != 0) {
-    func_add_new()
+    fn_add_new()
   }
   
-  func_print_board()
+  fn_print_board()
 
   pop(i,e,d,c,b,a)
   iret()
 }
 
-def func_putchar() {
+fn_putchar {
   push(a)
   a = 1
   for (;a == 1;) {
@@ -74,50 +74,50 @@ def func_putchar() {
   pop(a)
 }
 
-def func_print_board() {
+fn_print_board {
   push(a,b,c,d,e,i)
-  func_print_line()
+  fn_print_line()
   
   for (i=0; i<4; i=i+1) {
-    func_putchar(124)
+    fn_putchar(124)
 
     b = i << 2
     for (c=0; c<4; c=c+1) {
-      func_putchar(32)
+      fn_putchar(32)
 
       d = b + c
       e = mem[d]
 
       if (e == 0) {
-        func_putchar(32)
+        fn_putchar(32)
       }
       if (e != 0) {
         a = e + 48
-        func_putchar(a)
+        fn_putchar(a)
       }
 
-      func_putchar(124)
+      fn_putchar(124)
     }
-    func_putchar(10)
-    func_print_line()
+    fn_putchar(10)
+    fn_print_line()
   }
-  func_putchar(10)
+  fn_putchar(10)
   pop(i,e,d,c,b,a)
 }
 
-def func_print_line() {
+fn_print_line {
   push(a,i)
   for (i=0; i<13; i=i+1) {
-    func_putchar(45)
+    fn_putchar(45)
   }
-  func_putchar(10)
+  fn_putchar(10)
   pop(i,a)
 }
 
-def func_add_new() {
+fn_add_new {
   push(a,b,c,d,e,f)
   f = 1
-  a = func_rand()
+  a = fn_rand()
   for (b=0; b<16; b=b+1) {
     c = a + b
     d = 15
@@ -131,7 +131,7 @@ def func_add_new() {
   pop(f,e,d,c,b,a)
 }
 
-def func_rand() {
+fn_rand {
   push(a,b,c)
 
   c = 16
@@ -148,7 +148,7 @@ def func_rand() {
   pop(c,b,a)
 }
 
-def func_compress() {
+fn_compress {
   push(a,b,c,d,e,f,h)
   rv = 0
 
@@ -172,7 +172,7 @@ def func_compress() {
   pop(h,f,e,d,c,b,a)
 }
 
-def func_merge() {
+fn_merge {
   push(a,b,c,d,e,f,g)
   rv = 0
 
@@ -196,7 +196,7 @@ def func_merge() {
   pop(g,f,e,d,c,b,a)
 }
 
-def func_reverse() {
+fn_reverse {
   push(a,b,c,d,e,f,g)
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -213,7 +213,7 @@ def func_reverse() {
   pop(g,f,e,d,c,b,a)
 }
 
-def func_transpose() {
+fn_transpose {
   push(a,b,c,d,e,f,g)
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -232,40 +232,40 @@ def func_transpose() {
   pop(g,f,e,d,c,b,a)
 }
 
-def func_move_left() {
+fn_move_left {
   push(a,b,c)
-  a = func_compress()
-  b = func_merge()
-  c = func_compress()
+  a = fn_compress()
+  b = fn_merge()
+  c = fn_compress()
   a = a | b
   a = a | c
   rv = a
   pop(c,b,a)
 }
 
-def func_move_right() {
+fn_move_right {
   push(a)
-  func_reverse()
-  a = func_move_left()
-  func_reverse()
+  fn_reverse()
+  a = fn_move_left()
+  fn_reverse()
   rv = a
   pop(a)
 }
 
-def func_move_up() {
+fn_move_up {
   push(a)
-  func_transpose()
-  a = func_move_left()
-  func_transpose()
+  fn_transpose()
+  a = fn_move_left()
+  fn_transpose()
   rv = a
   pop(a)
 }
 
-def func_move_down() {
+fn_move_down {
   push(a)
-  func_transpose()
-  a = func_move_right()
-  func_transpose()
+  fn_transpose()
+  a = fn_move_right()
+  fn_transpose()
   rv = a
   pop(a)
 }
