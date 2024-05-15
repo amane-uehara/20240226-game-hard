@@ -36,33 +36,38 @@ fn_set_rand_seed {
 }
 
 fn_trap_handler {
-  push(a,b,c)
+  push(a,b)
   a = keyboard()
   b = 1
   intr_ack(b)
+  fn_update_board(a)
+  fn_print_board()
+  pop(b,a)
+  iret()
+}
 
-  c = 0
+fn_update_board {
+  push(a,b)
+  a = rv
+  b = 0
+
   if (a == 107) {
-    c = fn_move_up()
+    b = fn_move_up()
   }
   if (a == 106) {
-    c = fn_move_down()
+    b = fn_move_down()
   }
   if (a == 104) {
-    c = fn_move_left()
+    b = fn_move_left()
   }
   if (a == 108) {
-    c = fn_move_right()
+    b = fn_move_right()
   }
 
-  if (c != 0) {
+  if (b != 0) {
     fn_add_new()
   }
-  
-  fn_print_board()
-
-  pop(c,b,a)
-  iret()
+  pop(b,a)
 }
 
 fn_putchar {
@@ -150,8 +155,8 @@ fn_rand {
 }
 
 fn_compress {
-  push(a,b,c,d,e,f,h)
-  rv = 0
+  push(a,b,c,d,e,f,h,i)
+  i = 0
 
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -164,18 +169,20 @@ fn_compress {
         mem[f] = e
         if (h != c) {
           mem[d] = zero
-          rv = 1
+          i = 1
         }
         h = h + 1
       }
     }
   }
-  pop(h,f,e,d,c,b,a)
+
+  rv = i
+  pop(i,h,f,e,d,c,b,a)
 }
 
 fn_merge {
-  push(a,b,c,d,e,f,g)
-  rv = 0
+  push(a,b,c,d,e,f,g,i)
+  i = 0
 
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -194,7 +201,9 @@ fn_merge {
       }
     }
   }
-  pop(g,f,e,d,c,b,a)
+
+  rv = i
+  pop(i,g,f,e,d,c,b,a)
 }
 
 fn_reverse {
