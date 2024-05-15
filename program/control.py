@@ -46,7 +46,7 @@ def substitute_if(line, label):
 def substitute_def(line):
   bgn = []
   end = []
-  m = re.match("^def(?P<func_name>(.*))\(\)\{$", line)
+  m = re.match("^def(?P<func_name>(func_.*))\(\)\{$", line)
   if m:
     func_name = m.groupdict()["func_name"]
     bgn.append(f"label_{func_name}:")

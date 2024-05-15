@@ -1,24 +1,24 @@
-def main() {
+def func_main() {
   intr_en(zero)
-  a = label_trap_handler
+  a = label_func_trap_handler
   intr_trap(a)
-  call(vt100_mode)
-  call(init_game)
-  call(print_board)
+  func_vt100_mode()
+  func_init_game()
+  func_print_board()
   a = 1
   intr_en(a)
   halt()
 }
 
-def vt100_mode() {
-  call(putchar, 27)
-  call(putchar, 91)
-  call(putchar, 50)
-  call(putchar, 48)
-  call(putchar, 104)
+def func_vt100_mode() {
+  func_putchar(27)
+  func_putchar(91)
+  func_putchar(50)
+  func_putchar(48)
+  func_putchar(104)
 }
 
-def init_game() {
+def func_init_game() {
   push(a,b,i)
   for (i=0; i<16; i=i+1) {
     mem[i] = zero
@@ -26,11 +26,11 @@ def init_game() {
   a = 4093
   b = 16
   mem[b] = a
-  call(add_new)
+  func_add_new()
   pop(i,b,a)
 }
 
-def trap_handler() {
+def func_trap_handler() {
   push(a,b,c,d,e,i)
   a = keyboard()
   b = 1
@@ -43,16 +43,16 @@ def trap_handler() {
   }
 
   if (a == 119) {
-    call(move_up)
+    func_move_up()
   }
   if (a == 115) {
-    call(move_down)
+    func_move_down()
   }
   if (a == 97) {
-    call(move_left)
+    func_move_left()
   }
   if (a == 100) {
-    call(move_right)
+    func_move_right()
   }
 
   e = 0
@@ -66,16 +66,16 @@ def trap_handler() {
   }
 
   if (e != 0) {
-    call(init_if_game_over)
-    call(add_new)
-    call(print_board)
+    func_init_if_game_over()
+    func_add_new()
+    func_print_board()
   }
 
   pop(i,e,d,c,b,a)
   iret()
 }
 
-def putchar() {
+def func_putchar() {
   push(a,b)
   b = 1
   for (;b == 1;) {
@@ -85,16 +85,16 @@ def putchar() {
   pop(b,a)
 }
 
-def print_board() {
+def func_print_board() {
   push(a,b,c,d,e,i)
-  call(print_line)
+  func_print_line()
   
   for (i=0; i<4; i=i+1) {
-    call(putchar, 124)
+    func_putchar(124)
 
     b = i << 2
     for (c=0; c<4; c=c+1) {
-      call(putchar, 32)
+      func_putchar(32)
 
       d = b + c
       e = mem[d]
@@ -102,30 +102,30 @@ def print_board() {
       if (e == 0) {
         a = 32
       }
-      call(putchar)
+      func_putchar()
 
-      call(putchar, 124)
+      func_putchar(124)
     }
-    call(putchar, 10)
-    call(print_line)
+    func_putchar(10)
+    func_print_line()
   }
-  call(putchar, 10)
+  func_putchar(10)
   pop(i,e,d,c,b,a)
 }
 
-def print_line() {
+def func_print_line() {
   push(a,i)
   for (i=0; i<13; i=i+1) {
-    call(putchar, 45)
+    func_putchar(45)
   }
-  call(putchar, 10)
+  func_putchar(10)
   pop(i,a)
 }
 
-def add_new() {
+def func_add_new() {
   push(a,b,c,d,e,f)
   f = 1
-  call(rand)
+  func_rand()
   for (b=0; b<16; b=b+1) {
     c = a + b
     d = 15
@@ -139,7 +139,7 @@ def add_new() {
   pop(f,e,d,c,b,a)
 }
 
-def init_if_game_over() {
+def func_init_if_game_over() {
   push(a,b,c)
   a = 1
   for (b=0; b<16; b=b+1) {
@@ -149,12 +149,12 @@ def init_if_game_over() {
     }
   }
   if (a == 1) {
-    call(init_game)
+    func_init_game()
   }
   pop(c,b,a)
 }
 
-def rand() {
+def func_rand() {
   push(b,c)
   c = 16
   a = mem[c]
@@ -172,7 +172,7 @@ def rand() {
   pop(c,b)
 }
 
-def compress() {
+def func_compress() {
   push(a,b,c,d,e,f,h)
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -193,7 +193,7 @@ def compress() {
   pop(h,f,e,d,c,b,a)
 }
 
-def merge() {
+def func_merge() {
   push(a,b,c,d,e,f,g)
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -214,7 +214,7 @@ def merge() {
   pop(g,f,e,d,c,b,a)
 }
 
-def reverse() {
+def func_reverse() {
   push(a,b,c,d,e,f,g)
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -231,7 +231,7 @@ def reverse() {
   pop(g,f,e,d,c,b,a)
 }
 
-def transpose() {
+def func_transpose() {
   push(a,b,c,d,e,f,g)
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -250,26 +250,26 @@ def transpose() {
   pop(g,f,e,d,c,b,a)
 }
 
-def move_left() {
-  call(compress)
-  call(merge)
-  call(compress)
+def func_move_left() {
+  func_compress()
+  func_merge()
+  func_compress()
 }
 
-def move_right() {
-  call(reverse)
-  call(move_left)
-  call(reverse)
+def func_move_right() {
+  func_reverse()
+  func_move_left()
+  func_reverse()
 }
 
-def move_up() {
-  call(transpose)
-  call(move_left)
-  call(transpose)
+def func_move_up() {
+  func_transpose()
+  func_move_left()
+  func_transpose()
 }
 
-def move_down() {
-  call(transpose)
-  call(move_right)
-  call(transpose)
+def func_move_down() {
+  func_transpose()
+  func_move_right()
+  func_transpose()
 }

@@ -4,20 +4,18 @@ import sys
 def substitute_call(line):
   ret = []
   func_name = ""
-  FUNC_NAME = "(?P<func_name>([^,]*))"
-  ARGUMENT  = "(?P<argument>([^,]*))"
+  FUNC_NAME = "(?P<func_name>(func_.*))"
+  ARGUMENT  = "(?P<argument>(..*))"
 
-  m = re.match(f"^call\({FUNC_NAME}\)$", line)
+  m = re.match(f"^{FUNC_NAME}\({ARGUMENT}?\)$", line)
+
   if m:
-    func_name = m.groupdict()["func_name"]
+    # print(m.groupdict(), file=sys.stderr)
+    if m.groupdict()["argument"]:
+      argument = m.groupdict()["argument"]
+      ret.append(f"a = {argument}")
 
-  m = re.match(f"^call\({FUNC_NAME},{ARGUMENT}\)$", line)
-  if m:
     func_name = m.groupdict()["func_name"]
-    argument = m.groupdict()["argument"]
-    ret.append(f"a = {argument}")
-
-  if func_name:
     ret.append("sp = sp - 1")
     ret.append("mem[sp] = ra")
     ret.append(f"ra = label_{func_name}")
