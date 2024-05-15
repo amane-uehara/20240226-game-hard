@@ -2,6 +2,7 @@ def func_main() {
   intr_en(zero)
   a = label_func_trap_handler
   intr_trap(a)
+  func_set_rand_seed(4000)
   func_vt100_mode()
   func_init_game()
   func_print_board()
@@ -23,11 +24,15 @@ def func_init_game() {
   for (i=0; i<16; i=i+1) {
     mem[i] = zero
   }
-  a = 4093
-  b = 16
-  mem[b] = a
   func_add_new()
   pop(i,b,a)
+}
+
+def func_set_rand_seed() {
+  push(a)
+  a = 16
+  mem[a] = rv
+  pop(a)
 }
 
 def func_trap_handler() {
@@ -66,23 +71,23 @@ def func_trap_handler() {
   }
 
   if (e != 0) {
-    func_init_if_game_over()
     func_add_new()
-    func_print_board()
   }
+  
+  func_print_board()
 
   pop(i,e,d,c,b,a)
   iret()
 }
 
 def func_putchar() {
-  push(a,b)
-  b = 1
-  for (;b == 1;) {
-    b = monitor_busy()
+  push(a)
+  a = 1
+  for (;a == 1;) {
+    a = monitor_busy()
   }
-  monitor(a)
-  pop(b,a)
+  monitor(rv)
+  pop(a)
 }
 
 def func_print_board() {
@@ -98,11 +103,14 @@ def func_print_board() {
 
       d = b + c
       e = mem[d]
-      a = e + 48
+
       if (e == 0) {
-        a = 32
+        func_putchar(32)
       }
-      func_putchar()
+      if (e != 0) {
+        a = e + 48
+        func_putchar(a)
+      }
 
       func_putchar(124)
     }
@@ -125,7 +133,7 @@ def func_print_line() {
 def func_add_new() {
   push(a,b,c,d,e,f)
   f = 1
-  func_rand()
+  a = func_rand()
   for (b=0; b<16; b=b+1) {
     c = a + b
     d = 15
@@ -139,37 +147,21 @@ def func_add_new() {
   pop(f,e,d,c,b,a)
 }
 
-def func_init_if_game_over() {
-  push(a,b,c)
-  a = 1
-  for (b=0; b<16; b=b+1) {
-    c = mem[b]
-    if (c == 0) {
-      a = 0
-    }
-  }
-  if (a == 1) {
-    func_init_game()
-  }
-  pop(c,b,a)
-}
-
 def func_rand() {
-  push(b,c)
+  push(a,b,c)
+
   c = 16
   a = mem[c]
-
   b = a << 13
   a = a ^ b
-
   b = a >> 17
   a = a ^ b
-
   b = a << 5
   a = a ^ b
-
   mem[c] = a
-  pop(c,b)
+
+  rv = a
+  pop(c,b,a)
 }
 
 def func_compress() {

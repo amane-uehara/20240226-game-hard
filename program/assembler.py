@@ -2,9 +2,9 @@ import re
 import sys
 
 LABEL = "(?P<label>(label[_0-9a-z]*))"
-RS1 = "(?P<rs1>([a-z]|zero|ra|sp|tptr|tcmp))"
-RS2 = "(?P<rs2>([a-z]|zero|ra|sp|tptr|tcmp))"
-RD  = "(?P<rd>([a-z]|zero|ra|sp|tptr|tcmp))"
+RS1 = "(?P<rs1>([a-z]|zero|sp|ra|rv|tptr|tcmp))"
+RS2 = "(?P<rs2>([a-z]|zero|sp|ra|rv|tptr|tcmp))"
+RD  = "(?P<rd>([a-z]|zero|sp|ra|rv|tptr|tcmp))"
 IMM = "(?P<imm>[+-]?\d+)"
 CALC = "(?P<opt>(\+|-|<<|<<<|>>|>>>|&|\||\^))"
 COMP = "(?P<opt>(==|!=|>=|<))"
@@ -41,21 +41,21 @@ parse_table = [
 
 num_reg = {
   "zero" : 0,
-  "ra"   : 1,
-  "sp"   : 2,
-  "tptr" : 3,
-  "tcmp" : 4,
-  "a"    : 5,
-  "b"    : 6,
-  "c"    : 7,
-  "d"    : 8,
-  "e"    : 9,
-  "f"    : 10,
-  "g"    : 11,
-  "h"    : 12,
-  "i"    : 13,
-  "j"    : 14,
-  "k"    : 15
+  "sp"   : 1,
+  "ra"   : 2,
+  "rv"   : 3,
+  "tptr" : 4,
+  "tcmp" : 5,
+  "a"    : 6,
+  "b"    : 7,
+  "c"    : 8,
+  "d"    : 9,
+  "e"    : 10,
+  "f"    : 11,
+  "g"    : 12,
+  "h"    : 13,
+  "i"    : 14,
+  "j"    : 15
 }
 
 num_opt = {

@@ -4,19 +4,16 @@ import sys
 def substitute_call(line):
   ret = []
   func_name = ""
-  DST = "(?P<dst>([a-z]|zero|ra|sp|tptr|tcmp))"
+  DST = "(?P<dst>([a-z]|zero|sp|ra|rv|tptr|tcmp))"
   FUNC_NAME = "(?P<func_name>(func_.*))"
   ARGUMENT  = "(?P<argument>(..*))"
 
   m = re.match(f"^({DST}=)?{FUNC_NAME}\({ARGUMENT}?\)$", line)
 
   if m:
-    ret.append("sp = sp - 1")
-    ret.append(f"mem[sp] = a")
-
     if m.groupdict()["argument"]:
       argument = m.groupdict()["argument"]
-      ret.append(f"a = {argument}")
+      ret.append(f"rv = {argument}")
 
     func_name = m.groupdict()["func_name"]
     ret.append("sp = sp - 1")
@@ -28,10 +25,7 @@ def substitute_call(line):
 
     if m.groupdict()["dst"]:
       dst = m.groupdict()["dst"]
-      ret.append(f"{dst} = a")
-
-    ret.append("a = mem[sp]")
-    ret.append("sp = sp + 1")
+      ret.append(f"{dst} = rv")
 
   return ret
 
