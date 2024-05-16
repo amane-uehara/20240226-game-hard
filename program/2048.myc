@@ -89,19 +89,9 @@ fn_print_board {
 
     b = i << 2
     for (c=0; c<4; c=c+1) {
-      fn_putchar(32)
-
       d = b + c
       e = mem[d]
-
-      if (e == 0) {
-        fn_putchar(32)
-      }
-      if (e != 0) {
-        a = e + 48
-        fn_putchar(a)
-      }
-
+      fn_print_single_block(e)
       fn_putchar(124)
     }
     fn_putchar(10)
@@ -109,6 +99,22 @@ fn_print_board {
   }
   fn_putchar(10)
   pop(i,e,d,c,b,a)
+}
+
+fn_print_single_block {
+  push(a,b)
+  a = rv
+
+  if (a == 0) {
+    b = 32
+  }
+  if (a > 0) {
+    b = a + 48
+  }
+
+  fn_putchar(32)
+  fn_putchar(b)
+  pop(b,a)
 }
 
 fn_print_line {

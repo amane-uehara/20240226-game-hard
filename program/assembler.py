@@ -7,7 +7,7 @@ RS2 = "(?P<rs2>([a-z]|zero|sp|ra|rv|tptr|tcmp))"
 RD  = "(?P<rd>([a-z]|zero|sp|ra|rv|tptr|tcmp))"
 IMM = "(?P<imm>[+-]?\d+)"
 CALC = "(?P<opt>(\+|-|<<|<<<|>>|>>>|&|\||\^))"
-COMP = "(?P<opt>(==|!=|>=|<))"
+COMP = "(?P<opt>(==|!=|>|>=|<|<=))"
 PRIV = "(?P<opt>(halt|ien|idis|iack|iret))"
 
 nop = {
@@ -72,7 +72,9 @@ num_opt = {
   "==":   0,
   "!=":   1,
   ">=":   2,
-  "<":    3
+  "<":    3,
+  ">":    4,
+  "<=":   5
 }
 
 def hex_format(a, width):
