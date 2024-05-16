@@ -82,6 +82,7 @@ fn_putchar {
 
 fn_reprint_board {
   push(a,b,c,d,e,i)
+  fn_cursor_up(9)
   fn_print_line()
   
   for (i=0; i<4; i=i+1) {
@@ -141,6 +142,21 @@ fn_print_single_block {
   fn_putchar(109) // m
 
   pop(d,c,b,a)
+}
+
+fn_cursor_up {
+  push(i)
+  for(i=0; i<rv; i=i+1) {
+    fn_putchar(27) // ESC
+    fn_putchar(91) // [
+    fn_putchar(49) // 1
+    fn_putchar(70) // F
+
+    fn_putchar(27) // ESC
+    fn_putchar(91) // [
+    fn_putchar(75) // K
+  }
+  pop(i)
 }
 
 fn_print_line {
