@@ -3,7 +3,7 @@ fn_main {
   a = label_fn_trap_handler
   intr_trap(a)
   fn_set_rand_seed(4000)
-  fn_vt100_mode()
+  fn_print(27,91,50,48,104) // ESC [ 2 0 h
   fn_init_game()
   fn_reprint_board()
   a = 1
@@ -11,12 +11,32 @@ fn_main {
   halt()
 }
 
-fn_vt100_mode {
-  fn_putchar(27)  // ESC
-  fn_putchar(91)  // [
-  fn_putchar(50)  // 2
-  fn_putchar(48)  // 0
-  fn_putchar(104) // h
+fn_putchar {
+  push(a,b,i)
+  i = sp + 4
+  a = mem[i]
+
+  b = 1
+  for (;b == 1;) {
+    b = monitor_busy()
+  }
+
+  monitor(a)
+  pop(i,b,a)
+}
+
+fn_print {
+  push(a,i)
+  i = sp + 3
+  a = mem[i]
+  
+  for (;a != 0;) {
+    fn_putchar(a)
+    i = i + 1
+    a = mem[i]
+  }
+
+  pop(i,a)
 }
 
 fn_init_game {
@@ -73,20 +93,6 @@ fn_update_board {
   pop(i,b,a)
 }
 
-fn_putchar {
-  push(a,b,i)
-  i = sp + 4
-  a = mem[i]
-
-  b = 1
-  for (;b == 1;) {
-    b = monitor_busy()
-  }
-
-  monitor(a)
-  pop(i,b,a)
-}
-
 fn_reprint_board {
   push(a,b,c,d,e,i)
   fn_cursor_up(9)
@@ -128,26 +134,10 @@ fn_print_single_block {
     d = 55
   }
 
-  fn_putchar(27)  // ESC
-  fn_putchar(91)  // [
-  fn_putchar(52)  // 4
-  fn_putchar(c)   // background
-  fn_putchar(109) // m
-
-  fn_putchar(27)  // ESC
-  fn_putchar(91)  // [
-  fn_putchar(51)  // 3
-  fn_putchar(d)   // foreground
-  fn_putchar(109) // m
-
-  fn_putchar(32)
-  fn_putchar(b)
-
-  fn_putchar(27)  // ESC
-  fn_putchar(91)  // [
-  fn_putchar(48)  // 0
-  fn_putchar(109) // m
-
+  fn_print(27,91,52,c,109,0) // ESC [ 4 bg m NULL
+  fn_print(27,91,51,d,109,0) // ESC [ 3 fg m NULL
+  fn_print(32,b,0)           // SPACE num NULL
+  fn_print(27,91,48,109,0)   // ESC [ 0 m NULL
   pop(i,d,c,b,a)
 }
 
@@ -156,14 +146,8 @@ fn_cursor_up {
   i = sp + 4
   a = mem[i]
   for(j=0; j<a; j=j+1) {
-    fn_putchar(27) // ESC
-    fn_putchar(91) // [
-    fn_putchar(49) // 1
-    fn_putchar(70) // F
-
-    fn_putchar(27) // ESC
-    fn_putchar(91) // [
-    fn_putchar(75) // K
+    fn_print(27,91,49,70) // ESC [ 1 F (cursor up)
+    fn_print(27,91,75)    // ESC [ 1 K (erase line)
   }
   pop(j,i,a)
 }
@@ -171,9 +155,9 @@ fn_cursor_up {
 fn_print_line {
   push(a,i)
   for (i=0; i<13; i=i+1) {
-    fn_putchar(45)
+    fn_putchar(45) // -
   }
-  fn_putchar(10)
+  fn_putchar(10) // LF
   pop(i,a)
 }
 
