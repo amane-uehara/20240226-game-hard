@@ -36,13 +36,13 @@ fn_set_rand_seed {
 }
 
 fn_trap_handler {
-  push(a,b)
+  push(sp,ra,rv,tptr,tcmp,a,b,c,d,e,f,g,h,i,j)
   a = keyboard()
   b = 1
   intr_ack(b)
   fn_update_board(a)
   fn_print_board()
-  pop(b,a)
+  pop(j,i,h,g,f,e,d,c,b,a,tcmp,tptr,rv,ra,sp)
   iret()
 }
 
