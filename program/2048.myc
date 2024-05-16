@@ -5,18 +5,18 @@ fn_main {
   fn_set_rand_seed(4000)
   fn_vt100_mode()
   fn_init_game()
-  fn_print_board()
+  fn_reprint_board()
   a = 1
   intr_en(a)
   halt()
 }
 
 fn_vt100_mode {
-  fn_putchar(27)
-  fn_putchar(91)
-  fn_putchar(50)
-  fn_putchar(48)
-  fn_putchar(104)
+  fn_putchar(27)  // ESC
+  fn_putchar(91)  // [
+  fn_putchar(50)  // 2
+  fn_putchar(48)  // 0
+  fn_putchar(104) // h
 }
 
 fn_init_game {
@@ -41,7 +41,7 @@ fn_trap_handler {
   b = 1
   intr_ack(b)
   fn_update_board(a)
-  fn_print_board()
+  fn_reprint_board()
   pop(j,i,h,g,f,e,d,c,b,a,tcmp,tptr,rv,ra,sp)
   iret()
 }
@@ -80,7 +80,7 @@ fn_putchar {
   pop(a)
 }
 
-fn_print_board {
+fn_reprint_board {
   push(a,b,c,d,e,i)
   fn_print_line()
   
@@ -102,19 +102,45 @@ fn_print_board {
 }
 
 fn_print_single_block {
-  push(a,b)
+  push(a,b,c,d)
   a = rv
+  b = 32 // space
+  c = 48 // background, ASCII:0
+  d = 55 // foreground, ASCII:7
 
-  if (a == 0) {
-    b = 32
-  }
-  if (a > 0) {
+  if (a >= 1) {
     b = a + 48
+    c = b
   }
+  if (a >= 7) {
+    c = 7
+    d = a + 42
+  }
+  if (a >= 13) {
+    d = 55
+  }
+
+  fn_putchar(27)  // ESC
+  fn_putchar(91)  // [
+  fn_putchar(52)  // 4
+  fn_putchar(c)   // background
+  fn_putchar(109) // m
+
+  fn_putchar(27)  // ESC
+  fn_putchar(91)  // [
+  fn_putchar(51)  // 3
+  fn_putchar(d)   // foreground
+  fn_putchar(109) // m
 
   fn_putchar(32)
   fn_putchar(b)
-  pop(b,a)
+
+  fn_putchar(27)  // ESC
+  fn_putchar(91)  // [
+  fn_putchar(48)  // 0
+  fn_putchar(109) // m
+
+  pop(d,c,b,a)
 }
 
 fn_print_line {
