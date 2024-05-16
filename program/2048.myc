@@ -36,7 +36,7 @@ fn_set_rand_seed {
 }
 
 fn_trap_handler {
-  push(sp,ra,rv,tptr,tcmp,a,b,c,d,e,f,g,h,i,j)
+  push(sp,ra,rv,tptr,tcmp,a,b,c,d,e,f,g,h,i,j) // 全レジスタをstackしないと、forやifの処理中に割り込まれた時にtcmpの値がバグる
   a = keyboard()
   b = 1
   intr_ack(b)

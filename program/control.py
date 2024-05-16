@@ -62,7 +62,8 @@ def main():
   filename = sys.argv[1]
   with open(filename) as f:
     for line_raw in f:
-      line = line_raw.replace(" ", "")
+      line_delete_comment = re.split("//", line_raw)[0].strip()
+      line = line_delete_comment.replace(" ", "")
 
       (bgn_for, end_for) = substitute_for(line, f"label_{label_count}")
       (bgn_if, end_if) = substitute_if(line, f"label_{label_count}")
@@ -82,7 +83,7 @@ def main():
         code += bgn_def
         stack.append(end_def)
       else:
-        code.append(line_raw.strip())
+        code.append(line_delete_comment)
 
   print('\n'.join(code))
 
