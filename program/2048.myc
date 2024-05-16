@@ -29,10 +29,12 @@ fn_init_game {
 }
 
 fn_set_rand_seed {
-  push(a)
-  a = 16
-  mem[a] = rv
-  pop(a)
+  push(a,b,i)
+  i = sp + 4
+  a = mem[i]
+  b = 16
+  mem[b] = a
+  pop(i,b,a)
 }
 
 fn_trap_handler {
@@ -47,8 +49,9 @@ fn_trap_handler {
 }
 
 fn_update_board {
-  push(a,b)
-  a = rv
+  push(a,b,i)
+  i = sp + 4
+  a = mem[i]
   b = 0
 
   if (a == 107) {
@@ -67,17 +70,21 @@ fn_update_board {
   if (b != 0) {
     fn_add_new()
   }
-  pop(b,a)
+  pop(i,b,a)
 }
 
 fn_putchar {
-  push(a)
-  a = 1
-  for (;a == 1;) {
-    a = monitor_busy()
+  push(a,b,i)
+  i = sp + 4
+  a = mem[i]
+
+  b = 1
+  for (;b == 1;) {
+    b = monitor_busy()
   }
-  monitor(rv)
-  pop(a)
+
+  monitor(a)
+  pop(i,b,a)
 }
 
 fn_reprint_board {
@@ -98,13 +105,13 @@ fn_reprint_board {
     fn_putchar(10)
     fn_print_line()
   }
-  fn_putchar(10)
   pop(i,e,d,c,b,a)
 }
 
 fn_print_single_block {
-  push(a,b,c,d)
-  a = rv
+  push(a,b,c,d,i)
+  i = sp + 6
+  a = mem[i]
   b = 32 // space
   c = 48 // background, ASCII:0
   d = 55 // foreground, ASCII:7
@@ -141,12 +148,14 @@ fn_print_single_block {
   fn_putchar(48)  // 0
   fn_putchar(109) // m
 
-  pop(d,c,b,a)
+  pop(i,d,c,b,a)
 }
 
 fn_cursor_up {
-  push(i)
-  for(i=0; i<rv; i=i+1) {
+  push(a,i,j)
+  i = sp + 4
+  a = mem[i]
+  for(j=0; j<a; j=j+1) {
     fn_putchar(27) // ESC
     fn_putchar(91) // [
     fn_putchar(49) // 1
@@ -156,7 +165,7 @@ fn_cursor_up {
     fn_putchar(91) // [
     fn_putchar(75) // K
   }
-  pop(i)
+  pop(j,i,a)
 }
 
 fn_print_line {
