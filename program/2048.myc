@@ -2,7 +2,7 @@ fn_start {
   intr_en(zero)
   a = label_fn_trap_vector
   intr_trap(a)
-  fn_print(27,91,50,48,104) // ESC [ 2 0 h
+  fn_print(27,91,50,48,104,0) // ESC [ 2 0 h
   fn_main()
   a = 1
   intr_en(a)
@@ -106,8 +106,12 @@ fn_update_board {
 }
 
 fn_reprint_board {
-  push(a,b,c,d,e,i)
-  fn_cursor_up(9)
+  push(b,c,d,e,i)
+  for(i=0; i<9; i=i+1) {
+    fn_print(27,91,49,70,0)  // ESC [ 1 F (cursor up)
+    fn_print(27,91,75,0)     // ESC [ 1 K (erase line)
+  }
+
   fn_print_line()
   
   for (i=0; i<4; i=i+1) {
@@ -123,7 +127,7 @@ fn_reprint_board {
     fn_putchar(10)
     fn_print_line()
   }
-  pop(i,e,d,c,b,a)
+  pop(i,e,d,c,b)
 }
 
 fn_print_single_block {
@@ -146,31 +150,21 @@ fn_print_single_block {
     d = 55
   }
 
-  fn_print(27,91,52,c,109,0) // ESC [ 4 bg m NULL
-  fn_print(27,91,51,d,109,0) // ESC [ 3 fg m NULL
-  fn_print(32,b,0)           // SPACE num NULL
-  fn_print(27,91,48,109,0)   // ESC [ 0 m NULL
+  fn_print(27,91,52,c,109,0) // ESC [ 4 c m NULL
+  fn_print(27,91,51,d,109,0) // ESC [ 3 d m NULL
+  fn_print(32,b,0)
+  fn_print(27,91,48,109,0) // ESC [ 0 m NULL
+
   pop(i,d,c,b,a)
 }
 
-fn_cursor_up {
-  push(a,i,j)
-  i = sp + 4
-  a = mem[i]
-  for(j=0; j<a; j=j+1) {
-    fn_print(27,91,49,70) // ESC [ 1 F (cursor up)
-    fn_print(27,91,75)    // ESC [ 1 K (erase line)
-  }
-  pop(j,i,a)
-}
-
 fn_print_line {
-  push(a,i)
+  push(i)
   for (i=0; i<13; i=i+1) {
     fn_putchar(45) // -
   }
   fn_putchar(10) // LF
-  pop(i,a)
+  pop(i)
 }
 
 fn_add_new {
