@@ -1,14 +1,37 @@
-fn_main {
+fn_start {
   intr_en(zero)
-  a = label_fn_trap_handler
+  a = label_fn_trap_vector
   intr_trap(a)
-  fn_set_rand_seed(4000)
   fn_print(27,91,50,48,104) // ESC [ 2 0 h
-  fn_init_game()
-  fn_reprint_board()
+  fn_main()
   a = 1
   intr_en(a)
   halt()
+}
+
+fn_main {
+  fn_set_rand_seed(4000)
+  fn_init_game()
+  fn_reprint_board()
+}
+
+fn_trap_vector {
+  push(sp,ra,rv,tptr,tcmp,a,b,c,d,e,f,g,h,i,j) // 全レジスタをstackしないと、forやifの処理中に割り込まれた時にtcmpの値がバグる
+  a = keyboard()
+  b = 1
+  intr_ack(b)
+  fn_trap_handler(a)
+  pop(j,i,h,g,f,e,d,c,b,a,tcmp,tptr,rv,ra,sp)
+  iret()
+}
+
+fn_trap_handler {
+  push(a,i)
+  i = sp + 3
+  a = mem[i]
+  fn_update_board(a)
+  fn_reprint_board()
+  pop(i,a)
 }
 
 fn_putchar {
@@ -55,17 +78,6 @@ fn_set_rand_seed {
   b = 16
   mem[b] = a
   pop(i,b,a)
-}
-
-fn_trap_handler {
-  push(sp,ra,rv,tptr,tcmp,a,b,c,d,e,f,g,h,i,j) // 全レジスタをstackしないと、forやifの処理中に割り込まれた時にtcmpの値がバグる
-  a = keyboard()
-  b = 1
-  intr_ack(b)
-  fn_update_board(a)
-  fn_reprint_board()
-  pop(j,i,h,g,f,e,d,c,b,a,tcmp,tptr,rv,ra,sp)
-  iret()
 }
 
 fn_update_board {
