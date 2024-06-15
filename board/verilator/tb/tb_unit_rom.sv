@@ -1,6 +1,6 @@
 `include "test_package.sv"
 
-module tb1 ();
+module tb_unit_rom ();
   import test_package :: *;
   logic clk;
   test_clock test_clock(clk);
