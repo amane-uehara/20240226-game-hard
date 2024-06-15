@@ -1,6 +1,6 @@
 `include "test_package.sv"
 
-module tb_int_cpu_calc ();
+module tb_int_cpu_w_intr ();
   import test_package :: *;
 
   logic clk, reset, uart_rx, uart_tx;
@@ -26,23 +26,23 @@ module tb_int_cpu_calc ();
   initial begin
     i = 0; //                       imm  rs2 rs1 rd  opt opcode
     mother_board.rom.mem[i++] = 32'h001___0___0___1___0___0; // addi ---- x[1] = x[0] + 1
+    mother_board.rom.mem[i++] = 32'h000___0___1___0___0___8; // w_intr -- intr[0] = x[1] // intr[0] == ack
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
-    `check32(32'd1, x[1]);
+    task_reset_wait(i-1);
+    `check32(32'b1, {31'd0, mother_board.cpu.ack});
 
     i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___0___0; // addi ---- x[3] = x[2] + 1
+    mother_board.rom.mem[i++] = 32'h001___0___0___1___0___0; // addi ---- x[1] = x[0] + 1
+    mother_board.rom.mem[i++] = 32'h001___0___1___0___0___8; // w_intr -- intr[1] = x[1] // intr[1] == intr_en
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     task_reset_wait(i);
-    `check32(32'd4, x[3]);
+    `check32(32'b1, {31'd0, mother_board.cpu.sr.intr_en});
 
     i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___0___0; // addi ---- x[3] = x[2] + 1
-    mother_board.rom.mem[i++] = 32'h000___2___3___4___0___1; // add  ---- x[4] = x[3] + x[2]
+    mother_board.rom.mem[i++] = 32'h007___0___0___1___0___0; // addi ---- x[1] = x[0] + 7
+    mother_board.rom.mem[i++] = 32'h002___0___1___0___0___8; // w_intr -- intr[2] = x[1] // intr[2] == intr_vec
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     task_reset_wait(i);
-    `check32(32'd7, x[4]);
+    `check32(32'd7, mother_board.cpu.sr.intr_vec);
   end
 endmodule

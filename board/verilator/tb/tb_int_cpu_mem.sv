@@ -1,6 +1,6 @@
 `include "test_package.sv"
 
-module tb_int_cpu_calc ();
+module tb_int_cpu_mem ();
   import test_package :: *;
 
   logic clk, reset, uart_rx, uart_tx;
@@ -25,22 +25,18 @@ module tb_int_cpu_calc ();
   int i;
   initial begin
     i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h001___0___0___1___0___0; // addi ---- x[1] = x[0] + 1
+    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
+    mother_board.rom.mem[i++] = 32'h004___0___2___3___0___0; // addi ---- x[3] = x[2] + 4
+    mother_board.rom.mem[i++] = 32'h000___3___2___0___0___5; // sw   ---- mem[x[2]] = x[3]
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     task_reset_wait(i);
-    `check32(32'd1, x[1]);
+    `check32(32'd7, mem[3]);
 
     i = 0; //                       imm  rs2 rs1 rd  opt opcode
     mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___0___0; // addi ---- x[3] = x[2] + 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
-    `check32(32'd4, x[3]);
-
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___0___0; // addi ---- x[3] = x[2] + 1
-    mother_board.rom.mem[i++] = 32'h000___2___3___4___0___1; // add  ---- x[4] = x[3] + x[2]
+    mother_board.rom.mem[i++] = 32'h004___0___2___3___0___0; // addi ---- x[3] = x[2] + 4
+    mother_board.rom.mem[i++] = 32'h000___3___2___0___0___5; // sw   ---- mem[x[2]] = x[3]
+    mother_board.rom.mem[i++] = 32'h000___0___2___4___0___4; // lw   ---- x[4] = mem[x[2]]
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     task_reset_wait(i);
     `check32(32'd7, x[4]);
