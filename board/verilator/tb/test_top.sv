@@ -3,7 +3,7 @@
 module test_top ();
   import test_package :: *;
   tb_unit_rom tb_unit_rom;
-  tb2 tb2;
+  tb_int_cpu_calc tb_int_cpu_calc;
   tb_int_uart_rx tb_int_uart_rx;
   tb_int_uart_tx tb_int_uart_tx;
 
