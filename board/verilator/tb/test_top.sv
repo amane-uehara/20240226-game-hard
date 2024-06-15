@@ -4,8 +4,8 @@ module test_top ();
   import test_package :: *;
   tb1 tb1;
   tb2 tb2;
-  tb3 tb3;
-  tb4 tb4;
+  tb_int_uart_rx tb_int_uart_rx;
+  tb_int_uart_tx tb_int_uart_tx;
 
   initial begin
     #(CLOCK_PERIOD*10000);

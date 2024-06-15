@@ -1,6 +1,6 @@
 `include "test_package.sv"
 
-module tb4 ();
+module tb_int_uart_tx();
   import test_package :: *;
 
   logic clk, reset, uart_rx, uart_tx;
