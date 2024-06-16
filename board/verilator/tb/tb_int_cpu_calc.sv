@@ -22,510 +22,585 @@ module tb_int_cpu_calc ();
   logic [($size(mother_board.cpu.mem_file.mem)-1):0][31:0] mem;
   assign mem = mother_board.cpu.mem_file.mem;
 
+  function automatic void init_mem_restart_cpu(input [31:0] init_vals[]);
+    int n = init_vals.size();
+    for (int j = 0; j < n; j++) begin
+      mother_board.rom.mem[j] = init_vals[j];
+    end
+    for (int j = n; j < $size(mother_board.rom.mem); j++) begin
+      mother_board.rom.mem[j] = 32'd0;
+    end
+    task_reset_wait(n);
+  endfunction
+
   int i;
   initial begin
     // ----------------------------------------------------------------------------------------------------
     // x[3] = 3 `calc_i` 1
     // ----------------------------------------------------------------------------------------------------
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___0___0; // addi ---- x[3] = x[2] + 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h001___0___2___3___0___0 // addi ---- x[3] = x[2] + 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd4, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___1___0; // subi ---- x[3] = x[2] - 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h001___0___2___3___1___0 // subi ---- x[3] = x[2] - 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd2, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___2___0; // slli ---- x[3] = x[2] << 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h001___0___2___3___2___0 // slli ---- x[3] = x[2] << 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd6, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___3___0; // srli ---- x[3] = x[2] >> 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h001___0___2___3___3___0 // srli ---- x[3] = x[2] >> 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___4___0; // srai ---- x[3] = x[2] >>> 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h001___0___2___3___4___0 // srai ---- x[3] = x[2] >>> 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___5___0; // andi ---- x[3] = x[2] & 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h001___0___2___3___5___0 // andi ---- x[3] = x[2] & 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___6___0; // ori  ---- x[3] = x[2] | 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h001___0___2___3___6___0 // ori  ---- x[3] = x[2] | 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd3, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___7___0; // xori ---- x[3] = x[2] ^ 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h001___0___2___3___7___0 // xori ---- x[3] = x[2] ^ 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd2, x[3]);
 
     // ----------------------------------------------------------------------------------------------------
     // x[3] = 5 `calc_i` 6
     // ----------------------------------------------------------------------------------------------------
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h005___0___0___2___0___0; // addi ---- x[2] = x[0] + 5
-    mother_board.rom.mem[i++] = 32'h006___0___2___3___0___0; // addi ---- x[3] = x[2] + 6
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h005___0___0___2___0___0 // addi ---- x[2] = x[0] + 5
+      , 32'h006___0___2___3___0___0 // addi ---- x[3] = x[2] + 6
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd11, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h005___0___0___2___0___0; // addi ---- x[2] = x[0] + 5
-    mother_board.rom.mem[i++] = 32'h006___0___2___3___1___0; // subi ---- x[3] = x[2] - 6
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h005___0___0___2___0___0 // addi ---- x[2] = x[0] + 5
+      , 32'h006___0___2___3___1___0 // subi ---- x[3] = x[2] - 6
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'hFFFFFFFF, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h005___0___0___2___0___0; // addi ---- x[2] = x[0] + 5
-    mother_board.rom.mem[i++] = 32'h006___0___2___3___2___0; // slli ---- x[3] = x[2] << 6
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h005___0___0___2___0___0 // addi ---- x[2] = x[0] + 5
+      , 32'h006___0___2___3___2___0 // slli ---- x[3] = x[2] << 6
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd320, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h005___0___0___2___0___0; // addi ---- x[2] = x[0] + 5
-    mother_board.rom.mem[i++] = 32'h006___0___2___3___3___0; // srli ---- x[3] = x[2] >> 6
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h005___0___0___2___0___0 // addi ---- x[2] = x[0] + 5
+      , 32'h006___0___2___3___3___0 // srli ---- x[3] = x[2] >> 6
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h005___0___0___2___0___0; // addi ---- x[2] = x[0] + 5
-    mother_board.rom.mem[i++] = 32'h006___0___2___3___4___0; // srai ---- x[3] = x[2] >>> 6
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h005___0___0___2___0___0 // addi ---- x[2] = x[0] + 5
+      , 32'h006___0___2___3___4___0 // srai ---- x[3] = x[2] >>> 6
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h005___0___0___2___0___0; // addi ---- x[2] = x[0] + 5
-    mother_board.rom.mem[i++] = 32'h006___0___2___3___5___0; // andi ---- x[3] = x[2] & 6
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h005___0___0___2___0___0 // addi ---- x[2] = x[0] + 5
+      , 32'h006___0___2___3___5___0 // andi ---- x[3] = x[2] & 6
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd4, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h005___0___0___2___0___0; // addi ---- x[2] = x[0] + 5
-    mother_board.rom.mem[i++] = 32'h006___0___2___3___6___0; // ori  ---- x[3] = x[2] | 6
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h005___0___0___2___0___0 // addi ---- x[2] = x[0] + 5
+      , 32'h006___0___2___3___6___0 // ori  ---- x[3] = x[2] | 6
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd7, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h005___0___0___2___0___0; // addi ---- x[2] = x[0] + 5
-    mother_board.rom.mem[i++] = 32'h006___0___2___3___7___0; // xori ---- x[3] = x[2] ^ 6
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h005___0___0___2___0___0 // addi ---- x[2] = x[0] + 5
+      , 32'h006___0___2___3___7___0 // xori ---- x[3] = x[2] ^ 6
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd3, x[3]);
 
     // ----------------------------------------------------------------------------------------------------
     // x[3] = 2 `calc_i` (-1)
     // ----------------------------------------------------------------------------------------------------
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h002___0___0___2___0___0; // addi ---- x[2] = x[0] + 2
-    mother_board.rom.mem[i++] = 32'hFFF___0___2___3___0___0; // addi ---- x[3] = x[2] + (-1)
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h002___0___0___2___0___0 // addi ---- x[2] = x[0] + 2
+      , 32'hFFF___0___2___3___0___0 // addi ---- x[3] = x[2] + (-1)
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h002___0___0___2___0___0; // addi ---- x[2] = x[0] + 2
-    mother_board.rom.mem[i++] = 32'hFFF___0___2___3___1___0; // subi ---- x[3] = x[2] - (-1)
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h002___0___0___2___0___0 // addi ---- x[2] = x[0] + 2
+      , 32'hFFF___0___2___3___1___0 // subi ---- x[3] = x[2] - (-1)
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd3, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h002___0___0___2___0___0; // addi ---- x[2] = x[0] + 2
-    mother_board.rom.mem[i++] = 32'hFFF___0___2___3___2___0; // slli ---- x[3] = x[2] << (-1)
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h002___0___0___2___0___0 // addi ---- x[2] = x[0] + 2
+      , 32'hFFF___0___2___3___2___0 // slli ---- x[3] = x[2] << (-1)
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h002___0___0___2___0___0; // addi ---- x[2] = x[0] + 2
-    mother_board.rom.mem[i++] = 32'hFFF___0___2___3___3___0; // srli ---- x[3] = x[2] >> (-1)
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h002___0___0___2___0___0 // addi ---- x[2] = x[0] + 2
+      , 32'hFFF___0___2___3___3___0 // srli ---- x[3] = x[2] >> (-1)
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h002___0___0___2___0___0; // addi ---- x[2] = x[0] + 2
-    mother_board.rom.mem[i++] = 32'hFFF___0___2___3___4___0; // srai ---- x[3] = x[2] >>> (-1)
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h002___0___0___2___0___0 // addi ---- x[2] = x[0] + 2
+      , 32'hFFF___0___2___3___4___0 // srai ---- x[3] = x[2] >>> (-1)
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h002___0___0___2___0___0; // addi ---- x[2] = x[0] + 2
-    mother_board.rom.mem[i++] = 32'hFFF___0___2___3___5___0; // andi ---- x[3] = x[2] & (-1)
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h002___0___0___2___0___0 // addi ---- x[2] = x[0] + 2
+      , 32'hFFF___0___2___3___5___0 // andi ---- x[3] = x[2] & (-1)
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd2, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h002___0___0___2___0___0; // addi ---- x[2] = x[0] + 2
-    mother_board.rom.mem[i++] = 32'hFFF___0___2___3___6___0; // ori  ---- x[3] = x[2] | (-1)
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h002___0___0___2___0___0 // addi ---- x[2] = x[0] + 2
+      , 32'hFFF___0___2___3___6___0 // ori  ---- x[3] = x[2] | (-1)
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(-32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h002___0___0___2___0___0; // addi ---- x[2] = x[0] + 2
-    mother_board.rom.mem[i++] = 32'hFFF___0___2___3___7___0; // xori ---- x[3] = x[2] ^ (-1)
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h002___0___0___2___0___0 // addi ---- x[2] = x[0] + 2
+      , 32'hFFF___0___2___3___7___0 // xori ---- x[3] = x[2] ^ (-1)
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'hFFFFFFFD, x[3]);
 
     // ----------------------------------------------------------------------------------------------------
     // x[3] = -6 `calc_i` 1
     // ----------------------------------------------------------------------------------------------------
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h006___0___0___2___0___0; // addi ---- x[2] = x[0] + 6
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___0___0; // addi ---- x[3] = x[2] + 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h006___0___0___2___0___0 // addi ---- x[2] = x[0] + 6
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___0___0 // addi ---- x[3] = x[2] + 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(-32'd5, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h006___0___0___2___0___0; // addi ---- x[2] = x[0] + 6
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___1___0; // subi ---- x[3] = x[2] - 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h006___0___0___2___0___0 // addi ---- x[2] = x[0] + 6
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___1___0 // subi ---- x[3] = x[2] - 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(-32'd7, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h006___0___0___2___0___0; // addi ---- x[2] = x[0] + 6
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___2___0; // slli ---- x[3] = x[2] << 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h006___0___0___2___0___0 // addi ---- x[2] = x[0] + 6
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___2___0 // slli ---- x[3] = x[2] << 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(-32'd12, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h006___0___0___2___0___0; // addi ---- x[2] = x[0] + 6
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___3___0; // srli ---- x[3] = x[2] >> 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h006___0___0___2___0___0 // addi ---- x[2] = x[0] + 6
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___3___0 // srli ---- x[3] = x[2] >> 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'h7FFFFFFD, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h006___0___0___2___0___0; // addi ---- x[2] = x[0] + 6
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___4___0; // srai ---- x[3] = x[2] >>> 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h006___0___0___2___0___0 // addi ---- x[2] = x[0] + 6
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___4___0 // srai ---- x[3] = x[2] >>> 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'hFFFFFFFD, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h006___0___0___2___0___0; // addi ---- x[2] = x[0] + 6
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___5___0; // andi ---- x[3] = x[2] & 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h006___0___0___2___0___0 // addi ---- x[2] = x[0] + 6
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___5___0 // andi ---- x[3] = x[2] & 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h006___0___0___2___0___0; // addi ---- x[2] = x[0] + 6
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___6___0; // ori  ---- x[3] = x[2] | 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h006___0___0___2___0___0 // addi ---- x[2] = x[0] + 6
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___6___0 // ori  ---- x[3] = x[2] | 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'hFFFFFFFB, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h006___0___0___2___0___0; // addi ---- x[2] = x[0] + 6
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___7___0; // xori ---- x[3] = x[2] ^ 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h006___0___0___2___0___0 // addi ---- x[2] = x[0] + 6
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___7___0 // xori ---- x[3] = x[2] ^ 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'hFFFFFFFB, x[3]);
 
     // ----------------------------------------------------------------------------------------------------
     // x[3] = 0 `calc_i` 1
     // ----------------------------------------------------------------------------------------------------
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___0___0; // addi ---- x[3] = x[2] + 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___0___0 // addi ---- x[3] = x[2] + 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___1___0; // subi ---- x[3] = x[2] - 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___1___0 // subi ---- x[3] = x[2] - 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(-32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___2___0; // slli ---- x[3] = x[2] << 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___2___0 // slli ---- x[3] = x[2] << 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___3___0; // srli ---- x[3] = x[2] >> 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___3___0 // srli ---- x[3] = x[2] >> 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___4___0; // srai ---- x[3] = x[2] >>> 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___4___0 // srai ---- x[3] = x[2] >>> 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___5___0; // andi ---- x[3] = x[2] & 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___5___0 // andi ---- x[3] = x[2] & 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___6___0; // ori  ---- x[3] = x[2] | 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___6___0 // ori  ---- x[3] = x[2] | 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___2___0___2___1___1; // sub  ---- x[2] = x[0] - x[2]
-    mother_board.rom.mem[i++] = 32'h001___0___2___3___7___0; // xori ---- x[3] = x[2] ^ 1
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___2___0___2___1___1 // sub  ---- x[2] = x[0] - x[2]
+      , 32'h001___0___2___3___7___0 // xori ---- x[3] = x[2] ^ 1
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
     // ----------------------------------------------------------------------------------------------------
     // x[3] = 1 `calc_i` 0
     // ----------------------------------------------------------------------------------------------------
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h001___0___0___2___0___0; // addi ---- x[2] = x[0] + 1
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___0___0; // addi ---- x[3] = x[2] + 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h001___0___0___2___0___0 // addi ---- x[2] = x[0] + 1
+      , 32'h000___0___2___3___0___0 // addi ---- x[3] = x[2] + 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h001___0___0___2___0___0; // addi ---- x[2] = x[0] + 1
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___1___0; // subi ---- x[3] = x[2] - 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h001___0___0___2___0___0 // addi ---- x[2] = x[0] + 1
+      , 32'h000___0___2___3___1___0 // subi ---- x[3] = x[2] - 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h001___0___0___2___0___0; // addi ---- x[2] = x[0] + 1
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___2___0; // slli ---- x[3] = x[2] << 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h001___0___0___2___0___0 // addi ---- x[2] = x[0] + 1
+      , 32'h000___0___2___3___2___0 // slli ---- x[3] = x[2] << 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h001___0___0___2___0___0; // addi ---- x[2] = x[0] + 1
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___3___0; // srli ---- x[3] = x[2] >> 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h001___0___0___2___0___0 // addi ---- x[2] = x[0] + 1
+      , 32'h000___0___2___3___3___0 // srli ---- x[3] = x[2] >> 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h001___0___0___2___0___0; // addi ---- x[2] = x[0] + 1
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___4___0; // srai ---- x[3] = x[2] >>> 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h001___0___0___2___0___0 // addi ---- x[2] = x[0] + 1
+      , 32'h000___0___2___3___4___0 // srai ---- x[3] = x[2] >>> 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h001___0___0___2___0___0; // addi ---- x[2] = x[0] + 1
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___5___0; // andi ---- x[3] = x[2] & 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h001___0___0___2___0___0 // addi ---- x[2] = x[0] + 1
+      , 32'h000___0___2___3___5___0 // andi ---- x[3] = x[2] & 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h001___0___0___2___0___0; // addi ---- x[2] = x[0] + 1
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___6___0; // ori  ---- x[3] = x[2] | 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h001___0___0___2___0___0 // addi ---- x[2] = x[0] + 1
+      , 32'h000___0___2___3___6___0 // ori  ---- x[3] = x[2] | 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h001___0___0___2___0___0; // addi ---- x[2] = x[0] + 1
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___7___0; // xori ---- x[3] = x[2] ^ 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h001___0___0___2___0___0 // addi ---- x[2] = x[0] + 1
+      , 32'h000___0___2___3___7___0 // xori ---- x[3] = x[2] ^ 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd1, x[3]);
 
     // ----------------------------------------------------------------------------------------------------
     // x[3] = 0 `calc_i` 0
     // ----------------------------------------------------------------------------------------------------
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___0___0; // addi ---- x[3] = x[2] + 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___0___2___3___0___0 // addi ---- x[3] = x[2] + 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___1___0; // subi ---- x[3] = x[2] - 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___0___2___3___1___0 // subi ---- x[3] = x[2] - 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___2___0; // slli ---- x[3] = x[2] << 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___0___2___3___2___0 // slli ---- x[3] = x[2] << 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___3___0; // srli ---- x[3] = x[2] >> 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___0___2___3___3___0 // srli ---- x[3] = x[2] >> 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___4___0; // srai ---- x[3] = x[2] >>> 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___0___2___3___4___0 // srai ---- x[3] = x[2] >>> 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___5___0; // andi ---- x[3] = x[2] & 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___0___2___3___5___0 // andi ---- x[3] = x[2] & 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___6___0; // ori  ---- x[3] = x[2] | 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___0___2___3___6___0 // ori  ---- x[3] = x[2] | 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h000___0___0___2___0___0; // addi ---- x[2] = x[0] + 0
-    mother_board.rom.mem[i++] = 32'h000___0___2___3___7___0; // xori ---- x[3] = x[2] ^ 0
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h000___0___0___2___0___0 // addi ---- x[2] = x[0] + 0
+      , 32'h000___0___2___3___7___0 // xori ---- x[3] = x[2] ^ 0
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[3]);
 
     // ----------------------------------------------------------------------------------------------------
     // x[4] = 4 `calc_r` 3
     // ----------------------------------------------------------------------------------------------------
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h004___0___0___3___0___0; // addi ---- x[3] = x[0] + 4
-    mother_board.rom.mem[i++] = 32'h000___2___3___4___0___1; // add  ---- x[4] = x[3] + x[2]
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h004___0___0___3___0___0 // addi ---- x[3] = x[0] + 4
+      , 32'h000___2___3___4___0___1 // add  ---- x[4] = x[3] + x[2]
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd7, x[4]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h004___0___0___3___0___0; // addi ---- x[3] = x[0] + 4
-    mother_board.rom.mem[i++] = 32'h000___2___3___4___1___1; // sub  ---- x[4] = x[3] - x[2]
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h004___0___0___3___0___0 // addi ---- x[3] = x[0] + 4
+      , 32'h000___2___3___4___1___1 // sub  ---- x[4] = x[3] - x[2]
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'h1, x[4]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h004___0___0___3___0___0; // addi ---- x[3] = x[0] + 4
-    mother_board.rom.mem[i++] = 32'h000___2___3___4___2___1; // sll  ---- x[4] = x[3] << x[2]
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h004___0___0___3___0___0 // addi ---- x[3] = x[0] + 4
+      , 32'h000___2___3___4___2___1 // sll  ---- x[4] = x[3] << x[2]
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd32, x[4]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h004___0___0___3___0___0; // addi ---- x[3] = x[0] + 4
-    mother_board.rom.mem[i++] = 32'h000___2___3___4___3___1; // srl  ---- x[4] = x[3] >> x[2]
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h004___0___0___3___0___0 // addi ---- x[3] = x[0] + 4
+      , 32'h000___2___3___4___3___1 // srl  ---- x[4] = x[3] >> x[2]
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[4]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h004___0___0___3___0___0; // addi ---- x[3] = x[0] + 4
-    mother_board.rom.mem[i++] = 32'h000___2___3___4___4___1; // sra  ---- x[4] = x[3] >>> x[2]
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h004___0___0___3___0___0 // addi ---- x[3] = x[0] + 4
+      , 32'h000___2___3___4___4___1 // sra  ---- x[4] = x[3] >>> x[2]
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[4]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h004___0___0___3___0___0; // addi ---- x[3] = x[0] + 4
-    mother_board.rom.mem[i++] = 32'h000___2___3___4___5___1; // and  ---- x[4] = x[3] & x[2]
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h004___0___0___3___0___0 // addi ---- x[3] = x[0] + 4
+      , 32'h000___2___3___4___5___1 // and  ---- x[4] = x[3] & x[2]
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd0, x[4]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h004___0___0___3___0___0; // addi ---- x[3] = x[0] + 4
-    mother_board.rom.mem[i++] = 32'h000___2___3___4___6___1; // or   ---- x[4] = x[3] | x[2]
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h004___0___0___3___0___0 // addi ---- x[3] = x[0] + 4
+      , 32'h000___2___3___4___6___1 // or   ---- x[4] = x[3] | x[2]
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd7, x[4]);
 
-    i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h003___0___0___2___0___0; // addi ---- x[2] = x[0] + 3
-    mother_board.rom.mem[i++] = 32'h004___0___0___3___0___0; // addi ---- x[3] = x[0] + 4
-    mother_board.rom.mem[i++] = 32'h000___2___3___4___7___1; // xor  ---- x[4] = x[3] ^ x[2]
-    mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
-    task_reset_wait(i);
+    init_mem_restart_cpu('{
+        //  imm  rs2 rs1 rd  opt opcode
+        32'h003___0___0___2___0___0 // addi ---- x[2] = x[0] + 3
+      , 32'h004___0___0___3___0___0 // addi ---- x[3] = x[0] + 4
+      , 32'h000___2___3___4___7___1 // xor  ---- x[4] = x[3] ^ x[2]
+      , 32'h000___0___0___0___0___A // halt
+    });
     `check32(32'd7, x[4]);
   end
 endmodule
