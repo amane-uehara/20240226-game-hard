@@ -9,22 +9,15 @@ module tb_int_cpu_calc ();
 
   mother_board #(.WAIT(8), .FILENAME("")) mother_board(.*);
 
-  task automatic task_reset_wait(input int delay_cycle);
+  function automatic void init_mem_restart_cpu(input [31:0] init_vals[]);
+    int n = init_vals.size();
+    mother_board.rom.mem = '{default: '{default: '0}};
+    for (int i = 0; i < n; i++) mother_board.rom.mem[i] = init_vals[i];
+
     reset = 1'b1;
     #RESET_PERIOD;
     reset = 1'b0;
-    #(PERIOD_PER_INSTRUCT*delay_cycle);
-  endtask
-
-  function automatic void init_mem_restart_cpu(input [31:0] init_vals[]);
-    int n = init_vals.size();
-    for (int i = 0; i < n; i++) begin
-      mother_board.rom.mem[i] = init_vals[i];
-    end
-    for (int i = n; i < $size(mother_board.rom.mem); i++) begin
-      mother_board.rom.mem[i] = 32'd0;
-    end
-    task_reset_wait(n);
+    #(PERIOD_PER_INSTRUCT*n);
   endfunction
 
   logic [15:0][31:0] x;
