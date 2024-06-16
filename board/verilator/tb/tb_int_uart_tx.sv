@@ -47,7 +47,7 @@ module tb_int_uart_tx();
   int i;
   initial begin
     i = 0; //                       imm  rs2 rs1 rd  opt opcode
-    mother_board.rom.mem[i++] = 32'h05A___0___0___1___0___0; // x[1] = 0x8F
+    mother_board.rom.mem[i++] = 32'h05A___0___0___1___0___0; // x[1] = 0x5A
     mother_board.rom.mem[i++] = 32'h000___0___1___0___0___7; // io(0) = x[1]
     mother_board.rom.mem[i++] = 32'h000___0___0___0___0___A; // halt
     task_reset();
