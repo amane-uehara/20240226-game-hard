@@ -2,6 +2,7 @@
 `define TEST_PACKAGE_SV
 
 `define check32(E,A) fn_expected_actual_check(`__FILE__, `__LINE__, E, A)
+`define check1(E,A) fn_expected_actual_check_1bit(`__FILE__, `__LINE__, E, A)
 
 package test_package;
   // parameter
@@ -36,6 +37,15 @@ package test_package;
       $display("PASSED %s", message_tail);
       total_pass_count++;
     end
+  endfunction
+
+  function void fn_expected_actual_check_1bit(
+    string file_name,
+    int line_number,
+    logic expected,
+    logic actual
+  );
+    fn_expected_actual_check(file_name, line_number, {31'd0, expected}, {31'd0, actual});
   endfunction
 
   function void fn_show_total_result();
