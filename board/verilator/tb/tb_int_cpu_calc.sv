@@ -16,24 +16,20 @@ module tb_int_cpu_calc ();
     #(PERIOD_PER_INSTRUCT*delay_cycle);
   endtask
 
-  logic [15:0][31:0] x;
-  assign x = mother_board.cpu.gr_file.x;
-
-  logic [($size(mother_board.cpu.mem_file.mem)-1):0][31:0] mem;
-  assign mem = mother_board.cpu.mem_file.mem;
-
   function automatic void init_mem_restart_cpu(input [31:0] init_vals[]);
     int n = init_vals.size();
-    for (int j = 0; j < n; j++) begin
-      mother_board.rom.mem[j] = init_vals[j];
+    for (int i = 0; i < n; i++) begin
+      mother_board.rom.mem[i] = init_vals[i];
     end
-    for (int j = n; j < $size(mother_board.rom.mem); j++) begin
-      mother_board.rom.mem[j] = 32'd0;
+    for (int i = n; i < $size(mother_board.rom.mem); i++) begin
+      mother_board.rom.mem[i] = 32'd0;
     end
     task_reset_wait(n);
   endfunction
 
-  int i;
+  logic [15:0][31:0] x;
+  assign x = mother_board.cpu.gr_file.x;
+
   initial begin
     // ----------------------------------------------------------------------------------------------------
     // x[3] = 3 `calc_i` 1
