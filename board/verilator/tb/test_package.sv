@@ -53,9 +53,13 @@ package test_package;
     $display("TOTAL PASS: %0d/%0d", total_pass_count, total_pass_count+total_fail_count);
     $display("TOTAL FAIL: %0d/%0d", total_fail_count, total_pass_count+total_fail_count);
     $display("----------------------------------------------------------------------------------------------------");
-    $display("FAILED LIST");
-    for (int i=0; i<fail_message_list_index; i++) begin
-      $display("* %s", fail_message_list[i]);
+    if (fail_message_list_index == 0) begin
+      $display("ALL TESTS PASSED");
+    end else begin
+      $display("FAILED LIST");
+      for (int i=0; i<fail_message_list_index; i++) begin
+        $display("* %s", fail_message_list[i]);
+      end
     end
     $display("----------------------------------------------------------------------------------------------------");
   endfunction

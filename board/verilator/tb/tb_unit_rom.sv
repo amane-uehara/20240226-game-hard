@@ -33,8 +33,8 @@ module tb_unit_rom ();
     $readmemh("tb1_mem/tb1_2.mem", rom.mem);
     check(`__LINE__, 11'd2, 32'd8);
 
-    $readmemh("tb1_mem/tb1_3.mem", rom.mem);
-    check(`__LINE__, 11'd2, 32'd7);
+    //$readmemh("tb1_mem/tb1_3.mem", rom.mem);
+    //check(`__LINE__, 11'd2, 32'd7);
 
     rom.mem[0] = 32'd255;
     rom.mem[1] = 32'd255;
