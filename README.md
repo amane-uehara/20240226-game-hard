@@ -1,5 +1,42 @@
 # 20240226-game-hard
 
+# install
+
+Create verilator docker container:
+
+```sh
+$ sudo service docker start
+$ sh ./verilator/create_verilator_container.sh
+```
+
+Exec verilator test bench:
+
+```sh
+$ sudo service docker start
+$ sh ./verilator/exec_verilator_container.sh ./verilator/tb/test_top.sv
+```
+
+Fix verilator compiler error:
+
+```sh
+$ docker exec -it my_verilator /bin/sh
+# vim /usr/local/share/verilator/include/verilated.mk
+```
+
+Set git pre-commit hook:
+
+```sh
+$ echo '''
+#!/bin/sh
+cd "$(git rev-parse --show-toplevel)"
+sh ./verilator/exec_verilator_container.sh ./verilator/tb/test_top.sv
+''' > .git/hooks/pre-commit
+
+$ chmod +x .git/hooks/pre-commit
+```
+
+# instruction set
+
 | id | hex | name |
 | -- | --- | ---- |
 | 0  | 0x0 | zero |
