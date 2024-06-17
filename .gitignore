@@ -4,4 +4,5 @@
 !/package
 !/mem
 !/board
+!/verilator
 !/program
