@@ -1,7 +1,7 @@
 `ifndef TEST_PACKAGE_SV
 `define TEST_PACKAGE_SV
 
-`define check32(E,A) fn_expected_actual_check(`__FILE__, `__LINE__, E, A)
+`define check32(E,A) fn_expected_actual_check_32bit(`__FILE__, `__LINE__, E, A)
 `define check1(E,A) fn_expected_actual_check_1bit(`__FILE__, `__LINE__, E, A)
 
 package test_package;
@@ -20,7 +20,7 @@ package test_package;
   int file_name_dict[string];
 
   //check function
-  function void fn_expected_actual_check(
+  function void fn_expected_actual_check_32bit(
     string file_name,
     int line_number,
     logic [31:0] expected,
@@ -43,7 +43,7 @@ package test_package;
     logic expected,
     logic actual
   );
-    fn_expected_actual_check(file_name, line_number, {31'd0, expected}, {31'd0, actual});
+    fn_expected_actual_check_32bit(file_name, line_number, {31'd0, expected}, {31'd0, actual});
   endfunction
 
   function void fn_show_total_result();

@@ -22,7 +22,7 @@ module tb_unit_rom ();
     begin
       addr = in_addr;
       #20;
-      fn_expected_actual_check(`__FILE__, line_number, expected, data);
+      fn_expected_actual_check_32bit(`__FILE__, line_number, expected, data);
     end
   endfunction
 

@@ -17,11 +17,11 @@ module tb_int_uart_tx();
 
   // uart task
   task automatic task_check_uart_1bit(input int line_number, input logic e, input logic a);
-    fn_expected_actual_check(`__FILE__, line_number, {31'd0, e}, {31'd0, a});
-    fn_expected_actual_check(`__FILE__, line_number, 32'd1, {31'd0, mother_board.transmitter.busy});
+    fn_expected_actual_check_32bit(`__FILE__, line_number, {31'd0, e}, {31'd0, a});
+    fn_expected_actual_check_32bit(`__FILE__, line_number, 32'd1, {31'd0, mother_board.transmitter.busy});
     #(WAIT*CLOCK_PERIOD-1);
-    fn_expected_actual_check(`__FILE__, line_number, {31'd0, e}, {31'd0, a});
-    fn_expected_actual_check(`__FILE__, line_number, 32'd1, {31'd0, mother_board.transmitter.busy});
+    fn_expected_actual_check_32bit(`__FILE__, line_number, {31'd0, e}, {31'd0, a});
+    fn_expected_actual_check_32bit(`__FILE__, line_number, 32'd1, {31'd0, mother_board.transmitter.busy});
     #1;
   endtask
 
