@@ -14,12 +14,10 @@ package test_package;
 
 
   //global variable
-  int total_fail_count = 0;
-  int total_pass_count = 0;
-  string fail_message_list[10000];
-  int fail_message_list_index = 0;
-  int total_fail_count_arr[string];
-  int total_pass_count_arr[string];
+  string fail_message_list[];
+  int total_fail_count_dict[string];
+  int total_pass_count_dict[string];
+  int file_name_dict[string];
 
   //check function
   function void fn_expected_actual_check(
@@ -30,17 +28,12 @@ package test_package;
   );
     string message_tail;
     message_tail = $sformatf("%s:%0d - Expected %1d, Got %1d", file_name, line_number, expected, actual);
+    file_name_dict[file_name] = 1;
     if (expected !== actual) begin
-      $display("FAILED %s", message_tail);
-      total_fail_count++;
-      total_fail_count_arr[file_name] += 1;
-
-      fail_message_list[fail_message_list_index] = message_tail;
-      fail_message_list_index++;
+      total_fail_count_dict[file_name] += 1;
+      fail_message_list = {fail_message_list, message_tail};
     end else begin
-      $display("PASSED %s", message_tail);
-      total_pass_count++;
-      total_pass_count_arr[file_name] += 1;
+      total_pass_count_dict[file_name] += 1;
     end
   endfunction
 
@@ -54,21 +47,47 @@ package test_package;
   endfunction
 
   function void fn_show_total_result();
+    string sorted_keys[];
+    int total_pass_count;
+    int total_fail_count;
+    total_pass_count = 0;
+    total_fail_count = 0;
+
     $display("----------------------------------------------------------------------------------------------------");
-    $display("TOTAL PASS: %0d/%0d", total_pass_count, total_pass_count+total_fail_count);
-    $display("TOTAL FAIL: %0d/%0d", total_fail_count, total_pass_count+total_fail_count);
+    foreach (file_name_dict[key]) sorted_keys = {sorted_keys, key};
+    sorted_keys.sort();
+
+    foreach (sorted_keys[i]) begin
+      if (total_fail_count_dict.exists(sorted_keys[i]) == 0) $write("O   ");
+      else $write("X   ");
+      $display("%-30s %3d/ %3d"
+         , sorted_keys[i]
+         , total_pass_count_dict[sorted_keys[i]]
+         , total_pass_count_dict[sorted_keys[i]] + total_fail_count_dict[sorted_keys[i]]
+      );
+
+      total_pass_count += total_pass_count_dict[sorted_keys[i]];
+      total_fail_count += total_fail_count_dict[sorted_keys[i]];
+    end
+
+    if (total_fail_count == 0) $write("O   ");
+    else $write("X   ");
+    $display("%-30s %3d/ %3d"
+       , "--- TOTAL ---"
+       , total_pass_count
+       , total_pass_count+total_fail_count
+    );
+
     $display("----------------------------------------------------------------------------------------------------");
-    if (fail_message_list_index == 0) begin
+    if ($size(fail_message_list) == 0) begin
       $display("ALL TESTS PASSED");
     end else begin
       $display("FAILED LIST");
-      for (int i=0; i<fail_message_list_index; i++) begin
+      foreach (fail_message_list[i]) begin
         $display("* %s", fail_message_list[i]);
       end
     end
     $display("----------------------------------------------------------------------------------------------------");
-    $display(total_fail_count_arr);
-    $display(total_pass_count_arr);
   endfunction
 endpackage
 
