@@ -14,13 +14,13 @@ module cpu (
   import lib_cpu :: *;
 
   logic is_update_reg;
-  logic [1:0] counter, next_counter;
-  assign next_counter = counter + 2'd1;
+  logic [3:0] counter, next_counter;
+  assign next_counter = {counter[2:0], counter[3]};
   always_ff @(posedge clk) begin
-    if (reset) counter <= 2'd0;
+    if (reset) counter <= 4'b1;
     else       counter <= next_counter;
   end
-  assign is_update_reg = (counter == 2'd0);
+  assign is_update_reg = (counter == 4'b1);
 
   SPECIAL_REG sr;
   GENERAL_REG gr;
