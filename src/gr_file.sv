@@ -9,16 +9,14 @@ module gr_file import lib_cpu :: *; (
   logic [15:0][31:0] x, next_x;
 
   always_comb begin
-    next_x = x;
-    if (w_en) begin
-      next_x[rd] = x_rd;
-      next_x[0]  = 32'd0;
-    end
+    next_x     = x;
+    next_x[rd] = x_rd;
+    next_x[0]  = 32'd0;
   end
 
   always_ff @(posedge clk) begin
-    if (reset) x <= '0;
-    else       x <= next_x;
+    if (reset)     x <= '0;
+    else if (w_en) x <= next_x;
   end
 
   assign x_rs1 = x[rs1];

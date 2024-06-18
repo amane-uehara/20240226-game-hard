@@ -9,15 +9,13 @@ module mem_file import lib_cpu :: *; (
   logic [63:0][31:0] mem, next_mem;
 
   always_comb begin
-    next_mem = mem;
-    if (w_en) begin
-      next_mem[addr] = w_data;
-    end
+    next_mem       = mem;
+    next_mem[addr] = w_data;
   end
 
   always_ff @(posedge clk) begin
-    if (reset) mem <= '0;
-    else       mem <= next_mem;
+    if (reset)     mem <= '0;
+    else if (w_en) mem <= next_mem;
   end
 
   assign r_data = mem[addr];
