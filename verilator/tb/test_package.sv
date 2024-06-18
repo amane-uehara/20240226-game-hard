@@ -12,11 +12,14 @@ package test_package;
   localparam RESET_PERIOD = (CLOCK_PERIOD/2*3);
   localparam WAIT = 8; // uart wait
 
+
   //global variable
   int total_fail_count = 0;
   int total_pass_count = 0;
   string fail_message_list[10000];
   int fail_message_list_index = 0;
+  int total_fail_count_arr[string];
+  int total_pass_count_arr[string];
 
   //check function
   function void fn_expected_actual_check(
@@ -30,12 +33,14 @@ package test_package;
     if (expected !== actual) begin
       $display("FAILED %s", message_tail);
       total_fail_count++;
+      total_fail_count_arr[file_name] += 1;
 
       fail_message_list[fail_message_list_index] = message_tail;
       fail_message_list_index++;
     end else begin
       $display("PASSED %s", message_tail);
       total_pass_count++;
+      total_pass_count_arr[file_name] += 1;
     end
   endfunction
 
@@ -62,6 +67,8 @@ package test_package;
       end
     end
     $display("----------------------------------------------------------------------------------------------------");
+    $display(total_fail_count_arr);
+    $display(total_pass_count_arr);
   endfunction
 endpackage
 
