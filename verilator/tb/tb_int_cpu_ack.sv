@@ -28,7 +28,7 @@ module tb_int_cpu_ack ();
     `check32(32'b0, {31'd0, mother_board.cpu.ack});
     task_reset_wait(j-1);
     `check32(32'b1, {31'd0, mother_board.cpu.ack});
-    #(PERIOD_PER_INSTRUCT/2);
+    #(CLOCK_PERIOD*2);
     `check32(32'b1, {31'd0, mother_board.cpu.ack});
     #1;
     `check32(32'b0, {31'd0, mother_board.cpu.ack});
