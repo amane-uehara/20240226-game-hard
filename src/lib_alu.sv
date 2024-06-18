@@ -12,9 +12,9 @@ package lib_alu;
     fn_nop.ack       = 1'b0;
     fn_nop.w_rd      = 1'b0;
     fn_nop.x_rd      = 32'd0;
+    fn_nop.mem_r_req = 1'b0;
     fn_nop.mem_w_req = 1'b0;
-    fn_nop.mem_addr  = de.gr.x_rs1[5:0];
-    fn_nop.mem_val   = de.gr.mem_val;
+    fn_nop.mem_addr  = de.x_rs1[5:0];
     fn_nop.intr_en   = de.sr.intr_en;
     fn_nop.intr_pc   = de.sr.intr_pc;
     fn_nop.intr_vec  = de.sr.intr_vec;
@@ -43,51 +43,50 @@ package lib_alu;
 
     fn_calci = fn_nop(de);
     fn_calci.w_rd = 1'b1;
-    fn_calci.x_rd = fn_calc(de.opt, de.gr.x_rs1, imm_ext);
+    fn_calci.x_rd = fn_calc(de.opt, de.x_rs1, imm_ext);
   endfunction
 
   function automatic EXECUTE fn_calcr (input DECODE de);
     fn_calcr = fn_nop(de);
     fn_calcr.w_rd = 1'b1;
-    fn_calcr.x_rd = fn_calc(de.opt, de.gr.x_rs1, de.gr.x_rs2);
+    fn_calcr.x_rd = fn_calc(de.opt, de.x_rs1, de.x_rs2);
   endfunction
 
   function automatic EXECUTE fn_jalr (input DECODE de);
     fn_jalr = fn_nop(de);
     fn_jalr.w_rd = 1'b1;
     fn_jalr.x_rd = de.sr.pc + 32'd1;
-    fn_jalr.pc = de.gr.x_rs1;
+    fn_jalr.pc = de.x_rs1;
   endfunction
 
   function automatic EXECUTE fn_jcc (input DECODE de);
       logic zf, sf, is_jmp;
-      zf = (de.gr.x_rs2 == 32'd0);
-      sf = (de.gr.x_rs2[31] == 1'b0);
+      zf = (de.x_rs2 == 32'd0);
+      sf = (de.x_rs2[31] == 1'b0);
 
       unique case (de.opt)
         4'h0:    is_jmp =  zf;
         4'h1:    is_jmp = ~zf;
-        4'h2:    is_jmp =  sf;        // de.gr.x_rs1 >= 0
-        4'h3:    is_jmp = ~sf;        // de.gr.x_rs1 <  0
-        4'h4:    is_jmp =  sf && ~zf; // de.gr.x_rs1 >  0
-        4'h5:    is_jmp = ~sf ||  zf; // de.gr.x_rs1 <= 0
+        4'h2:    is_jmp =  sf;        // de.x_rs1 >= 0
+        4'h3:    is_jmp = ~sf;        // de.x_rs1 <  0
+        4'h4:    is_jmp =  sf && ~zf; // de.x_rs1 >  0
+        4'h5:    is_jmp = ~sf ||  zf; // de.x_rs1 <= 0
         default: is_jmp = 1'b0;
       endcase
 
       fn_jcc = fn_nop(de);
-      fn_jcc.pc = is_jmp ? de.gr.x_rs1 : de.sr.pc + 32'd1;
+      fn_jcc.pc = is_jmp ? de.x_rs1 : de.sr.pc + 32'd1;
   endfunction
 
   function automatic EXECUTE fn_lw (input DECODE de);
     fn_lw = fn_nop(de);
+    fn_lw.mem_r_req = 1'b1;
     fn_lw.w_rd = 1'b1;
-    fn_lw.x_rd = de.gr.mem_val;
   endfunction
 
   function automatic EXECUTE fn_sw (input DECODE de);
     fn_sw = fn_nop(de);
     fn_sw.mem_w_req = 1'b1;
-    fn_sw.mem_val = de.gr.x_rs2;
   endfunction
 
   function automatic EXECUTE fn_r_io (input DECODE de);
@@ -106,16 +105,16 @@ package lib_alu;
     fn_w_io.w_req = 1'b1;
 
     case (de.imm)
-      12'd0:   fn_w_io.w_data = de.gr.x_rs1[7:0];
+      12'd0:   fn_w_io.w_data = de.x_rs1[7:0];
       default: fn_w_io.w_req  = 1'b0;
     endcase
   endfunction
 
   function automatic EXECUTE fn_w_intr (input DECODE de);
     fn_w_intr = fn_nop(de);
-    fn_w_intr.ack      = (de.imm == 12'd0) ? de.gr.x_rs1[0] : 1'b0;
-    fn_w_intr.intr_en  = (de.imm == 12'd1) ? de.gr.x_rs1[0] : 1'b0;
-    fn_w_intr.intr_vec = (de.imm == 12'd2) ? de.gr.x_rs1    : de.sr.intr_vec;
+    fn_w_intr.ack      = (de.imm == 12'd0) ? de.x_rs1[0] : 1'b0;
+    fn_w_intr.intr_en  = (de.imm == 12'd1) ? de.x_rs1[0] : 1'b0;
+    fn_w_intr.intr_vec = (de.imm == 12'd2) ? de.x_rs1    : de.sr.intr_vec;
   endfunction
 
   function automatic EXECUTE fn_icall (input DECODE de);

@@ -22,8 +22,8 @@ module cpu (
   end
   assign is_update_reg = (counter == 5'b1);
 
+  logic [31:0] x_rs1, x_rs2, mem_r_val;
   SPECIAL_REG sr;
-  GENERAL_REG gr;
   EXECUTE ex;
 
   always_ff @(posedge clk) begin
@@ -40,31 +40,35 @@ module cpu (
     end
   end
 
+  logic [31:0] gr_w_val;
+  assign gr_w_val = ex.mem_r_req ? mem_r_val : ex.x_rd;
+
   gr_file gr_file(
     .clk, .reset,
     .w_en(is_update_reg & ex.w_rd),
     .rs1(rom_data[15:12]),
     .rs2(rom_data[19:16]),
     .rd(rom_data[11:8]),
-    .x_rd(ex.x_rd),
-    .x_rs1(gr.x_rs1),
-    .x_rs2(gr.x_rs2)
+    .x_rd(gr_w_val),
+    .x_rs1(x_rs1),
+    .x_rs2(x_rs2)
   );
 
   mem_file mem_file(
     .clk, .reset,
     .w_en(is_update_reg & ex.mem_w_req),
     .addr(ex.mem_addr),
-    .r_data(gr.mem_val),
-    .w_data(ex.mem_val)
+    .r_data(mem_r_val),
+    .w_data(x_rs2)
   );
 
   DECODE de;
   assign de.opcode = rom_data[ 3: 0];
   assign de.opt    = rom_data[ 7: 4];
   assign de.imm    = rom_data[31:20];
+  assign de.x_rs1  = x_rs1;
+  assign de.x_rs2  = x_rs2;
   assign de.sr     = sr;
-  assign de.gr     = gr;
 
   alu alu(.clk, .reset, .de, .ex);
 
