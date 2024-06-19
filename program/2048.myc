@@ -132,7 +132,7 @@ fn_merge {
           e = e + 1
           mem[d] = e
           mem[f] = zero
-          rv = 1
+          i = 1
         }
       }
     }
