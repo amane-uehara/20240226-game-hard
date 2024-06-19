@@ -59,7 +59,7 @@ module cpu (
     .w_en(is_update_reg & ex.mem_w_req),
     .addr(ex.mem_addr),
     .r_data(mem_r_val),
-    .w_data(x_rs2)
+    .w_data(ex.x_rd)
   );
 
   DECODE de;

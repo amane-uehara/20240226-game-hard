@@ -86,6 +86,7 @@ package lib_alu;
 
   function automatic EXECUTE fn_sw (input DECODE de);
     fn_sw = fn_nop(de);
+    fn_sw.x_rd = de.x_rs2;
     fn_sw.mem_w_req = 1'b1;
   endfunction
 
