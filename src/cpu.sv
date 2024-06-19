@@ -63,12 +63,18 @@ module cpu (
   );
 
   DECODE de;
-  assign de.opcode = rom_data[ 3: 0];
-  assign de.opt    = rom_data[ 7: 4];
-  assign de.imm    = rom_data[31:20];
-  assign de.x_rs1  = x_rs1;
-  assign de.x_rs2  = x_rs2;
-  assign de.sr     = sr;
+  always_ff @(posedge clk) begin
+    if (reset) begin
+      de        <= '0;
+    end else begin
+      de.opcode <= rom_data[ 3: 0];
+      de.opt    <= rom_data[ 7: 4];
+      de.imm    <= rom_data[31:20];
+      de.x_rs1  <= x_rs1;
+      de.x_rs2  <= x_rs2;
+      de.sr     <= sr;
+    end
+  end
 
   alu alu(.clk, .reset, .de, .ex);
 
