@@ -8,8 +8,8 @@ package lib_cpu;
     logic        intr_en;
     logic [31:0] intr_pc;
     logic [31:0] intr_vec;
-    logic        w_busy;
-    logic [ 7:0] r_data;
+    logic        tx_busy;
+    logic [ 7:0] rx_data;
   } SPECIAL_REG;
 
   typedef struct packed {
@@ -23,8 +23,8 @@ package lib_cpu;
 
   typedef struct packed {
     logic [31:0] pc;
-    logic        w_req;
-    logic [ 7:0] w_data;
+    logic        tx_req;
+    logic [ 7:0] tx_data;
     logic        ack;
     logic        w_rd;
     logic [31:0] x_rd;

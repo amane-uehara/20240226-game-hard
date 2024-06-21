@@ -7,8 +7,8 @@ package lib_alu;
 
   function automatic EXECUTE fn_nop (input DECODE de);
     fn_nop.pc        = de.sr.pc + 32'd1;
-    fn_nop.w_req     = 1'b0;
-    fn_nop.w_data    = 8'd0;
+    fn_nop.tx_req    = 1'b0;
+    fn_nop.tx_data   = 8'd0;
     fn_nop.ack       = 1'b0;
     fn_nop.w_rd      = 1'b0;
     fn_nop.x_rd      = 32'd0;
@@ -95,19 +95,19 @@ package lib_alu;
     fn_r_io.w_rd = 1'b1;
 
     case (de.imm)
-      12'd0:   fn_r_io.x_rd = {31'd0, de.sr.w_busy};
-      12'd1:   fn_r_io.x_rd = {24'd0, de.sr.r_data};
+      12'd0:   fn_r_io.x_rd = {31'd0, de.sr.tx_busy};
+      12'd1:   fn_r_io.x_rd = {24'd0, de.sr.rx_data};
       default: fn_r_io.w_rd = 1'b0;
     endcase
   endfunction
 
   function automatic EXECUTE fn_w_io (input DECODE de);
     fn_w_io = fn_nop(de);
-    fn_w_io.w_req = 1'b1;
+    fn_w_io.tx_req = 1'b1;
 
     case (de.imm)
-      12'd0:   fn_w_io.w_data = de.x_rs1[7:0];
-      default: fn_w_io.w_req  = 1'b0;
+      12'd0:   fn_w_io.tx_data = de.x_rs1[7:0];
+      default: fn_w_io.tx_req  = 1'b0;
     endcase
   endfunction
 

@@ -3,30 +3,30 @@ module mother_board #(parameter WAIT, FILENAME) (
   input  logic uart_rx,
   output logic uart_tx
 );
-  logic [7:0] uart_r_data;
-  logic uart_update;
+  logic [7:0] rx_data;
+  logic rx_update;
   receiver #(.WAIT(WAIT)) receiver (
     .clk, .reset,
     .uart_rx,
-    .update(uart_update),
-    .data(uart_r_data)
+    .update(rx_update),
+    .data(rx_data)
   );
 
-  logic [7:0] uart_w_data;
-  logic uart_w_req, uart_busy;
+  logic [7:0] tx_data;
+  logic tx_req, tx_busy;
   transmitter #(.WAIT(WAIT)) transmitter (
     .clk, .reset,
     .uart_tx,
-    .send_req(uart_w_req),
-    .data(uart_w_data),
-    .busy(uart_busy)
+    .send_req(tx_req),
+    .data(tx_data),
+    .busy(tx_busy)
   );
 
   logic irr;
   logic ack;
   uart_intr uart_intr (
     .clk, .reset,
-    .uart_update,
+    .uart_update(rx_update),
     .ack,
     .irr
   );
@@ -42,7 +42,7 @@ module mother_board #(parameter WAIT, FILENAME) (
   cpu cpu (
     .clk, .reset,
     .rom_addr, .rom_data,
-    .irr, .ack, .r_data(uart_r_data),
-    .w_req(uart_w_req), .w_data(uart_w_data), .w_busy(uart_busy)
+    .irr, .ack, .rx_data,
+    .tx_req, .tx_data, .tx_busy
   );
 endmodule

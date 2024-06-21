@@ -6,10 +6,10 @@ module cpu (
   input  logic [31:0] rom_data,
   input  logic        irr,
   output logic        ack,
-  input  logic [ 7:0] r_data,
-  output logic        w_req,
-  output logic [ 7:0] w_data,
-  input  logic        w_busy
+  input  logic [ 7:0] rx_data,
+  output logic        tx_req,
+  output logic [ 7:0] tx_data,
+  input  logic        tx_busy
 );
   import lib_cpu :: *;
 
@@ -35,8 +35,8 @@ module cpu (
       sr.intr_en  <= ex.intr_en;
       sr.intr_pc  <= ex.intr_pc;
       sr.intr_vec <= ex.intr_vec;
-      sr.w_busy   <= w_busy;
-      sr.r_data   <= r_data;
+      sr.tx_busy   <= tx_busy;
+      sr.rx_data   <= rx_data;
     end
   end
 
@@ -80,6 +80,6 @@ module cpu (
 
   assign rom_addr = sr.pc[10:0];
   assign ack = ex.ack;
-  assign w_req = ex.w_req & is_update_reg;
-  assign w_data = ex.w_data;
+  assign tx_req = ex.tx_req & is_update_reg;
+  assign tx_data = ex.tx_data;
 endmodule

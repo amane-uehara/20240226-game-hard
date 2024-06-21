@@ -38,7 +38,7 @@ module tb_int_uart_rx ();
   task test_task_uart_receive;
     task_reset();
     task_uart_rx(8'h8F);
-    `check32(32'h8F, {24'd0, mother_board.cpu.r_data});
+    `check32(32'h8F, {24'd0, mother_board.cpu.rx_data});
     `check32(32'b1, {31'd0, mother_board.cpu.irr});
   endtask
 
@@ -74,7 +74,7 @@ module tb_int_uart_rx ();
     `check32(32'h8F, x[4]);
     `check32(32'd1, x[5]);
     `check32(32'd0, x[6]);
-    `check32(32'h8F, {24'd0, mother_board.cpu.r_data});
+    `check32(32'h8F, {24'd0, mother_board.cpu.rx_data});
     `check32(32'b0, {31'd0, mother_board.cpu.irr});
 
     #(PERIOD_PER_INSTRUCT*4);
@@ -97,7 +97,7 @@ module tb_int_uart_rx ();
     `check32(32'h8F, x[4]);
     `check32(32'd0, x[5]); // ack off
     `check32(32'd0, x[6]);
-    `check32(32'h8F, {24'd0, mother_board.cpu.r_data});
+    `check32(32'h8F, {24'd0, mother_board.cpu.rx_data});
     `check32(32'b1, {31'd0, mother_board.cpu.irr}); // ack off
 
     #(PERIOD_PER_INSTRUCT*4);
@@ -120,7 +120,7 @@ module tb_int_uart_rx ();
     `check32(32'd0, x[4]); // io unreach
     `check32(32'd0, x[5]); // ack unreach
     `check32(32'd0, x[6]);
-    `check32(32'h8F, {24'd0, mother_board.cpu.r_data});
+    `check32(32'h8F, {24'd0, mother_board.cpu.rx_data});
     `check32(32'b1, {31'd0, mother_board.cpu.irr}); // ack unreach
 
     #(PERIOD_PER_INSTRUCT*4);
