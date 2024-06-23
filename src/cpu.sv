@@ -35,8 +35,8 @@ module cpu (
       sr.intr_en  <= ex.intr_en;
       sr.intr_pc  <= ex.intr_pc;
       sr.intr_vec <= ex.intr_vec;
-      sr.tx_busy   <= tx_busy;
-      sr.rx_data   <= rx_data;
+      sr.tx_busy  <= tx_busy;
+      sr.rx_data  <= rx_data;
     end
   end
 
