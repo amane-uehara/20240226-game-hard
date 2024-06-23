@@ -10,6 +10,9 @@ package lib_cpu;
     logic [31:0] intr_vec;
     logic        tx_busy;
     logic [ 7:0] rx_data;
+    logic        ack;
+    logic        tx_req;
+    logic [ 7:0] tx_data;
   } SPECIAL_REG;
 
   typedef struct packed {

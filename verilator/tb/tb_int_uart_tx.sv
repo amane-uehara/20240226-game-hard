@@ -17,12 +17,12 @@ module tb_int_uart_tx();
 
   // uart task
   task automatic task_check_uart_1bit(input int line_number, input logic e, input logic a);
-    fn_expected_actual_check_32bit(`__FILE__, line_number, {31'd0, e}, {31'd0, a});
-    fn_expected_actual_check_32bit(`__FILE__, line_number, 32'd1, {31'd0, mother_board.transmitter.busy});
-    #(WAIT*CLOCK_PERIOD-1);
-    fn_expected_actual_check_32bit(`__FILE__, line_number, {31'd0, e}, {31'd0, a});
-    fn_expected_actual_check_32bit(`__FILE__, line_number, 32'd1, {31'd0, mother_board.transmitter.busy});
-    #1;
+    fn_expected_actual_check_1bit(`__FILE__, line_number, e, a);
+    fn_expected_actual_check_1bit(`__FILE__, line_number, 1'b1, mother_board.transmitter.busy);
+    #(WAIT*CLOCK_PERIOD-CLOCK_PERIOD);
+    fn_expected_actual_check_1bit(`__FILE__, line_number, e, a);
+    fn_expected_actual_check_1bit(`__FILE__, line_number, 1'b1, mother_board.transmitter.busy);
+    #CLOCK_PERIOD;
   endtask
 
   task automatic task_uart_tx(input logic [7:0] data);
@@ -54,16 +54,16 @@ module tb_int_uart_tx();
 
     // before send
     #(PERIOD_PER_INSTRUCT*2);
-    `check32(32'd1, {31'd0, uart_tx});
-    `check32(32'd0, {31'd0, mother_board.transmitter.busy});
-
-    #1;
+    #CLOCK_PERIOD
+    `check1(1'b1, uart_tx);
+    `check1(1'b0, mother_board.transmitter.busy);
+    #CLOCK_PERIOD;
 
     // sending
     task_uart_tx(8'h5A);
 
     // after send
-    `check32(32'd1, {31'd0, uart_tx});
-    `check32(32'd0, {31'd0, mother_board.transmitter.busy});
+    `check1(1'b1, uart_tx);
+    `check1(1'b0, mother_board.transmitter.busy);
   end
 endmodule

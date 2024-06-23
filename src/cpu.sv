@@ -37,15 +37,23 @@ module cpu (
       sr.intr_vec <= ex.intr_vec;
       sr.tx_busy  <= tx_busy;
       sr.rx_data  <= rx_data;
+      sr.ack      <= ex.ack;
+      sr.tx_req   <= ex.tx_req;
+      sr.tx_data  <= ex.tx_data;
     end
   end
+
+  assign rom_addr = sr.pc[10:0];
+  assign ack = sr.ack;
+  assign tx_req = sr.tx_req;
+  assign tx_data = sr.tx_data;
 
   logic [31:0] gr_w_val;
   assign gr_w_val = ex.mem_r_req ? mem_r_val : ex.x_rd;
 
   gr_file gr_file(
     .clk, .reset,
-    .w_en(is_update_reg & ex.w_rd),
+    .w_en(ex.w_rd),
     .rs1(rom_data[15:12]),
     .rs2(rom_data[19:16]),
     .rd(rom_data[11:8]),
@@ -56,7 +64,7 @@ module cpu (
 
   mem_file mem_file(
     .clk, .reset,
-    .w_en(is_update_reg & ex.mem_w_req),
+    .w_en(ex.mem_w_req),
     .addr(ex.mem_addr),
     .r_data(mem_r_val),
     .w_data(ex.x_rd)
@@ -77,9 +85,4 @@ module cpu (
   end
 
   alu alu(.clk, .reset, .de, .ex);
-
-  assign rom_addr = sr.pc[10:0];
-  assign ack = ex.ack;
-  assign tx_req = ex.tx_req & is_update_reg;
-  assign tx_data = ex.tx_data;
 endmodule
