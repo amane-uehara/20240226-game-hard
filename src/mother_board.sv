@@ -26,7 +26,7 @@ module mother_board #(parameter WAIT, FILENAME) (
   logic ack;
   uart_intr uart_intr (
     .clk, .reset,
-    .uart_update(rx_update),
+    .rx_update,
     .ack,
     .irr
   );
