@@ -4,6 +4,7 @@ module test_top ();
   import test_package :: *;
   tb_unit_rom         tb_unit_rom;
   tb_unit_transmitter tb_unit_transmitter;
+  tb_unit_receiver    tb_unit_receiver;
   tb_int_cpu_calc     tb_int_cpu_calc;
   tb_int_cpu_mem      tb_int_cpu_mem;
   tb_int_cpu_jump     tb_int_cpu_jump;
