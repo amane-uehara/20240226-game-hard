@@ -11,6 +11,7 @@ module test_top ();
   tb_int_cpu_ack      tb_int_cpu_ack;
   tb_int_uart_rx      tb_int_uart_rx;
   tb_int_uart_tx      tb_int_uart_tx;
+  tb_unit_uart_intr   tb_unit_uart_intr;
 
   initial begin
     #(CLOCK_PERIOD*10000);
