@@ -5,7 +5,7 @@ module tb_unit_transmitter();
   logic clk, reset;
   logic uart_tx, send_req, busy;
   logic [7:0] data;
-  transmitter #(.WAIT(8)) transmitter (.*);
+  transmitter #(.WAIT(WAIT)) transmitter (.*);
 
   test_clock test_clock(clk);
 

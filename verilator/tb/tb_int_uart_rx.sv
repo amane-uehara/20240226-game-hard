@@ -16,17 +16,17 @@ module tb_int_uart_rx ();
   endtask
 
   // uart task
-  task automatic task_uart_rx(input logic [7:0] data);
-    uart_rx = 1'b0;    #(WAIT*CLOCK_PERIOD); // start bit
-    uart_rx = data[0]; #(WAIT*CLOCK_PERIOD);
-    uart_rx = data[1]; #(WAIT*CLOCK_PERIOD);
-    uart_rx = data[2]; #(WAIT*CLOCK_PERIOD);
-    uart_rx = data[3]; #(WAIT*CLOCK_PERIOD);
-    uart_rx = data[4]; #(WAIT*CLOCK_PERIOD);
-    uart_rx = data[5]; #(WAIT*CLOCK_PERIOD);
-    uart_rx = data[6]; #(WAIT*CLOCK_PERIOD);
-    uart_rx = data[7]; #(WAIT*CLOCK_PERIOD);
-    uart_rx = 1'b1;    #(WAIT*CLOCK_PERIOD); // stop bit
+  task automatic task_uart_rx(input logic [7:0] tmp);
+    uart_rx = 1'b0;   #(WAIT*CLOCK_PERIOD); // start bit
+    uart_rx = tmp[0]; #(WAIT*CLOCK_PERIOD);
+    uart_rx = tmp[1]; #(WAIT*CLOCK_PERIOD);
+    uart_rx = tmp[2]; #(WAIT*CLOCK_PERIOD);
+    uart_rx = tmp[3]; #(WAIT*CLOCK_PERIOD);
+    uart_rx = tmp[4]; #(WAIT*CLOCK_PERIOD);
+    uart_rx = tmp[5]; #(WAIT*CLOCK_PERIOD);
+    uart_rx = tmp[6]; #(WAIT*CLOCK_PERIOD);
+    uart_rx = tmp[7]; #(WAIT*CLOCK_PERIOD);
+    uart_rx = 1'b1;   #(WAIT*CLOCK_PERIOD); // stop bit
   endtask
 
   logic [15:0][31:0] x;
