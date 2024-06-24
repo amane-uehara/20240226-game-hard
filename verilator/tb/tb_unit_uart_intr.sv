@@ -56,6 +56,13 @@ module tb_unit_uart_intr();
     #CLOCK_PERIOD; `check1(1'b0, irr);
     #CLOCK_PERIOD; `check1(1'b0, irr);
 
+    ack = 1'b0;
+    rx_update = 1'b0;
+    #CLOCK_PERIOD; `check1(1'b0, irr);
+    #CLOCK_PERIOD; `check1(1'b0, irr);
+    #CLOCK_PERIOD; `check1(1'b0, irr);
+    #CLOCK_PERIOD; `check1(1'b0, irr);
+
     ack = 1'b1;
     rx_update = 1'b0;
     #CLOCK_PERIOD; `check1(1'b0, irr);
@@ -73,6 +80,10 @@ module tb_unit_uart_intr();
     #CLOCK_PERIOD; `check1(1'b1, irr);
 
     ack = 1'b1;
+    rx_update = 1'b0;
+    #CLOCK_PERIOD; `check1(1'b0, irr);
+
+    ack = 1'b0;
     rx_update = 1'b0;
     #CLOCK_PERIOD; `check1(1'b0, irr);
   end
