@@ -1,0 +1,7 @@
+fn_main {
+  fn_print(65,65,65,124,0)  // AAA\n\0
+}
+
+fn_trap_handler {
+  fn_print(66,66,66,124,0)  // BBB\n\0
+}
