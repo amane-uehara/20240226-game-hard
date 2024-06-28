@@ -24,6 +24,20 @@ module tb_unit_transmitter();
     @(posedge clk);
     send_req = 1'b0;
     data = 8'h0;
+
+    // 既に送信中なので、以下は効かないはず
+    #(WAIT*CLOCK_PERIOD);
+    #(WAIT*CLOCK_PERIOD);
+    #(WAIT*CLOCK_PERIOD);
+    send_req = 1'b1;
+    data = const_data;
+    @(posedge clk);
+    @(posedge clk);
+    #(WAIT*CLOCK_PERIOD);
+    #(WAIT*CLOCK_PERIOD);
+    #(WAIT*CLOCK_PERIOD);
+    send_req = 1'b0;
+    data = 8'h0;
   end
 
   initial begin
