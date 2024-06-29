@@ -39,13 +39,19 @@ module test_wave ();
 
   initial begin
     for(;;) begin
-      $display("Current time = %t", $realtime);
+      $display("TIME:%06t pc:%08d, tx:%0d, rx:%0d",
+        $realtime,
+        mother_board.cpu.sr.pc,
+        mother_board.uart_tx,
+        mother_board.uart_rx
+      );
+
       #(WAIT*CLOCK_PERIOD);
     end
   end
 
   initial begin
-    #(WAIT*CLOCK_PERIOD*50);
+    #(WAIT*CLOCK_PERIOD*400);
     $finish();
   end
 endmodule
