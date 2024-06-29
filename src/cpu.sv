@@ -29,7 +29,7 @@ module cpu (
   always_ff @(posedge clk) begin
     if (reset) begin
       sr          <= '0;
-    end else if (is_update_reg) begin
+    end else begin
       sr.pc       <= ex.pc;
       sr.intr_en  <= ex.intr_en;
       sr.intr_pc  <= ex.intr_pc;
@@ -71,7 +71,7 @@ module cpu (
   always_ff @(posedge clk) begin
     if (reset) begin
       de        <= '0;
-    end else begin
+    end else if (is_update_reg) begin
       de.opcode  <= rom_data[ 3: 0];
       de.opt     <= rom_data[ 7: 4];
       de.imm     <= rom_data[31:20];

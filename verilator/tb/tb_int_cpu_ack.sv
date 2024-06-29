@@ -27,7 +27,7 @@ module tb_int_cpu_ack ();
     task_reset();
     `check1(1'b0, mother_board.cpu.ack);
 
-    #(PERIOD_PER_INSTRUCT*2-2*CLOCK_PERIOD);
+    #(PERIOD_PER_INSTRUCT*2);
     `check1(1'b0,  mother_board.cpu.ack);
     #CLOCK_PERIOD;
     `check1(1'b1,  mother_board.cpu.ack);

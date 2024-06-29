@@ -53,10 +53,11 @@ module tb_int_uart_tx();
     task_reset();
 
     // before send
-    #(PERIOD_PER_INSTRUCT*2-CLOCK_PERIOD);
+    #(PERIOD_PER_INSTRUCT*2);
+    #(CLOCK_PERIOD);
     `check1(1'b1, uart_tx);
     `check1(1'b0, mother_board.transmitter.busy);
-    #CLOCK_PERIOD;
+    #(CLOCK_PERIOD);
 
     // sending
     task_uart_tx(8'h5A);
