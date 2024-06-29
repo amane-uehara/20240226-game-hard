@@ -21,6 +21,7 @@ docker exec -it ${CONTAINER_NAME} /bin/sh -c "\
     -Wall \
     -Wno-UNUSEDSIGNAL \
     -Wno-UNOPTFLAT \
+    -Wno-UNUSEDPARAM \
     --trace --trace-params --trace-structs --trace-underscore \
     ${VERILOG_FILE} \
   && ./obj_dir/V${VERILOG_WITHOUT_EXT} \
