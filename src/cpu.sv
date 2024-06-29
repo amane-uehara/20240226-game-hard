@@ -17,10 +17,10 @@ module cpu (
   logic [1:0] counter, next_counter;
   assign next_counter = counter + 2'd1;
   always_ff @(posedge clk) begin
-    if (reset) counter <= 2'd1;
+    if (reset) counter <= 2'd0;
     else       counter <= next_counter;
   end
-  assign is_update_reg = (counter == 2'd3);
+  assign is_update_reg = (counter == 2'd2);
 
   logic [31:0] x_rs1, x_rs2, mem_r_val;
   SPECIAL_REG sr;
