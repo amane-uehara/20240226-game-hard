@@ -95,8 +95,8 @@ package lib_alu;
     fn_r_io.w_rd = 1'b1;
 
     case (de.imm)
-      12'd0:   fn_r_io.x_rd = {31'd0, de.sr.tx_busy};
-      12'd1:   fn_r_io.x_rd = {24'd0, de.sr.rx_data};
+      12'd0:   fn_r_io.x_rd = {31'd0, de.tx_busy};
+      12'd1:   fn_r_io.x_rd = {24'd0, de.rx_data};
       default: fn_r_io.w_rd = 1'b0;
     endcase
   endfunction

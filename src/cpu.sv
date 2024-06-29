@@ -31,12 +31,9 @@ module cpu (
       sr          <= '0;
     end else if (is_update_reg) begin
       sr.pc       <= ex.pc;
-      sr.irr      <= irr;
       sr.intr_en  <= ex.intr_en;
       sr.intr_pc  <= ex.intr_pc;
       sr.intr_vec <= ex.intr_vec;
-      sr.tx_busy  <= tx_busy;
-      sr.rx_data  <= rx_data;
       sr.ack      <= ex.ack;
       sr.tx_req   <= ex.tx_req;
       sr.tx_data  <= ex.tx_data;
@@ -75,12 +72,15 @@ module cpu (
     if (reset) begin
       de        <= '0;
     end else begin
-      de.opcode <= rom_data[ 3: 0];
-      de.opt    <= rom_data[ 7: 4];
-      de.imm    <= rom_data[31:20];
-      de.x_rs1  <= x_rs1;
-      de.x_rs2  <= x_rs2;
-      de.sr     <= sr;
+      de.opcode  <= rom_data[ 3: 0];
+      de.opt     <= rom_data[ 7: 4];
+      de.imm     <= rom_data[31:20];
+      de.x_rs1   <= x_rs1;
+      de.x_rs2   <= x_rs2;
+      de.irr     <= irr;
+      de.tx_busy <= tx_busy;
+      de.rx_data <= rx_data;
+      de.sr      <= sr;
     end
   end
 

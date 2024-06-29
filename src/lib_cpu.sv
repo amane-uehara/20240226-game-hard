@@ -4,12 +4,9 @@
 package lib_cpu;
   typedef struct packed {
     logic [31:0] pc;
-    logic        irr;
     logic        intr_en;
     logic [31:0] intr_pc;
     logic [31:0] intr_vec;
-    logic        tx_busy;
-    logic [ 7:0] rx_data;
     logic        ack;
     logic        tx_req;
     logic [ 7:0] tx_data;
@@ -21,6 +18,9 @@ package lib_cpu;
     logic [11:0] imm;
     logic [31:0] x_rs1;
     logic [31:0] x_rs2;
+    logic        irr;
+    logic        tx_busy;
+    logic [ 7:0] rx_data;
     SPECIAL_REG  sr;
   } DECODE;
 
