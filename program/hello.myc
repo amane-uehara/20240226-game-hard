@@ -1,20 +1,24 @@
-def main() {
-  a = 72
-  call(label_putchar)
+fn_main {
+  fn_putchar(65)
+  fn_putchar(66)
+  fn_putchar(67)
+  fn_putchar(68)
 
-  a = 69
-  call(label_putchar)
-  
-  halt()
+  for (;zero==zero;) {
+    a = 1
+  }
 }
 
-def label_putchar() {
-  push(a,b)
+fn_putchar {
+  push(a,b,i)
+  i = sp + 4
+  a = mem[i]
+
   b = 1
   for (;b == 1;) {
     b = monitor_busy()
   }
+
   monitor(a)
-  pop(b,a)
-  return
+  pop(i,b,a)
 }
