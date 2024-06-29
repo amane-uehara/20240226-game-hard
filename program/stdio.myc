@@ -1,5 +1,6 @@
 fn_start {
   intr_en(zero)
+  sp = 64
   a = label_fn_trap_vector
   intr_trap(a)
   fn_print(27,91,50,48,104,0) // ESC [ 2 0 h
