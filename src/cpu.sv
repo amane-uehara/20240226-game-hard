@@ -27,17 +27,8 @@ module cpu (
   EXECUTE ex;
 
   always_ff @(posedge clk) begin
-    if (reset) begin
-      sr          <= '0;
-    end else begin
-      sr.pc       <= ex.pc;
-      sr.intr_en  <= ex.intr_en;
-      sr.intr_pc  <= ex.intr_pc;
-      sr.intr_vec <= ex.intr_vec;
-      sr.ack      <= ex.ack;
-      sr.tx_req   <= ex.tx_req;
-      sr.tx_data  <= ex.tx_data;
-    end
+    if (reset) sr <= '0;
+    else       sr <= ex.sr;
   end
 
   assign rom_addr = sr.pc[10:0];

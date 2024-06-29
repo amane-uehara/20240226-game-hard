@@ -25,18 +25,12 @@ package lib_cpu;
   } DECODE;
 
   typedef struct packed {
-    logic [31:0] pc;
-    logic        tx_req;
-    logic [ 7:0] tx_data;
-    logic        ack;
     logic        w_rd;
     logic [31:0] x_rd;
     logic        mem_r_req;
     logic        mem_w_req;
     logic [ 5:0] mem_addr;
-    logic        intr_en;
-    logic [31:0] intr_pc;
-    logic [31:0] intr_vec;
+    SPECIAL_REG  sr;
   } EXECUTE;
 endpackage
 

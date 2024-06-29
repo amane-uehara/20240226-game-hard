@@ -6,18 +6,18 @@ package lib_alu;
   import lib_cpu :: *;
 
   function automatic EXECUTE fn_nop (input DECODE de);
-    fn_nop.pc        = de.sr.pc + 32'd1;
-    fn_nop.tx_req    = 1'b0;
-    fn_nop.tx_data   = 8'd0;
-    fn_nop.ack       = 1'b0;
-    fn_nop.w_rd      = 1'b0;
-    fn_nop.x_rd      = 32'd0;
-    fn_nop.mem_r_req = 1'b0;
-    fn_nop.mem_w_req = 1'b0;
-    fn_nop.mem_addr  = de.x_rs1[5:0];
-    fn_nop.intr_en   = de.sr.intr_en;
-    fn_nop.intr_pc   = de.sr.intr_pc;
-    fn_nop.intr_vec  = de.sr.intr_vec;
+    fn_nop.w_rd        = 1'b0;
+    fn_nop.x_rd        = 32'd0;
+    fn_nop.mem_r_req   = 1'b0;
+    fn_nop.mem_w_req   = 1'b0;
+    fn_nop.mem_addr    = de.x_rs1[5:0];
+    fn_nop.sr.pc       = de.sr.pc + 32'd1;
+    fn_nop.sr.intr_en  = de.sr.intr_en;
+    fn_nop.sr.intr_pc  = de.sr.intr_pc;
+    fn_nop.sr.intr_vec = de.sr.intr_vec;
+    fn_nop.sr.ack      = 1'b0;
+    fn_nop.sr.tx_req   = 1'b0;
+    fn_nop.sr.tx_data  = 8'd0;
   endfunction
 
   function automatic logic [31:0] fn_calc (
@@ -56,7 +56,7 @@ package lib_alu;
     fn_jalr = fn_nop(de);
     fn_jalr.w_rd = 1'b1;
     fn_jalr.x_rd = de.sr.pc + 32'd1;
-    fn_jalr.pc = de.x_rs1;
+    fn_jalr.sr.pc = de.x_rs1;
   endfunction
 
   function automatic EXECUTE fn_jcc (input DECODE de);
@@ -75,7 +75,7 @@ package lib_alu;
       endcase
 
       fn_jcc = fn_nop(de);
-      fn_jcc.pc = is_jmp ? de.x_rs1 : de.sr.pc + 32'd1;
+      fn_jcc.sr.pc = is_jmp ? de.x_rs1 : de.sr.pc + 32'd1;
   endfunction
 
   function automatic EXECUTE fn_lw (input DECODE de);
@@ -103,37 +103,37 @@ package lib_alu;
 
   function automatic EXECUTE fn_w_io (input DECODE de);
     fn_w_io = fn_nop(de);
-    fn_w_io.tx_req = 1'b1;
+    fn_w_io.sr.tx_req = 1'b1;
 
     case (de.imm)
-      12'd0:   fn_w_io.tx_data = de.x_rs1[7:0];
-      default: fn_w_io.tx_req  = 1'b0;
+      12'd0:   fn_w_io.sr.tx_data = de.x_rs1[7:0];
+      default: fn_w_io.sr.tx_req = 1'b0;
     endcase
   endfunction
 
   function automatic EXECUTE fn_w_intr (input DECODE de);
     fn_w_intr = fn_nop(de);
-    fn_w_intr.ack      = (de.imm == 12'd0) ? de.x_rs1[0] : 1'b0;
-    fn_w_intr.intr_en  = (de.imm == 12'd1) ? de.x_rs1[0] : 1'b0;
-    fn_w_intr.intr_vec = (de.imm == 12'd2) ? de.x_rs1    : de.sr.intr_vec;
+    fn_w_intr.sr.ack = (de.imm == 12'd0) ? de.x_rs1[0] : 1'b0;
+    fn_w_intr.sr.intr_en = (de.imm == 12'd1) ? de.x_rs1[0] : 1'b0;
+    fn_w_intr.sr.intr_vec = (de.imm == 12'd2) ? de.x_rs1 : de.sr.intr_vec;
   endfunction
 
   function automatic EXECUTE fn_icall (input DECODE de);
-    fn_icall         = fn_nop(de);
-    fn_icall.pc      = de.sr.intr_vec;
-    fn_icall.intr_pc = de.sr.pc;
-    fn_icall.intr_en = 1'b0;
+    fn_icall = fn_nop(de);
+    fn_icall.sr.pc = de.sr.intr_vec;
+    fn_icall.sr.intr_pc = de.sr.pc;
+    fn_icall.sr.intr_en = 1'b0;
   endfunction
 
   function automatic EXECUTE fn_iret (input DECODE de);
-    fn_iret         = fn_nop(de);
-    fn_iret.pc      = de.sr.intr_pc;
-    fn_iret.intr_en = 1'b1;
+    fn_iret = fn_nop(de);
+    fn_iret.sr.pc = de.sr.intr_pc;
+    fn_iret.sr.intr_en = 1'b1;
   endfunction
 
   function automatic EXECUTE fn_halt (input DECODE de);
-    fn_halt    = fn_nop(de);
-    fn_halt.pc = de.sr.pc;
+    fn_halt = fn_nop(de);
+    fn_halt.sr.pc = de.sr.pc;
   endfunction
 endpackage
 `endif
