@@ -62,9 +62,8 @@ module cpu (
       de.irr     <= irr;
       de.tx_busy <= tx_busy;
       de.rx_data <= rx_data;
-      de.sr      <= sr;
     end
   end
 
-  alu alu(.clk, .reset, .de, .ex);
+  alu alu(.clk, .reset, .de, .sr, .ex);
 endmodule

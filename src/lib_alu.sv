@@ -5,19 +5,17 @@
 package lib_alu;
   import lib_cpu :: *;
 
-  function automatic EXECUTE fn_nop (input DECODE de);
+  function automatic EXECUTE fn_nop (input DECODE de, input SPECIAL_REG sr);
     fn_nop.w_rd        = 1'b0;
     fn_nop.x_rd        = 32'd0;
     fn_nop.mem_r_req   = 1'b0;
     fn_nop.mem_w_req   = 1'b0;
     fn_nop.mem_addr    = de.x_rs1[5:0];
-    fn_nop.sr.pc       = de.sr.pc + 32'd1;
-    fn_nop.sr.intr_en  = de.sr.intr_en;
-    fn_nop.sr.intr_pc  = de.sr.intr_pc;
-    fn_nop.sr.intr_vec = de.sr.intr_vec;
+
+    fn_nop.sr          = sr;
+    fn_nop.sr.pc       = sr.pc + 32'd1;
     fn_nop.sr.ack      = 1'b0;
     fn_nop.sr.tx_req   = 1'b0;
-    fn_nop.sr.tx_data  = 8'd0;
   endfunction
 
   function automatic logic [31:0] fn_calc (
@@ -37,29 +35,29 @@ package lib_alu;
     endcase
   endfunction
 
-  function automatic EXECUTE fn_calci (input DECODE de);
+  function automatic EXECUTE fn_calci (input DECODE de, input SPECIAL_REG sr);
     logic s = de.imm[11];
     logic [31:0] imm_ext = {{20{s}}, de.imm[11:0]};
 
-    fn_calci = fn_nop(de);
+    fn_calci = fn_nop(de, sr);
     fn_calci.w_rd = 1'b1;
     fn_calci.x_rd = fn_calc(de.opt, de.x_rs1, imm_ext);
   endfunction
 
-  function automatic EXECUTE fn_calcr (input DECODE de);
-    fn_calcr = fn_nop(de);
+  function automatic EXECUTE fn_calcr (input DECODE de, input SPECIAL_REG sr);
+    fn_calcr = fn_nop(de, sr);
     fn_calcr.w_rd = 1'b1;
     fn_calcr.x_rd = fn_calc(de.opt, de.x_rs1, de.x_rs2);
   endfunction
 
-  function automatic EXECUTE fn_jalr (input DECODE de);
-    fn_jalr = fn_nop(de);
+  function automatic EXECUTE fn_jalr (input DECODE de, input SPECIAL_REG sr);
+    fn_jalr = fn_nop(de, sr);
     fn_jalr.w_rd = 1'b1;
-    fn_jalr.x_rd = de.sr.pc + 32'd1;
+    fn_jalr.x_rd = sr.pc + 32'd1;
     fn_jalr.sr.pc = de.x_rs1;
   endfunction
 
-  function automatic EXECUTE fn_jcc (input DECODE de);
+  function automatic EXECUTE fn_jcc (input DECODE de, input SPECIAL_REG sr);
       logic zf, sf, is_jmp;
       zf = (de.x_rs2 == 32'd0);
       sf = (de.x_rs2[31] == 1'b0);
@@ -74,24 +72,24 @@ package lib_alu;
         default: is_jmp = 1'b0;
       endcase
 
-      fn_jcc = fn_nop(de);
-      fn_jcc.sr.pc = is_jmp ? de.x_rs1 : de.sr.pc + 32'd1;
+      fn_jcc = fn_nop(de, sr);
+      fn_jcc.sr.pc = is_jmp ? de.x_rs1 : sr.pc + 32'd1;
   endfunction
 
-  function automatic EXECUTE fn_lw (input DECODE de);
-    fn_lw = fn_nop(de);
+  function automatic EXECUTE fn_lw (input DECODE de, input SPECIAL_REG sr);
+    fn_lw = fn_nop(de, sr);
     fn_lw.mem_r_req = 1'b1;
     fn_lw.w_rd = 1'b1;
   endfunction
 
-  function automatic EXECUTE fn_sw (input DECODE de);
-    fn_sw = fn_nop(de);
+  function automatic EXECUTE fn_sw (input DECODE de, input SPECIAL_REG sr);
+    fn_sw = fn_nop(de, sr);
     fn_sw.x_rd = de.x_rs2;
     fn_sw.mem_w_req = 1'b1;
   endfunction
 
-  function automatic EXECUTE fn_r_io (input DECODE de);
-    fn_r_io = fn_nop(de);
+  function automatic EXECUTE fn_r_io (input DECODE de, input SPECIAL_REG sr);
+    fn_r_io = fn_nop(de, sr);
     fn_r_io.w_rd = 1'b1;
 
     case (de.imm)
@@ -101,8 +99,8 @@ package lib_alu;
     endcase
   endfunction
 
-  function automatic EXECUTE fn_w_io (input DECODE de);
-    fn_w_io = fn_nop(de);
+  function automatic EXECUTE fn_w_io (input DECODE de, input SPECIAL_REG sr);
+    fn_w_io = fn_nop(de, sr);
     fn_w_io.sr.tx_req = 1'b1;
 
     case (de.imm)
@@ -111,29 +109,29 @@ package lib_alu;
     endcase
   endfunction
 
-  function automatic EXECUTE fn_w_intr (input DECODE de);
-    fn_w_intr = fn_nop(de);
+  function automatic EXECUTE fn_w_intr (input DECODE de, input SPECIAL_REG sr);
+    fn_w_intr = fn_nop(de, sr);
     fn_w_intr.sr.ack = (de.imm == 12'd0) ? de.x_rs1[0] : 1'b0;
     fn_w_intr.sr.intr_en = (de.imm == 12'd1) ? de.x_rs1[0] : 1'b0;
-    fn_w_intr.sr.intr_vec = (de.imm == 12'd2) ? de.x_rs1 : de.sr.intr_vec;
+    fn_w_intr.sr.intr_vec = (de.imm == 12'd2) ? de.x_rs1 : sr.intr_vec;
   endfunction
 
-  function automatic EXECUTE fn_icall (input DECODE de);
-    fn_icall = fn_nop(de);
-    fn_icall.sr.pc = de.sr.intr_vec;
-    fn_icall.sr.intr_pc = de.sr.pc;
+  function automatic EXECUTE fn_icall (input DECODE de, input SPECIAL_REG sr);
+    fn_icall = fn_nop(de, sr);
+    fn_icall.sr.pc = sr.intr_vec;
+    fn_icall.sr.intr_pc = sr.pc;
     fn_icall.sr.intr_en = 1'b0;
   endfunction
 
-  function automatic EXECUTE fn_iret (input DECODE de);
-    fn_iret = fn_nop(de);
-    fn_iret.sr.pc = de.sr.intr_pc;
+  function automatic EXECUTE fn_iret (input DECODE de, input SPECIAL_REG sr);
+    fn_iret = fn_nop(de, sr);
+    fn_iret.sr.pc = sr.intr_pc;
     fn_iret.sr.intr_en = 1'b1;
   endfunction
 
-  function automatic EXECUTE fn_halt (input DECODE de);
-    fn_halt = fn_nop(de);
-    fn_halt.sr.pc = de.sr.pc;
+  function automatic EXECUTE fn_halt (input DECODE de, input SPECIAL_REG sr);
+    fn_halt = fn_nop(de, sr);
+    fn_halt.sr.pc = sr.pc;
   endfunction
 endpackage
 `endif
