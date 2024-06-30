@@ -65,13 +65,11 @@ module cpu (
     end
   end
 
-  logic is_update_ex;
-  logic [1:0] counter;
+  logic [3:0] counter;
   always_ff @(posedge clk) begin
-    if (reset) counter <= 2'd0;
-    else       counter <= counter + 2'd1;
+    if (reset) counter <= 4'b1;
+    else       counter <= {counter[2:0], counter[3]};
   end
-  assign is_update_ex = (counter == 2'd3);
 
-  alu alu(.clk, .reset, .w_en(is_update_ex), .de, .state, .ex);
+  alu alu(.clk, .reset, .w_en(counter[3]), .de, .state, .ex);
 endmodule
