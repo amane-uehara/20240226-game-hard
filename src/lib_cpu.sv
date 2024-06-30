@@ -10,7 +10,7 @@ package lib_cpu;
     logic        ack;
     logic        tx_req;
     logic [ 7:0] tx_data;
-  } SPECIAL_REG;
+  } STATE;
 
   typedef struct packed {
     logic [ 3:0] opcode;
@@ -29,7 +29,7 @@ package lib_cpu;
     logic        mem_r_req;
     logic        mem_w_req;
     logic [ 5:0] mem_addr;
-    SPECIAL_REG  sr;
+    STATE        state;
   } EXECUTE;
 endpackage
 

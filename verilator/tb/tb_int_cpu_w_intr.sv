@@ -30,7 +30,7 @@ module tb_int_cpu_w_intr ();
       , 32'h001___0___1___0___0___8 // w_intr -- intr[1] = x[1] // intr[1] == intr_en
       , 32'h000___0___0___0___0___A // halt
     });
-    `check32(32'b1, {31'd0, mother_board.cpu.sr.intr_en});
+    `check32(32'b1, {31'd0, mother_board.cpu.state.intr_en});
 
     init_mem_restart_cpu('{
         //  imm  rs2 rs1 rd  opt opcode
@@ -38,6 +38,6 @@ module tb_int_cpu_w_intr ();
       , 32'h002___0___1___0___0___8 // w_intr -- intr[2] = x[1] // intr[2] == intr_vec
       , 32'h000___0___0___0___0___A // halt
     });
-    `check32(32'd7, mother_board.cpu.sr.intr_vec);
+    `check32(32'd7, mother_board.cpu.state.intr_vec);
   end
 endmodule

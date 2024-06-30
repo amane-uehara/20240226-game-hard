@@ -14,18 +14,18 @@ module cpu (
   import lib_cpu :: *;
 
   logic [31:0] x_rs1, x_rs2, mem_r_val;
-  SPECIAL_REG sr;
+  STATE state;
   EXECUTE ex;
 
   always_ff @(posedge clk) begin
-    if (reset) sr <= '0;
-    else       sr <= ex.sr;
+    if (reset) state <= '0;
+    else       state <= ex.state;
   end
 
-  assign rom_addr = sr.pc[10:0];
-  assign ack = sr.ack;
-  assign tx_req = sr.tx_req;
-  assign tx_data = sr.tx_data;
+  assign rom_addr = state.pc[10:0];
+  assign ack = state.ack;
+  assign tx_req = state.tx_req;
+  assign tx_data = state.tx_data;
 
   logic [31:0] gr_w_val;
   assign gr_w_val = ex.mem_r_req ? mem_r_val : ex.x_rd;
@@ -65,5 +65,5 @@ module cpu (
     end
   end
 
-  alu alu(.clk, .reset, .de, .sr, .ex);
+  alu alu(.clk, .reset, .de, .state, .ex);
 endmodule
