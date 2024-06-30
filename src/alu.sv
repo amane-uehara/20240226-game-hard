@@ -11,7 +11,7 @@ module alu import lib_cpu :: *; (
 
   EXECUTE next_ex;
   always_comb begin
-    if (de.irr & state.intr_en == 1'b1)
+    if (de.irr && state.intr_en)
       next_ex = fn_icall(de, state);
     else unique case (de.opcode)
       4'h0:    next_ex = fn_calci(de, state);

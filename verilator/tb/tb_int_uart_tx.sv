@@ -54,7 +54,6 @@ module tb_int_uart_tx();
 
     // before send
     #(PERIOD_PER_INSTRUCT*2);
-    #(CLOCK_PERIOD);
     `check1(1'b1, uart_tx);
     `check1(1'b0, mother_board.transmitter.busy);
     #(CLOCK_PERIOD);
