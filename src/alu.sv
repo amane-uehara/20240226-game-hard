@@ -3,7 +3,6 @@
 
 module alu import lib_cpu :: *; (
   input  logic   clk, reset,
-  input  logic   w_en,
   input  DECODE  de,
   input  STATE   state,
   output EXECUTE ex
@@ -32,6 +31,6 @@ module alu import lib_cpu :: *; (
 
   always_ff @(posedge clk) begin
     if (reset) ex <= '0;
-    else if (w_en) ex <= next_ex;
+    else ex <= next_ex;
   end
 endmodule

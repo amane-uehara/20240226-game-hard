@@ -17,9 +17,15 @@ module cpu (
   STATE state;
   EXECUTE ex;
 
+  logic [3:0] counter;
+  always_ff @(posedge clk) begin
+    if (reset) counter <= 4'b1;
+    else       counter <= {counter[2:0], counter[3]};
+  end
+
   always_ff @(posedge clk) begin
     if (reset) state <= '0;
-    else       state <= ex.state;
+    else if (counter[0]) state <= ex.state;
   end
 
   assign rom_addr = state.pc[10:0];
@@ -65,11 +71,5 @@ module cpu (
     end
   end
 
-  logic [3:0] counter;
-  always_ff @(posedge clk) begin
-    if (reset) counter <= 4'b1;
-    else       counter <= {counter[2:0], counter[3]};
-  end
-
-  alu alu(.clk, .reset, .w_en(counter[3]), .de, .state, .ex);
+  alu alu(.clk, .reset, .de, .state, .ex);
 endmodule
