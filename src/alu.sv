@@ -3,6 +3,7 @@
 
 module alu import lib_cpu :: *; (
   input  logic   clk, reset,
+  input  logic   w_en,
   input  DECODE  de,
   input  STATE   state,
   output EXECUTE ex
@@ -29,17 +30,8 @@ module alu import lib_cpu :: *; (
     endcase
   end
 
-  logic is_update_reg;
-  logic [1:0] counter, next_counter;
-  assign next_counter = counter + 2'd1;
-  always_ff @(posedge clk) begin
-    if (reset) counter <= 2'd0;
-    else       counter <= next_counter;
-  end
-  assign is_update_reg = (counter == 2'd3);
-
   always_ff @(posedge clk) begin
     if (reset) ex <= '0;
-    else if (is_update_reg) ex <= next_ex;
+    else if (w_en) ex <= next_ex;
   end
 endmodule
