@@ -8,7 +8,7 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 VCD_FILE="${SCRIPT_DIR}/tb/wave/${VERILOG_FILE}.vcd"
 WAVE_FILE="${SCRIPT_DIR}/wave.gtkw"
 
-rm -f ${WAVE_FILE}
+rm -f ${VCD_FILE}
 
 docker start ${CONTAINER_NAME}
 
