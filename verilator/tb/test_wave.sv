@@ -41,7 +41,7 @@ module test_wave ();
     for(;;) begin
       $display("TIME:%06t pc:%08d, tx:%0d, rx:%0d",
         $realtime,
-        mother_board.cpu.sr.pc,
+        mother_board.cpu.state.pc,
         mother_board.uart_tx,
         mother_board.uart_rx
       );
