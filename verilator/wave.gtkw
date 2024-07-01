@@ -3,7 +3,7 @@
 [*]
 [timestart] 0
 [size] 1920 1057
-[pos] -87 -87
+[pos] -1 -1
 *-7.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] TOP.
 [treeopen] TOP.test_wave.
@@ -24,22 +24,19 @@ TOP.test_wave.mother_board.rx_data[7:0]
 @28
 TOP.test_wave.mother_board.irr
 TOP.test_wave.mother_board.ack
-@200
--
-@28
+TOP.test_wave.mother_board.clk
 TOP.test_wave.mother_board.uart_tx
 @22
 TOP.test_wave.mother_board.tx_data[7:0]
 @28
 TOP.test_wave.mother_board.tx_req
 TOP.test_wave.mother_board.tx_busy
-@200
--
+TOP.test_wave.mother_board.clk
 @22
 TOP.test_wave.mother_board.rom_addr[10:0]
 TOP.test_wave.mother_board.rom_data[31:0]
-@200
--
+@28
+TOP.test_wave.mother_board.clk
 @22
 TOP.test_wave.mother_board.cpu.de.imm[11:0]
 @28
@@ -53,8 +50,8 @@ TOP.test_wave.mother_board.cpu.de.tx_busy
 @22
 TOP.test_wave.mother_board.cpu.de.x_rs1[31:0]
 TOP.test_wave.mother_board.cpu.de.x_rs2[31:0]
-@200
--
+@28
+TOP.test_wave.mother_board.clk
 @22
 TOP.test_wave.mother_board.cpu.ex.mem_addr[5:0]
 @28
@@ -72,9 +69,8 @@ TOP.test_wave.mother_board.cpu.ex.state.tx_req
 TOP.test_wave.mother_board.cpu.ex.w_rd
 @22
 TOP.test_wave.mother_board.cpu.ex.x_rd[31:0]
-@201
--
 @28
+TOP.test_wave.mother_board.clk
 TOP.test_wave.mother_board.cpu.state.ack
 TOP.test_wave.mother_board.cpu.state.intr_en
 @22
