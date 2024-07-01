@@ -1,0 +1,88 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*]
+[timestart] 0
+[size] 1920 1057
+[pos] -87 -87
+*-7.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] TOP.
+[treeopen] TOP.test_wave.
+[treeopen] TOP.test_wave.mother_board.
+[treeopen] TOP.test_wave.mother_board.cpu.
+[treeopen] TOP.test_wave.mother_board.cpu.ex.
+[sst_width] 197
+[signals_width] 142
+[sst_expanded] 1
+[sst_vpaned_height] 314
+@28
+TOP.test_wave.mother_board.clk
+TOP.test_wave.mother_board.reset
+TOP.test_wave.mother_board.uart_rx
+TOP.test_wave.mother_board.rx_update
+@22
+TOP.test_wave.mother_board.rx_data[7:0]
+@28
+TOP.test_wave.mother_board.irr
+TOP.test_wave.mother_board.ack
+@200
+-
+@28
+TOP.test_wave.mother_board.uart_tx
+@22
+TOP.test_wave.mother_board.tx_data[7:0]
+@28
+TOP.test_wave.mother_board.tx_req
+TOP.test_wave.mother_board.tx_busy
+@200
+-
+@22
+TOP.test_wave.mother_board.rom_addr[10:0]
+TOP.test_wave.mother_board.rom_data[31:0]
+@200
+-
+@22
+TOP.test_wave.mother_board.cpu.de.imm[11:0]
+@28
+TOP.test_wave.mother_board.cpu.de.irr
+@22
+TOP.test_wave.mother_board.cpu.de.opcode[3:0]
+TOP.test_wave.mother_board.cpu.de.opt[3:0]
+TOP.test_wave.mother_board.cpu.de.rx_data[7:0]
+@28
+TOP.test_wave.mother_board.cpu.de.tx_busy
+@22
+TOP.test_wave.mother_board.cpu.de.x_rs1[31:0]
+TOP.test_wave.mother_board.cpu.de.x_rs2[31:0]
+@200
+-
+@22
+TOP.test_wave.mother_board.cpu.ex.mem_addr[5:0]
+@28
+TOP.test_wave.mother_board.cpu.ex.mem_r_req
+TOP.test_wave.mother_board.cpu.ex.mem_w_req
+TOP.test_wave.mother_board.cpu.ex.state.ack
+TOP.test_wave.mother_board.cpu.ex.state.intr_en
+@22
+TOP.test_wave.mother_board.cpu.ex.state.intr_pc[31:0]
+TOP.test_wave.mother_board.cpu.ex.state.intr_vec[31:0]
+TOP.test_wave.mother_board.cpu.ex.state.pc[31:0]
+TOP.test_wave.mother_board.cpu.ex.state.tx_data[7:0]
+@28
+TOP.test_wave.mother_board.cpu.ex.state.tx_req
+TOP.test_wave.mother_board.cpu.ex.w_rd
+@22
+TOP.test_wave.mother_board.cpu.ex.x_rd[31:0]
+@201
+-
+@28
+TOP.test_wave.mother_board.cpu.state.ack
+TOP.test_wave.mother_board.cpu.state.intr_en
+@22
+TOP.test_wave.mother_board.cpu.state.intr_pc[31:0]
+TOP.test_wave.mother_board.cpu.state.intr_vec[31:0]
+TOP.test_wave.mother_board.cpu.state.pc[31:0]
+TOP.test_wave.mother_board.cpu.state.tx_data[7:0]
+@28
+TOP.test_wave.mother_board.cpu.state.tx_req
+[pattern_trace] 1
+[pattern_trace] 0

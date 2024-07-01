@@ -5,7 +5,8 @@ CONTAINER_NAME="my_verilator"
 VERILOG_FILE=$(basename $1)
 VERILOG_WITHOUT_EXT=${VERILOG_FILE%.*}
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
-WAVE_FILE="${SCRIPT_DIR}/tb/wave/${VERILOG_FILE}.vcd"
+VCD_FILE="${SCRIPT_DIR}/tb/wave/${VERILOG_FILE}.vcd"
+WAVE_FILE="${SCRIPT_DIR}/wave.gtkw"
 
 rm -f ${WAVE_FILE}
 
@@ -27,4 +28,7 @@ docker exec -it ${CONTAINER_NAME} /bin/sh -c "\
   && ./obj_dir/V${VERILOG_WITHOUT_EXT} \
 "
 
-${GTKWAVE} $(echo "${WAVE_FILE}" |sed -e 's@/mnt/c/@C:\\\\@' |sed -e 's@/@\\\\@g')
+${GTKWAVE} \
+  $(echo "${VCD_FILE}"  |sed -e 's@/mnt/c/@C:\\\\@' |sed -e 's@/@\\\\@g') \
+  $(echo "${WAVE_FILE}" |sed -e 's@/mnt/c/@C:\\\\@' |sed -e 's@/@\\\\@g') \
+
