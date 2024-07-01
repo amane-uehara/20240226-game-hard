@@ -23,12 +23,13 @@ module cpu (
     else       counter <= {counter[2:0], counter[3]};
   end
 
-  logic is_update_reg;
-  assign is_update_reg = counter[3];
+  logic stage_de, stage_wb;
+  assign stage_de = counter[1];
+  assign stage_wb = counter[3];
 
   always_ff @(posedge clk) begin
     if (reset) state <= '0;
-    else if (is_update_reg) state <= ex.state;
+    else if (stage_wb) state <= ex.state;
   end
 
   assign rom_addr = state.pc[10:0];
@@ -41,7 +42,7 @@ module cpu (
 
   gr_file gr_file(
     .clk, .reset,
-    .w_en(ex.w_rd && is_update_reg),
+    .w_en(ex.w_rd && stage_wb),
     .rs1(rom_data[15:12]),
     .rs2(rom_data[19:16]),
     .rd(rom_data[11:8]),
@@ -52,7 +53,7 @@ module cpu (
 
   mem_file mem_file(
     .clk, .reset,
-    .w_en(ex.mem_w_req && is_update_reg),
+    .w_en(ex.mem_w_req && stage_wb),
     .addr(ex.mem_addr),
     .r_data(mem_r_val),
     .w_data(ex.x_rd)
@@ -62,7 +63,7 @@ module cpu (
   always_ff @(posedge clk) begin
     if (reset) begin
       de         <= '0;
-    end else begin
+    end else if (stage_de) begin
       de.opcode  <= rom_data[ 3: 0];
       de.opt     <= rom_data[ 7: 4];
       de.imm     <= rom_data[31:20];
