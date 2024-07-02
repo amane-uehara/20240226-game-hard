@@ -7,6 +7,7 @@ package lib_alu;
 
   function automatic EXECUTE fn_nop (input DECODE de, input STATE state);
     fn_nop.w_rd         = 1'b0;
+    fn_nop.rd           = de.rd;
     fn_nop.x_rd         = 32'd0;
     fn_nop.mem_r_req    = 1'b0;
     fn_nop.mem_w_req    = 1'b0;

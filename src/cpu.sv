@@ -45,7 +45,7 @@ module cpu (
     .w_en(ex.w_rd && stage_wb),
     .rs1(rom_data[15:12]),
     .rs2(rom_data[19:16]),
-    .rd(rom_data[11:8]),
+    .rd(ex.rd),
     .x_rd(gr_w_val),
     .x_rs1(x_rs1),
     .x_rs2(x_rs2)
@@ -66,6 +66,7 @@ module cpu (
     end else if (stage_de) begin
       de.opcode  <= rom_data[ 3: 0];
       de.opt     <= rom_data[ 7: 4];
+      de.rd      <= rom_data[11: 8];
       de.imm     <= rom_data[31:20];
       de.x_rs1   <= x_rs1;
       de.x_rs2   <= x_rs2;

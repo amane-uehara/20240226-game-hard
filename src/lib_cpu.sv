@@ -15,6 +15,7 @@ package lib_cpu;
   typedef struct packed {
     logic [ 3:0] opcode;
     logic [ 3:0] opt;
+    logic [ 3:0] rd;
     logic [11:0] imm;
     logic [31:0] x_rs1;
     logic [31:0] x_rs2;
@@ -25,6 +26,7 @@ package lib_cpu;
 
   typedef struct packed {
     logic        w_rd;
+    logic [ 3:0] rd;
     logic [31:0] x_rd;
     logic        mem_r_req;
     logic        mem_w_req;
