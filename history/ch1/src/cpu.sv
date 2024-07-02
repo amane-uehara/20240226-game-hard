@@ -34,12 +34,12 @@ module cpu (
     if (irr) begin
       next_state.pc = 32'd3;
     end else begin
-      case (rom[3:0])
+      case (rom_data[3:0])
         4'd0: next_state.pc = state.pc; // halt
-        4'd1: next_state.pc = {24'd0, rom[31:24]};
+        4'd1: next_state.pc = {24'd0, rom_data[31:24]};
         4'd2: next_state.ack = 1'b1;
         4'd3: next_state.tx_req = 1'b1;
-        4'd4: next_state.tx_data = rom[31:24];
+        4'd4: next_state.tx_data = rom_data[31:24];
         4'd5: next_state.tx_data = rx_data;
       endcase
     end
