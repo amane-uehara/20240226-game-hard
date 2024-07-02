@@ -1,7 +1,6 @@
-06500004 // tx_data = 0x65
-00000003 // tx_req = 1
-00000000 // halt
-00000002 // ack = 1
-00000005 // tx_data = rx_data
-00000003 // tx_req = 1
-00200001 // jump 0x02 (halt)
+65000003 // addr: 0x0000   asm: tx_data = 0x65
+00000002 // addr: 0x0001   asm: tx_req = 1
+00000000 // addr: 0x0002   asm: halt
+00000004 // addr: 0x0004   asm: tx_data = rx_data
+00000002 // addr: 0x0005   asm: tx_req = 1
+02000001 // addr: 0x0006   asm: jump 0x02 (halt)

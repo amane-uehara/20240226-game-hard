@@ -13,6 +13,15 @@ module cpu (
 );
   import lib_cpu :: *;
 
+  logic [1:0] counter;
+  always_ff @(posedge clk) begin
+    if (reset) counter <= 2'b1;
+    else       counter <= {counter[0], counter[1]};
+  end
+
+  logic stage_wb;
+  assign stage_wb = counter[1];
+
   STATE state;
   assign rom_addr = state.pc[10:0];
   assign ack = state.ack;
@@ -22,7 +31,7 @@ module cpu (
   STATE next_state;
   always_ff @(posedge clk) begin
     if (reset) state <= '0;
-    else state <= next_state;
+    else if (stage_wb) state <= next_state;
   end
 
   always_comb begin
@@ -33,14 +42,14 @@ module cpu (
 
     if (irr) begin
       next_state.pc = 32'd3;
+      next_state.ack = 1'b1;
     end else begin
       case (rom_data[3:0])
         4'd0: next_state.pc = state.pc; // halt
         4'd1: next_state.pc = {24'd0, rom_data[31:24]};
-        4'd2: next_state.ack = 1'b1;
-        4'd3: next_state.tx_req = 1'b1;
-        4'd4: next_state.tx_data = rom_data[31:24];
-        4'd5: next_state.tx_data = rx_data;
+        4'd2: next_state.tx_req = 1'b1;
+        4'd3: next_state.tx_data = rom_data[31:24];
+        4'd4: next_state.tx_data = rx_data;
       endcase
     end
   end
