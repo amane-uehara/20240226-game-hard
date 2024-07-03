@@ -23,16 +23,7 @@ module cpu (
   assign stage_wb = counter[1];
 
   STATE state;
-  assign rom_addr = state.pc[10:0];
-  assign ack = state.ack;
-  assign tx_req = state.tx_req;
-  assign tx_data = state.tx_data;
-
   STATE next_state;
-  always_ff @(posedge clk) begin
-    if (reset) state <= '0;
-    else if (stage_wb) state <= next_state;
-  end
 
   always_comb begin
     next_state = state;
@@ -61,4 +52,14 @@ module cpu (
       endcase
     end
   end
+
+  always_ff @(posedge clk) begin
+    if (reset) state <= '0;
+    else if (stage_wb) state <= next_state;
+  end
+
+  assign rom_addr = state.pc[10:0];
+  assign ack = state.ack;
+  assign tx_req = state.tx_req;
+  assign tx_data = state.tx_data;
 endmodule
