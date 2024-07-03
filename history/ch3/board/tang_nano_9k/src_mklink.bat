@@ -1,5 +1,5 @@
 @echo off
-set target_dir=%cd%\ch1\src
+set target_dir=%cd%\ch3\src
 
 set source_dir=%cd%\..\..\src
 for %%i in ("%source_dir%\*.sv")  do (mklink "%target_dir%\%%~nxi" "%%i")
