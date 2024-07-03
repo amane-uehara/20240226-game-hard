@@ -37,8 +37,8 @@ module cpu (
   always_comb begin
     next_state = state;
     next_state.pc = state.pc + 32'd1;
-    next_state.ack = 1'b0;
     next_state.tx_req = 1'b0;
+    next_state.ack = 1'b0;
 
     if (irr && state.intr_en) begin
       next_state.pc = state.intr_vec;
@@ -46,10 +46,10 @@ module cpu (
       next_state.intr_en = 1'b0;
     end else begin
       case (rom_data[3:0])
-        4'd0: next_state.pc = state.pc; // halt
-        4'd1: next_state.pc = {24'd0, rom_data[31:24]};
+        4'd0: next_state.pc = {24'd0, rom_data[31:24]};
+        4'd1: next_state.tx_data = rom_data[31:24];
         4'd2: next_state.tx_req = 1'b1;
-        4'd3: next_state.tx_data = rom_data[31:24];
+        4'd3: next_state.pc = state.pc; // halt
         4'd4: next_state.tx_data = rx_data;
         4'd5: next_state.intr_vec = {24'd0, rom_data[31:24]};
         4'd6: next_state.intr_en = rom_data[24];
