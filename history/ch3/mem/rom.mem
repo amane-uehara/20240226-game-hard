@@ -1,7 +1,7 @@
-61000001 // addr: 0x0000   asm: tx_data = 0x66
+06200001 // addr: 0x0000   asm: tx_data = 0x62 = 'B'
 00000002 // addr: 0x0001   asm: tx_req = 1
-05000005 // addr: 0x0002   asm: intr_vec = 0x05
-01000006 // addr: 0x0003   asm: intr_en = 1
+00500005 // addr: 0x0002   asm: intr_vec = 0x5
+00100006 // addr: 0x0003   asm: intr_en = 1
 00000003 // addr: 0x0004   asm: halt
 00000004 // addr: 0x0005   asm: tx_data = rx_data
 00000002 // addr: 0x0006   asm: tx_req = 1
