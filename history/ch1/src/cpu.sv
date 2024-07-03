@@ -35,22 +35,14 @@ module cpu (
   end
 
   always_comb begin
+    next_state = state;
     next_state.pc = state.pc + 32'd1;
-    next_state.ack = 1'b0;
     next_state.tx_req = 1'b0;
-    next_state.tx_data = state.tx_data;
 
-    if (irr) begin
-      next_state.pc = 32'd3;
-      next_state.ack = 1'b1;
-    end else begin
-      case (rom_data[3:0])
-        4'd0: next_state.pc = state.pc; // halt
-        4'd1: next_state.pc = {24'd0, rom_data[31:24]};
-        4'd2: next_state.tx_req = 1'b1;
-        4'd3: next_state.tx_data = rom_data[31:24];
-        4'd4: next_state.tx_data = rx_data;
-      endcase
-    end
+    case (rom_data[3:0])
+      4'd0: next_state.pc = {24'd0, rom_data[31:24]};
+      4'd1: next_state.tx_data = rom_data[31:24];
+      4'd2: next_state.tx_req = 1'b1;
+    endcase
   end
 endmodule
