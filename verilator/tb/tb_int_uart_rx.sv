@@ -30,7 +30,7 @@ module tb_int_uart_rx ();
   endtask
 
   logic [15:0][31:0] x;
-  assign x = mother_board.cpu.gr_file.x;
+  assign x = mother_board.cpu.reg_file.x;
 
   logic [($size(mother_board.cpu.mem_file.mem)-1):0][31:0] mem;
   assign mem = mother_board.cpu.mem_file.mem;

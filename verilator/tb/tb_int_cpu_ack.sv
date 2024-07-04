@@ -16,7 +16,7 @@ module tb_int_cpu_ack ();
   endtask
 
   logic [15:0][31:0] x;
-  assign x = mother_board.cpu.gr_file.x;
+  assign x = mother_board.cpu.reg_file.x;
 
   int j;
   initial begin

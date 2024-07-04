@@ -40,7 +40,7 @@ module cpu (
   logic [31:0] gr_w_val;
   assign gr_w_val = ex.mem_r_req ? mem_r_val : ex.x_rd;
 
-  gr_file gr_file(
+  reg_file reg_file(
     .clk, .reset,
     .w_en(ex.w_rd && stage_wb),
     .rs1(rom_data[15:12]),

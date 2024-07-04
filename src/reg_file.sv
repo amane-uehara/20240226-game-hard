@@ -1,6 +1,6 @@
 `include "lib_cpu.sv"
 
-module gr_file import lib_cpu :: *; (
+module reg_file import lib_cpu :: *; (
   input  logic        clk, reset, w_en,
   input  logic [ 3:0] rs1, rs2, rd,
   input  logic [31:0] x_rd,
