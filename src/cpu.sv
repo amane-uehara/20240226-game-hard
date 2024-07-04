@@ -13,10 +13,6 @@ module cpu (
 );
   import lib_cpu :: *;
 
-  logic [31:0] x_rs1, x_rs2, mem_r_val;
-  STATE state;
-  EXECUTE ex;
-
   logic [3:0] counter;
   always_ff @(posedge clk) begin
     if (reset) counter <= 4'b1;
@@ -27,39 +23,8 @@ module cpu (
   assign stage_de = counter[1];
   assign stage_wb = counter[3];
 
-  always_ff @(posedge clk) begin
-    if (reset) state <= '0;
-    else if (stage_wb) state <= ex.state;
-  end
-
-  assign rom_addr = state.pc[10:0];
-  assign ack = state.ack;
-  assign tx_req = state.tx_req;
-  assign tx_data = state.tx_data;
-
-  logic [31:0] gr_w_val;
-  assign gr_w_val = ex.mem_r_req ? mem_r_val : ex.x_rd;
-
-  reg_file reg_file(
-    .clk, .reset,
-    .w_en(ex.w_rd && stage_wb),
-    .rs1(rom_data[15:12]),
-    .rs2(rom_data[19:16]),
-    .rd(ex.rd),
-    .x_rd(gr_w_val),
-    .x_rs1(x_rs1),
-    .x_rs2(x_rs2)
-  );
-
-  mem_file mem_file(
-    .clk, .reset,
-    .w_en(ex.mem_w_req && stage_wb),
-    .addr(ex.mem_addr),
-    .r_data(mem_r_val),
-    .w_data(ex.x_rd)
-  );
-
   DECODE de;
+  logic [31:0] x_rs1, x_rs2;
   always_ff @(posedge clk) begin
     if (reset) begin
       de         <= '0;
@@ -76,5 +41,39 @@ module cpu (
     end
   end
 
+  STATE state;
+  EXECUTE ex;
   alu alu(.clk, .reset, .de, .state, .ex);
+
+  logic [31:0] mem_r_val;
+  mem_file mem_file(
+    .clk, .reset,
+    .w_en(ex.mem_w_req && stage_wb),
+    .addr(ex.mem_addr),
+    .r_data(mem_r_val),
+    .w_data(ex.x_rd)
+  );
+
+  logic [31:0] gr_w_val;
+  assign gr_w_val = ex.mem_r_req ? mem_r_val : ex.x_rd;
+  reg_file reg_file(
+    .clk, .reset,
+    .w_en(ex.w_rd && stage_wb),
+    .rs1(rom_data[15:12]),
+    .rs2(rom_data[19:16]),
+    .rd(ex.rd),
+    .x_rd(gr_w_val),
+    .x_rs1(x_rs1),
+    .x_rs2(x_rs2)
+  );
+
+  always_ff @(posedge clk) begin
+    if (reset) state <= '0;
+    else if (stage_wb) state <= ex.state;
+  end
+
+  assign rom_addr = state.pc[10:0];
+  assign ack = state.ack;
+  assign tx_req = state.tx_req;
+  assign tx_data = state.tx_data;
 endmodule
