@@ -4,6 +4,24 @@
 
 package lib_alu;
   import lib_cpu :: *;
+  function automatic EXECUTE fn_alu (input DECODE de, input STATE state);
+    if (de.irr && state.intr_en)
+      fn_alu = fn_icall(de, state);
+    else unique case (de.opcode)
+      4'h0:    fn_alu = fn_calci(de, state);
+      4'h1:    fn_alu = fn_calcr(de, state);
+      4'h2:    fn_alu = fn_jalr(de, state);
+      4'h3:    fn_alu = fn_jcc(de, state);
+      4'h4:    fn_alu = fn_lw(de, state);
+      4'h5:    fn_alu = fn_sw(de, state);
+      4'h6:    fn_alu = fn_r_io(de, state);
+      4'h7:    fn_alu = fn_w_io(de, state);
+      4'h8:    fn_alu = fn_w_intr(de, state);
+      4'h9:    fn_alu = fn_iret(de, state);
+      4'hA:    fn_alu = fn_halt(de, state);
+      default: fn_alu = fn_nop(de, state);
+    endcase
+  endfunction
 
   function automatic EXECUTE fn_nop (input DECODE de, input STATE state);
     fn_nop.w_rd         = 1'b0;
