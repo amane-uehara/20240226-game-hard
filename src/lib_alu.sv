@@ -4,26 +4,26 @@
 
 package lib_alu;
   import lib_cpu :: *;
-  function automatic EXECUTE fn_alu (input DECODE de, input STATE state);
-    if (de.irr && state.intr_en)
-      fn_alu = fn_icall(de, state);
+  function automatic EXECUTE fn_alu (input DECODE de);
+    if (de.irr && de.state.intr_en)
+      fn_alu = fn_icall(de);
     else unique case (de.opcode)
-      4'h0:    fn_alu = fn_calci(de, state);
-      4'h1:    fn_alu = fn_calcr(de, state);
-      4'h2:    fn_alu = fn_jalr(de, state);
-      4'h3:    fn_alu = fn_jcc(de, state);
-      4'h4:    fn_alu = fn_lw(de, state);
-      4'h5:    fn_alu = fn_sw(de, state);
-      4'h6:    fn_alu = fn_r_io(de, state);
-      4'h7:    fn_alu = fn_w_io(de, state);
-      4'h8:    fn_alu = fn_w_intr(de, state);
-      4'h9:    fn_alu = fn_iret(de, state);
-      4'hA:    fn_alu = fn_halt(de, state);
-      default: fn_alu = fn_nop(de, state);
+      4'h0:    fn_alu = fn_calci(de);
+      4'h1:    fn_alu = fn_calcr(de);
+      4'h2:    fn_alu = fn_jalr(de);
+      4'h3:    fn_alu = fn_jcc(de);
+      4'h4:    fn_alu = fn_lw(de);
+      4'h5:    fn_alu = fn_sw(de);
+      4'h6:    fn_alu = fn_r_io(de);
+      4'h7:    fn_alu = fn_w_io(de);
+      4'h8:    fn_alu = fn_w_intr(de);
+      4'h9:    fn_alu = fn_iret(de);
+      4'hA:    fn_alu = fn_halt(de);
+      default: fn_alu = fn_nop(de);
     endcase
   endfunction
 
-  function automatic EXECUTE fn_nop (input DECODE de, input STATE state);
+  function automatic EXECUTE fn_nop (input DECODE de);
     fn_nop.w_rd         = 1'b0;
     fn_nop.rd           = de.rd;
     fn_nop.x_rd         = 32'd0;
@@ -31,8 +31,8 @@ package lib_alu;
     fn_nop.mem_w_req    = 1'b0;
     fn_nop.mem_addr     = de.x_rs1[5:0];
 
-    fn_nop.state        = state;
-    fn_nop.state.pc     = state.pc + 32'd1;
+    fn_nop.state        = de.state;
+    fn_nop.state.pc     = de.state.pc + 32'd1;
     fn_nop.state.ack    = 1'b0;
     fn_nop.state.tx_req = 1'b0;
   endfunction
@@ -54,29 +54,29 @@ package lib_alu;
     endcase
   endfunction
 
-  function automatic EXECUTE fn_calci (input DECODE de, input STATE state);
+  function automatic EXECUTE fn_calci (input DECODE de);
     logic s = de.imm[11];
     logic [31:0] imm_ext = {{20{s}}, de.imm[11:0]};
 
-    fn_calci = fn_nop(de, state);
+    fn_calci = fn_nop(de);
     fn_calci.w_rd = 1'b1;
     fn_calci.x_rd = fn_calc(de.opt, de.x_rs1, imm_ext);
   endfunction
 
-  function automatic EXECUTE fn_calcr (input DECODE de, input STATE state);
-    fn_calcr = fn_nop(de, state);
+  function automatic EXECUTE fn_calcr (input DECODE de);
+    fn_calcr = fn_nop(de);
     fn_calcr.w_rd = 1'b1;
     fn_calcr.x_rd = fn_calc(de.opt, de.x_rs1, de.x_rs2);
   endfunction
 
-  function automatic EXECUTE fn_jalr (input DECODE de, input STATE state);
-    fn_jalr = fn_nop(de, state);
+  function automatic EXECUTE fn_jalr (input DECODE de);
+    fn_jalr = fn_nop(de);
     fn_jalr.w_rd = 1'b1;
-    fn_jalr.x_rd = state.pc + 32'd1;
+    fn_jalr.x_rd = de.state.pc + 32'd1;
     fn_jalr.state.pc = de.x_rs1;
   endfunction
 
-  function automatic EXECUTE fn_jcc (input DECODE de, input STATE state);
+  function automatic EXECUTE fn_jcc (input DECODE de);
       logic zf, sf, is_jmp;
       zf = (de.x_rs2 == 32'd0);
       sf = (de.x_rs2[31] == 1'b0);
@@ -91,24 +91,24 @@ package lib_alu;
         default: is_jmp = 1'b0;
       endcase
 
-      fn_jcc = fn_nop(de, state);
-      fn_jcc.state.pc = is_jmp ? de.x_rs1 : state.pc + 32'd1;
+      fn_jcc = fn_nop(de);
+      fn_jcc.state.pc = is_jmp ? de.x_rs1 : de.state.pc + 32'd1;
   endfunction
 
-  function automatic EXECUTE fn_lw (input DECODE de, input STATE state);
-    fn_lw = fn_nop(de, state);
+  function automatic EXECUTE fn_lw (input DECODE de);
+    fn_lw = fn_nop(de);
     fn_lw.mem_r_req = 1'b1;
     fn_lw.w_rd = 1'b1;
   endfunction
 
-  function automatic EXECUTE fn_sw (input DECODE de, input STATE state);
-    fn_sw = fn_nop(de, state);
+  function automatic EXECUTE fn_sw (input DECODE de);
+    fn_sw = fn_nop(de);
     fn_sw.x_rd = de.x_rs2;
     fn_sw.mem_w_req = 1'b1;
   endfunction
 
-  function automatic EXECUTE fn_r_io (input DECODE de, input STATE state);
-    fn_r_io = fn_nop(de, state);
+  function automatic EXECUTE fn_r_io (input DECODE de);
+    fn_r_io = fn_nop(de);
     fn_r_io.w_rd = 1'b1;
 
     case (de.imm)
@@ -118,8 +118,8 @@ package lib_alu;
     endcase
   endfunction
 
-  function automatic EXECUTE fn_w_io (input DECODE de, input STATE state);
-    fn_w_io = fn_nop(de, state);
+  function automatic EXECUTE fn_w_io (input DECODE de);
+    fn_w_io = fn_nop(de);
     fn_w_io.state.tx_req = 1'b1;
 
     case (de.imm)
@@ -128,29 +128,29 @@ package lib_alu;
     endcase
   endfunction
 
-  function automatic EXECUTE fn_w_intr (input DECODE de, input STATE state);
-    fn_w_intr = fn_nop(de, state);
+  function automatic EXECUTE fn_w_intr (input DECODE de);
+    fn_w_intr = fn_nop(de);
     fn_w_intr.state.ack = (de.imm == 12'd0) ? de.x_rs1[0] : 1'b0;
     fn_w_intr.state.intr_en = (de.imm == 12'd1) ? de.x_rs1[0] : 1'b0;
-    fn_w_intr.state.intr_vec = (de.imm == 12'd2) ? de.x_rs1 : state.intr_vec;
+    fn_w_intr.state.intr_vec = (de.imm == 12'd2) ? de.x_rs1 : de.state.intr_vec;
   endfunction
 
-  function automatic EXECUTE fn_icall (input DECODE de, input STATE state);
-    fn_icall = fn_nop(de, state);
-    fn_icall.state.pc = state.intr_vec;
-    fn_icall.state.intr_pc = state.pc;
+  function automatic EXECUTE fn_icall (input DECODE de);
+    fn_icall = fn_nop(de);
+    fn_icall.state.pc = de.state.intr_vec;
+    fn_icall.state.intr_pc = de.state.pc;
     fn_icall.state.intr_en = 1'b0;
   endfunction
 
-  function automatic EXECUTE fn_iret (input DECODE de, input STATE state);
-    fn_iret = fn_nop(de, state);
-    fn_iret.state.pc = state.intr_pc;
+  function automatic EXECUTE fn_iret (input DECODE de);
+    fn_iret = fn_nop(de);
+    fn_iret.state.pc = de.state.intr_pc;
     fn_iret.state.intr_en = 1'b1;
   endfunction
 
-  function automatic EXECUTE fn_halt (input DECODE de, input STATE state);
-    fn_halt = fn_nop(de, state);
-    fn_halt.state.pc = state.pc;
+  function automatic EXECUTE fn_halt (input DECODE de);
+    fn_halt = fn_nop(de);
+    fn_halt.state.pc = de.state.pc;
   endfunction
 endpackage
 `endif

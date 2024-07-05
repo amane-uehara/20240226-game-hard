@@ -1,4 +1,5 @@
 `include "lib_cpu.sv"
+`include "lib_alu.sv"
 
 module cpu (
   input  logic        clk, reset,
@@ -19,11 +20,11 @@ module cpu (
     else       counter <= {counter[2:0], counter[3]};
   end
 
-  logic stage_de, stage_wb;
+  logic stage_de;
   assign stage_de = counter[1];
-  assign stage_wb = counter[3];
 
   DECODE de;
+  STATE state;
   logic [31:0] x_rs1, x_rs2;
   always_ff @(posedge clk) begin
     if (reset) begin
@@ -38,17 +39,21 @@ module cpu (
       de.irr     <= irr;
       de.tx_busy <= tx_busy;
       de.rx_data <= rx_data;
+      de.state   <= state;
     end
   end
 
-  STATE state;
-  EXECUTE ex;
-  alu alu(.clk, .reset, .de, .state, .ex);
+  EXECUTE ex, next_ex;
+  assign next_ex = lib_alu :: fn_alu(de);
+  always_ff @(posedge clk) begin
+    if (reset) ex <= '0;
+    else ex <= next_ex;
+  end
 
   logic [31:0] mem_r_val;
   mem_file mem_file(
     .clk, .reset,
-    .w_en(ex.mem_w_req && stage_wb),
+    .w_en(ex.mem_w_req),
     .addr(ex.mem_addr),
     .r_data(mem_r_val),
     .w_data(ex.x_rd)
@@ -58,7 +63,7 @@ module cpu (
   assign gr_w_val = ex.mem_r_req ? mem_r_val : ex.x_rd;
   reg_file reg_file(
     .clk, .reset,
-    .w_en(ex.w_rd && stage_wb),
+    .w_en(ex.w_rd),
     .rs1(rom_data[15:12]),
     .rs2(rom_data[19:16]),
     .rd(ex.rd),
@@ -69,7 +74,7 @@ module cpu (
 
   always_ff @(posedge clk) begin
     if (reset) state <= '0;
-    else if (stage_wb) state <= ex.state;
+    else state <= ex.state;
   end
 
   assign rom_addr = state.pc[10:0];

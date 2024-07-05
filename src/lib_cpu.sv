@@ -22,6 +22,7 @@ package lib_cpu;
     logic        irr;
     logic        tx_busy;
     logic [ 7:0] rx_data;
+    STATE        state;
   } DECODE;
 
   typedef struct packed {
