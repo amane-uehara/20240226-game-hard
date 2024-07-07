@@ -85,7 +85,7 @@ def main():
       line = line_raw.replace(" ","")
 
       for template in template_table:
-        m = re.match(f"^{template['regex']}(//)?.*$", line)
+        m = re.search(f"^{template['regex']}(//)?.*$", line)
         if m:
           p = {**template, **m.groupdict()}
 
