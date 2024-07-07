@@ -1,7 +1,7 @@
 import re
 import sys
 
-num_reg = {
+NUM_REG = {
   "zero" : 0,
   "sp"   : 1,
   "ra"   : 2,
@@ -20,7 +20,7 @@ num_reg = {
   "j"    : 15
 }
 
-num_opt = {
+NUM_OPT = {
   "null": 0,
   "+":    0,
   "-":    1,
@@ -39,7 +39,7 @@ num_opt = {
   "<=":   5
 }
 
-nop = {
+NOP = {
   "rs1":"zero",
   "rs2":"zero",
   "rd":"zero",
@@ -54,25 +54,26 @@ IMM = "(?P<imm>[+-]?\d+)"
 CALC = "(?P<opt>(\+|-|<<|<<<|>>|>>>|&|\||\^))"
 COMP = "(?P<opt>(==|!=|>|>=|<|<=))"
 PRIV = "(?P<opt>(halt|ien|idis|iack|iret))"
+COMMENT = "(//.*)"
 
 template_table = [
-  {"opcode": 0, **nop, "regex":f"{RD}={RS1}{CALC}{IMM}"},
-  {"opcode": 1, **nop, "regex":f"{RD}={RS1}{CALC}{RS2}"},
-  {"opcode": 2, **nop, "regex":f"\(pc,{RD}\)=\({RS1},pc\+1\)"},
-  {"opcode": 3, **nop, "regex":f"if\({RS2}{COMP}0\)pc={RS1}"},
-  {"opcode": 4, **nop, "regex":f"{RD}=mem\[{RS1}\]"},
-  {"opcode": 5, **nop, "regex":f"mem\[{RS1}\]={RS2}"},
-  {"opcode": 9, **nop, "regex":f"iret\(\)"},
-  {"opcode":10, **nop, "regex":f"halt\(\)"},
-  {"opcode": 0, **nop, "regex":f"{RD}={IMM}"},
-  {"opcode": 1, **nop, "regex":f"{RD}={RS1}"},
-  {"opcode": 3, **nop, "regex":f"pc={RS1}"},
-  {"opcode": 6, **nop, "imm": "0", "regex":f"{RD}=monitor_busy\(\)"},
-  {"opcode": 6, **nop, "imm": "1", "regex":f"{RD}=keyboard\(\)"},
-  {"opcode": 7, **nop, "imm": "0", "regex":f"monitor\({RS1}\)"},
-  {"opcode": 8, **nop, "imm": "0", "regex":f"intr_ack\({RS1}\)"},
-  {"opcode": 8, **nop, "imm": "1", "regex":f"intr_en\({RS1}\)"},
-  {"opcode": 8, **nop, "imm": "2", "regex":f"intr_trap\({RS1}\)"},
+  {"opcode": 0, **NOP, "regex":f"{RD}={RS1}{CALC}{IMM}"},
+  {"opcode": 1, **NOP, "regex":f"{RD}={RS1}{CALC}{RS2}"},
+  {"opcode": 2, **NOP, "regex":f"\(pc,{RD}\)=\({RS1},pc\+1\)"},
+  {"opcode": 3, **NOP, "regex":f"if\({RS2}{COMP}0\)pc={RS1}"},
+  {"opcode": 4, **NOP, "regex":f"{RD}=mem\[{RS1}\]"},
+  {"opcode": 5, **NOP, "regex":f"mem\[{RS1}\]={RS2}"},
+  {"opcode": 9, **NOP, "regex":f"iret\(\)"},
+  {"opcode":10, **NOP, "regex":f"halt\(\)"},
+  {"opcode": 0, **NOP, "regex":f"{RD}={IMM}"},
+  {"opcode": 1, **NOP, "regex":f"{RD}={RS1}"},
+  {"opcode": 3, **NOP, "regex":f"pc={RS1}"},
+  {"opcode": 6, **NOP, "imm": "0", "regex":f"{RD}=monitor_busy\(\)"},
+  {"opcode": 6, **NOP, "imm": "1", "regex":f"{RD}=keyboard\(\)"},
+  {"opcode": 7, **NOP, "imm": "0", "regex":f"monitor\({RS1}\)"},
+  {"opcode": 8, **NOP, "imm": "0", "regex":f"intr_ack\({RS1}\)"},
+  {"opcode": 8, **NOP, "imm": "1", "regex":f"intr_en\({RS1}\)"},
+  {"opcode": 8, **NOP, "imm": "2", "regex":f"intr_trap\({RS1}\)"},
 ]
 
 def hex_format(a, width):
@@ -85,16 +86,16 @@ def main():
       line = line_raw.replace(" ","")
 
       for template in template_table:
-        m = re.search(f"^{template['regex']}(//)?.*$", line)
-        if m:
-          p = {**template, **m.groupdict()}
+        template_match = f"^{template['regex']}{COMMENT}?$"
+        if match := re.search(template_match, line):
+          parse = {**template, **match.groupdict()}
 
-          opcode = hex_format(p["opcode"], 1)
-          opt    = hex_format(num_opt[p["opt"]], 1)
-          rd     = hex_format(num_reg[p["rd"]], 1)
-          rs1    = hex_format(num_reg[p["rs1"]], 1)
-          rs2    = hex_format(num_reg[p["rs2"]], 1)
-          imm    = hex_format(int(p["imm"]), 3)
+          opcode = hex_format(parse["opcode"], 1)
+          opt    = hex_format(NUM_OPT[parse["opt"]], 1)
+          rd     = hex_format(NUM_REG[parse["rd"]], 1)
+          rs1    = hex_format(NUM_REG[parse["rs1"]], 1)
+          rs2    = hex_format(NUM_REG[parse["rs2"]], 1)
+          imm    = hex_format(int(parse["imm"]), 3)
           print(f"{imm}{rs2}{rs1}{rd}{opt}{opcode} ", end="")
           break
 
