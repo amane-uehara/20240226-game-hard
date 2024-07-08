@@ -7,7 +7,7 @@ def substitute_comp(line):
   SRC1 = f"(?P<src1>{REG})"
   SRC2 = f"(?P<src2>({REG_LVAL}))"
   SRC3 = f"(?P<src3>({REG_LVAL}))"
-  if m := re.search(f"if\({SRC1}{COMP}{SRC2}\)pc={SRC3}{COMMENT}?", line):
+  if m := re.search(f"if\({SRC1}{COMP}{SRC2}\)pc={SRC3}", line):
     src1 = m.group("src1")
     src2 = m.group("src2")
     src3 = m.group("src3")
@@ -19,7 +19,7 @@ def substitute_comp(line):
 
 def substitute_push(line):
   ret = []
-  if m := re.search(f"push\((?P<regs>{REG}(,{REG})*)\){COMMENT}?", line):
+  if m := re.search(f"push\((?P<regs>{REG}(,{REG})*)\)", line):
     for reg in m.group("regs").split(","):
       ret.append("sp = sp - 1")
       ret.append(f"mem[sp] = {reg}")
@@ -27,7 +27,7 @@ def substitute_push(line):
 
 def substitute_pop(line):
   ret = []
-  if m := re.search(f"pop\((?P<regs>{REG}(,{REG})*)\){COMMENT}?", line):
+  if m := re.search(f"pop\((?P<regs>{REG}(,{REG})*)\)", line):
     for reg in m.group("regs").split(","):
       ret.append(f"{reg} = mem[sp]")
       ret.append("sp = sp + 1")
@@ -40,7 +40,7 @@ def substitute_call(line):
   FN = f"(?P<fn_name>{FN_NAME})"
   ARGS = f"(?P<args>({REG_LVAL}?(,{REG_LVAL})*))"
 
-  if m := re.search(f"({DST}=)?{FN}\({ARGS}?\){COMMENT}?", line):
+  if m := re.search(f"({DST}=)?{FN}\({ARGS}?\)", line):
     push_list = ["ra"]
     if m.group("args"):
       push_list += m.group("args").split(",")
@@ -68,7 +68,8 @@ def main():
   ret = []
   with open(filename) as f:
     for line_raw in f:
-      line = line_raw.replace(" ","")
+      line_with_comment = line_raw.replace(" ","")
+      line = line_with_comment.split("//")[0]
       substitute = []
       substitute += substitute_call(line)
       substitute += substitute_comp(line)
