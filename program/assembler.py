@@ -50,7 +50,7 @@ NOP = {
 RS1 = "(?P<rs1>(zero|sp|ra|rv|tptr|tcmp|[a-j]))"
 RS2 = "(?P<rs2>(zero|sp|ra|rv|tptr|tcmp|[a-j]))"
 RD  = "(?P<rd>(zero|sp|ra|rv|tptr|tcmp|[a-j]))"
-IMM = "(?P<imm>[+-]?(0x)?\d+)"
+IMM = "(?P<imm>[+-]?(0x[0-9a-f]+|\d+))"
 CALC = "(?P<opt>(\+|-|<<|<<<|>>|>>>|&|\||\^))"
 COMP = "(?P<opt>(==|!=|>|>=|<|<=))"
 PRIV = "(?P<opt>(halt|ien|idis|iack|iret))"
