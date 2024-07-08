@@ -12,17 +12,17 @@ def substitute_for(line, label):
     advancement    = expressions[2]
 
     bgn.append(initialization)
-    bgn.append(f"{label}_for_bgn:")
+    bgn.append(f"deflabel {label}_for_bgn")
     bgn.append(f"tptr = {label}_for_loop")
     bgn.append(f"if ({condition}) pc = tptr")
     bgn.append(f"tptr = {label}_for_end")
     bgn.append(f"pc = tptr")
-    bgn.append(f"{label}_for_loop:")
+    bgn.append(f"deflabel {label}_for_loop")
 
     end.append(advancement)
     end.append(f"tptr = {label}_for_bgn")
     end.append(f"pc = tptr")
-    end.append(f"{label}_for_end:")
+    end.append(f"deflabel {label}_for_end")
 
   return (bgn, end)
 
@@ -37,9 +37,9 @@ def substitute_if(line, label):
     bgn.append(f"if ({condition}) pc = tptr")
     bgn.append(f"tptr = {label}_if_end")
     bgn.append(f"pc = tptr")
-    bgn.append(f"{label}_if_bgn:")
+    bgn.append(f"deflabel {label}_if_bgn")
 
-    end.append(f"{label}_if_end:")
+    end.append(f"deflabel {label}_if_end")
 
   return (bgn, end)
 
@@ -49,7 +49,7 @@ def substitute_fn_def(line):
   m = re.match("^(?P<fn_name>(fn_[a-z0-9_]*))\{$", line)
   if m:
     fn_name = m.groupdict()["fn_name"]
-    bgn.append(f"label_{fn_name}:")
+    bgn.append(f"deflabel label_{fn_name}")
     end.append("pc = ra")
 
   return (bgn, end)
