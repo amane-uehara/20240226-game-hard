@@ -19,7 +19,7 @@ def create_symbol_table(filename):
 
       m = re.search(f"^ *deflabel {LABEL}", line_strip)
       if m:
-        symbol_table[m.group("label")] = hex_format(addr, 4)
+        symbol_table[m.group("label")] = f"0x{hex_format(addr, 4)}"
         continue
       addr += 1
   return symbol_table
@@ -41,7 +41,7 @@ def main():
       m = re.search(f"^ *deflabel {LABEL}", line_strip)
       if m:
         label = m.group("label")
-        print(f"// {label}: 0x{symbol_table[label]}")
+        print(f"// {label}: {symbol_table[label]}")
         continue
 
       m = re.search(f"{LABEL}", line_strip)
@@ -51,7 +51,7 @@ def main():
         print(line_strip.replace(label, label_addr, 1), end="")
       else:
         print(line_strip, end="")
-      print(f" // addr:0x{hex_format(addr, 4)}")
+      print(f" // addr:{hex_format(addr, 4)}")
       addr += 1
 
 main()
