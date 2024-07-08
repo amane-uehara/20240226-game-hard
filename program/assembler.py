@@ -50,7 +50,7 @@ NOP = {
 RS1 = "(?P<rs1>(zero|sp|ra|rv|tptr|tcmp|[a-j]))"
 RS2 = "(?P<rs2>(zero|sp|ra|rv|tptr|tcmp|[a-j]))"
 RD  = "(?P<rd>(zero|sp|ra|rv|tptr|tcmp|[a-j]))"
-IMM = "(?P<imm>[+-]?\d+)"
+IMM = "(?P<imm>[+-]?(0x)?\d+)"
 CALC = "(?P<opt>(\+|-|<<|<<<|>>|>>>|&|\||\^))"
 COMP = "(?P<opt>(==|!=|>|>=|<|<=))"
 PRIV = "(?P<opt>(halt|ien|idis|iack|iret))"
@@ -95,7 +95,7 @@ def main():
           rd     = hex_format(NUM_REG[parse["rd"]], 1)
           rs1    = hex_format(NUM_REG[parse["rs1"]], 1)
           rs2    = hex_format(NUM_REG[parse["rs2"]], 1)
-          imm    = hex_format(int(parse["imm"]), 3)
+          imm    = hex_format(int(parse["imm"],0), 3)
           print(f"{imm}{rs2}{rs1}{rd}{opt}{opcode} ", end="")
           break
 
