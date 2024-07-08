@@ -39,14 +39,6 @@ NUM_OPT = {
   "<=":   5
 }
 
-NOP = {
-  "rs1":"zero",
-  "rs2":"zero",
-  "rd":"zero",
-  "imm":"0",
-  "opt":"null"
-}
-
 RS1 = "(?P<rs1>(zero|sp|ra|rv|tptr|tcmp|[a-j]))"
 RS2 = "(?P<rs2>(zero|sp|ra|rv|tptr|tcmp|[a-j]))"
 RD  = "(?P<rd>(zero|sp|ra|rv|tptr|tcmp|[a-j]))"
@@ -57,20 +49,20 @@ PRIV = "(?P<opt>(halt|ien|idis|iack|iret))"
 COMMENT = "(//.*)"
 
 template_table = [
-  {"opcode": 0, **NOP, "regex":f"{RD}={RS1}{CALC}{IMM}"},
-  {"opcode": 1, **NOP, "regex":f"{RD}={RS1}{CALC}{RS2}"},
-  {"opcode": 2, **NOP, "regex":f"\(pc,{RD}\)=\({RS1},pc\+1\)"},
-  {"opcode": 3, **NOP, "regex":f"if\({RS2}{COMP}0\)pc={RS1}"},
-  {"opcode": 4, **NOP, "regex":f"{RD}=mem\[{RS1}\]"},
-  {"opcode": 5, **NOP, "regex":f"mem\[{RS1}\]={RS2}"},
-  {"opcode": 6, **NOP, "regex":f"{RD}=io\[{IMM}\]"},
-  {"opcode": 7, **NOP, "regex":f"io\[{IMM}\]={RS1}"},
-  {"opcode": 8, **NOP, "regex":f"intr\[{IMM}\]={RS1}"},
-  {"opcode": 9, **NOP, "regex":f"iret\(\)"},
-  {"opcode":10, **NOP, "regex":f"halt\(\)"},
-  {"opcode": 0, **NOP, "regex":f"{RD}={IMM}"},
-  {"opcode": 1, **NOP, "regex":f"{RD}={RS1}"},
-  {"opcode": 3, **NOP, "regex":f"pc={RS1}"},
+  {"opcode": 0, "regex":f"{RD}={RS1}{CALC}{IMM}"},
+  {"opcode": 1, "regex":f"{RD}={RS1}{CALC}{RS2}"},
+  {"opcode": 2, "regex":f"\(pc,{RD}\)=\({RS1},pc\+1\)"},
+  {"opcode": 3, "regex":f"if\({RS2}{COMP}0\)pc={RS1}"},
+  {"opcode": 4, "regex":f"{RD}=mem\[{RS1}\]"},
+  {"opcode": 5, "regex":f"mem\[{RS1}\]={RS2}"},
+  {"opcode": 6, "regex":f"{RD}=io\[{IMM}\]"},
+  {"opcode": 7, "regex":f"io\[{IMM}\]={RS1}"},
+  {"opcode": 8, "regex":f"intr\[{IMM}\]={RS1}"},
+  {"opcode": 9, "regex":f"iret\(\)"},
+  {"opcode":10, "regex":f"halt\(\)"},
+  {"opcode": 0, "regex":f"{RD}={IMM}"},
+  {"opcode": 1, "regex":f"{RD}={RS1}"},
+  {"opcode": 3, "regex":f"pc={RS1}"},
 ]
 
 def hex_format(a, width):
@@ -85,9 +77,16 @@ def main():
       for template in template_table:
         template_match = f"^{template['regex']}{COMMENT}?$"
         if match := re.search(template_match, line):
-          parse = {**template, **match.groupdict()}
+          parse = {
+            "rs1": "zero",
+            "rs2": "zero",
+            "rd": "zero",
+            "imm": "0",
+            "opt": "null",
+            **match.groupdict()
+          }
 
-          opcode = hex_format(parse["opcode"], 1)
+          opcode = hex_format(template["opcode"], 1)
           opt    = hex_format(NUM_OPT[parse["opt"]], 1)
           rd     = hex_format(NUM_REG[parse["rd"]], 1)
           rs1    = hex_format(NUM_REG[parse["rs1"]], 1)
