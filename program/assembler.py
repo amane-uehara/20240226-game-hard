@@ -63,17 +63,14 @@ template_table = [
   {"opcode": 3, **NOP, "regex":f"if\({RS2}{COMP}0\)pc={RS1}"},
   {"opcode": 4, **NOP, "regex":f"{RD}=mem\[{RS1}\]"},
   {"opcode": 5, **NOP, "regex":f"mem\[{RS1}\]={RS2}"},
+  {"opcode": 6, **NOP, "regex":f"{RD}=io\[{IMM}\]"},
+  {"opcode": 7, **NOP, "regex":f"io\[{IMM}\]={RS1}"},
+  {"opcode": 8, **NOP, "regex":f"intr\[{IMM}\]={RS1}"},
   {"opcode": 9, **NOP, "regex":f"iret\(\)"},
   {"opcode":10, **NOP, "regex":f"halt\(\)"},
   {"opcode": 0, **NOP, "regex":f"{RD}={IMM}"},
   {"opcode": 1, **NOP, "regex":f"{RD}={RS1}"},
   {"opcode": 3, **NOP, "regex":f"pc={RS1}"},
-  {"opcode": 6, **NOP, "imm": "0", "regex":f"{RD}=monitor_busy\(\)"},
-  {"opcode": 6, **NOP, "imm": "1", "regex":f"{RD}=keyboard\(\)"},
-  {"opcode": 7, **NOP, "imm": "0", "regex":f"monitor\({RS1}\)"},
-  {"opcode": 8, **NOP, "imm": "0", "regex":f"intr_ack\({RS1}\)"},
-  {"opcode": 8, **NOP, "imm": "1", "regex":f"intr_en\({RS1}\)"},
-  {"opcode": 8, **NOP, "imm": "2", "regex":f"intr_trap\({RS1}\)"},
 ]
 
 def hex_format(a, width):

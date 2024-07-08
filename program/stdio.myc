@@ -1,20 +1,20 @@
 fn_start {
-  intr_en(zero)
+  intr[1] = zero // intr_en(zero)
   sp = 64
   a = label_fn_trap_vector
-  intr_trap(a)
+  intr[2] = a // intr_trap(a)
   fn_print(27,91,50,48,104,0) // ESC [ 2 0 h
   fn_main()
   a = 1
-  intr_en(a)
+  intr[1] = a // intr_en(a)
   halt()
 }
 
 fn_trap_vector {
   push(sp,ra,rv,tptr,tcmp,a,b,c,d,e,f,g,h,i,j) // 全レジスタをstackしないと、forやifの処理中に割り込まれた時にtcmpの値がバグる
-  a = keyboard()
+  a = io[1] // a = keyboard()
   b = 1
-  intr_ack(b)
+  intr[0] = b // intr_ack(b)
   fn_trap_handler(a)
   pop(j,i,h,g,f,e,d,c,b,a,tcmp,tptr,rv,ra,sp)
   iret()
@@ -27,10 +27,10 @@ fn_putchar {
 
   b = 1
   for (;b == 1;) {
-    b = monitor_busy()
+    b = io[0] // b = monitor_busy()
   }
 
-  monitor(a)
+  io[0] = a // monitor(a)
   pop(i,b,a)
 }
 

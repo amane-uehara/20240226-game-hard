@@ -1,8 +1,8 @@
 // // label_fn_start: 0x0000
-00100008 // intr_en(zero) // addr:0000
+00100008 // intr[1] = zero // addr:0000
 04000100 // sp = 64 // addr:0001
 02800600 // a = 0x0028 // addr:0002
-00206008 // intr_trap(a) // addr:0003
+00206008 // intr[2] = a // addr:0003
 00101110 // sp = sp - 1 // addr:0004
 00000500 // tcmp = 0 // addr:0005
 00051005 // mem[sp] = tcmp // addr:0006
@@ -36,7 +36,7 @@
 00001204 // ra = mem[sp] // addr:0022
 00101100 // sp = sp + 1 // addr:0023
 00100600 // a = 1 // addr:0024
-00106008 // intr_en(a) // addr:0025
+00106008 // intr[1] = a // addr:0025
 0000000a // halt() // addr:0026
 00002003 // pc = ra // addr:0027
 // 
@@ -71,9 +71,9 @@
 000e1005 // mem[sp] = i // addr:0043
 00101110 // sp = sp - 1 // addr:0044
 000f1005 // mem[sp] = j // addr:0045
-00100606 // a = keyboard() // addr:0046
+00100606 // a = io[1] // addr:0046
 00100700 // b = 1 // addr:0047
-00007008 // intr_ack(b) // addr:0048
+00007008 // intr[0] = b // addr:0048
 00101110 // sp = sp - 1 // addr:0049
 00006501 // tcmp = a // addr:004a
 00051005 // mem[sp] = tcmp // addr:004b
@@ -136,13 +136,13 @@
 08400400 // tptr = 0x0084 // addr:007f
 00004003 // pc = tptr // addr:0080
 // // label_0_for_loop: 0x0081
-00000706 // b = monitor_busy() // addr:0081
+00000706 // b = io[0] // addr:0081
 // 
 07c00400 // tptr = 0x007c // addr:0082
 00004003 // pc = tptr // addr:0083
 // // label_0_for_end: 0x0084
 // 
-00006007 // monitor(a) // addr:0084
+00006007 // io[0] = a // addr:0084
 00001e04 // i = mem[sp] // addr:0085
 00101100 // sp = sp + 1 // addr:0086
 00001704 // b = mem[sp] // addr:0087
