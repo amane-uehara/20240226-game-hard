@@ -1,5 +1,6 @@
 import re
 import sys
+from common import *
 
 NUM_REG = {
   "zero" : 0,
@@ -39,15 +40,6 @@ NUM_OPT = {
   "<=":   5
 }
 
-RS1 = "(?P<rs1>(zero|sp|ra|rv|tptr|tcmp|[a-j]))"
-RS2 = "(?P<rs2>(zero|sp|ra|rv|tptr|tcmp|[a-j]))"
-RD  = "(?P<rd>(zero|sp|ra|rv|tptr|tcmp|[a-j]))"
-IMM = "(?P<imm>[+-]?(0x[0-9a-f]+|\d+))"
-CALC = "(?P<opt>(\+|-|<<|<<<|>>|>>>|&|\||\^))"
-COMP = "(?P<opt>(==|!=|>|>=|<|<=))"
-PRIV = "(?P<opt>(halt|ien|idis|iack|iret))"
-COMMENT = "(//.*)"
-
 template_table = [
   {"opcode": 0, "regex":f"{RD}={RS1}{CALC}{IMM}"},
   {"opcode": 1, "regex":f"{RD}={RS1}{CALC}{RS2}"},
@@ -64,9 +56,6 @@ template_table = [
   {"opcode": 1, "regex":f"{RD}={RS1}"},
   {"opcode": 3, "regex":f"pc={RS1}"},
 ]
-
-def hex_format(a, width):
-  return format(2**32+a, '08x')[-width:]
 
 def main():
   filename = sys.argv[1]
@@ -91,7 +80,7 @@ def main():
           rd     = hex_format(NUM_REG[parse["rd"]], 1)
           rs1    = hex_format(NUM_REG[parse["rs1"]], 1)
           rs2    = hex_format(NUM_REG[parse["rs2"]], 1)
-          imm    = hex_format(int(parse["imm"],0), 3)
+          imm    = hex_format(int(parse["imm"], 0), 3)
           print(f"{imm}{rs2}{rs1}{rd}{opt}{opcode} ", end="")
           break
 
