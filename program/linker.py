@@ -1,10 +1,6 @@
 import re
 import sys
-
-LABEL = "(?P<label>(label[_0-9a-z]+))"
-
-def hex_format(a, width):
-  return format(2**32+a, '08x')[-width:]
+from common import *
 
 def create_symbol_table(filename):
   symbol_table = {}
@@ -13,7 +9,7 @@ def create_symbol_table(filename):
     for line_raw in f:
       line_strip = line_raw.strip()
 
-      m = re.search(f"^ *(//.*)?$", line_strip)
+      m = re.search(f"^ *{COMMENT}?$", line_strip)
       if m:
         continue
 
@@ -33,7 +29,7 @@ def main():
     for line_raw in f:
       line_strip = line_raw.strip()
 
-      m = re.search(f"^ *(//.*)?$", line_strip)
+      m = re.search(f"^ *{COMMENT}?$", line_strip)
       if m:
         print(line_strip)
         continue

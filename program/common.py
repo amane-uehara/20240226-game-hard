@@ -7,5 +7,7 @@ CALC = "(?P<opt>(\+|-|<<|<<<|>>|>>>|&|\||\^))"
 COMP = "(?P<opt>(==|!=|>|>=|<|<=))"
 COMMENT = "(//.*)"
 
+LABEL = "(?P<label>(label[_0-9a-z]+))"
+
 def hex_format(a, width):
   return format(2**32+a, '08x')[-width:]
