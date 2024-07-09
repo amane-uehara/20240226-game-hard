@@ -13,7 +13,7 @@ def substitute_for(line, label):
     bgn.append(initialization)
     bgn.append(f"deflabel {label}_for_bgn")
     bgn.append(f"tptr = {label}_for_loop")
-    bgn.append(f"if ({condition}) pc = tptr")
+    bgn.append(f"pc = ({condition}) ? tptr : pc + 1")
     bgn.append(f"tptr = {label}_for_end")
     bgn.append(f"pc = tptr")
     bgn.append(f"deflabel {label}_for_loop")
@@ -32,7 +32,7 @@ def substitute_if(line, label):
     condition = m.group("condition")
 
     bgn.append(f"tptr = {label}_if_bgn")
-    bgn.append(f"if ({condition}) pc = tptr")
+    bgn.append(f"pc = ({condition}) ? tptr : pc + 1")
     bgn.append(f"tptr = {label}_if_end")
     bgn.append(f"pc = tptr")
     bgn.append(f"deflabel {label}_if_bgn")

@@ -132,7 +132,7 @@
 // // label_0_for_bgn: 0x007c
 08100400 // tptr = 0x0081 // addr:007c
 00107510 // tcmp = b - 1 // addr:007d
-00054003 // if (tcmp == 0) pc = tptr // addr:007e
+00054003 // pc = (tcmp == 0) ? tptr : pc + 1 // addr:007e
 08400400 // tptr = 0x0084 // addr:007f
 00004003 // pc = tptr // addr:0080
 // // label_0_for_loop: 0x0081
@@ -163,7 +163,7 @@
 // // label_1_for_bgn: 0x0092
 09700400 // tptr = 0x0097 // addr:0092
 00006510 // tcmp = a - 0 // addr:0093
-00054013 // if (tcmp != 0) pc = tptr // addr:0094
+00054013 // pc = (tcmp != 0) ? tptr : pc + 1 // addr:0094
 0a500400 // tptr = 0x00a5 // addr:0095
 00004003 // pc = tptr // addr:0096
 // // label_1_for_loop: 0x0097
@@ -273,7 +273,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_2_for_bgn: 0x00f2
 0f700400 // tptr = 0x00f7 // addr:00f2
 0100e510 // tcmp = i - 16 // addr:00f3
-00054033 // if (tcmp < 0) pc = tptr // addr:00f4
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:00f4
 0fb00400 // tptr = 0x00fb // addr:00f5
 00004003 // pc = tptr // addr:00f6
 // // label_2_for_loop: 0x00f7
@@ -340,7 +340,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // 
 13300400 // tptr = 0x0133 // addr:012e
 06b06510 // tcmp = a - 107 // addr:012f
-00054003 // if (tcmp == 0) pc = tptr // addr:0130
+00054003 // pc = (tcmp == 0) ? tptr : pc + 1 // addr:0130
 13b00400 // tptr = 0x013b // addr:0131
 00004003 // pc = tptr // addr:0132
 // // label_3_if_bgn: 0x0133
@@ -355,7 +355,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_3_if_end: 0x013b
 14000400 // tptr = 0x0140 // addr:013b
 06a06510 // tcmp = a - 106 // addr:013c
-00054003 // if (tcmp == 0) pc = tptr // addr:013d
+00054003 // pc = (tcmp == 0) ? tptr : pc + 1 // addr:013d
 14800400 // tptr = 0x0148 // addr:013e
 00004003 // pc = tptr // addr:013f
 // // label_4_if_bgn: 0x0140
@@ -370,7 +370,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_4_if_end: 0x0148
 14d00400 // tptr = 0x014d // addr:0148
 06806510 // tcmp = a - 104 // addr:0149
-00054003 // if (tcmp == 0) pc = tptr // addr:014a
+00054003 // pc = (tcmp == 0) ? tptr : pc + 1 // addr:014a
 15500400 // tptr = 0x0155 // addr:014b
 00004003 // pc = tptr // addr:014c
 // // label_5_if_bgn: 0x014d
@@ -385,7 +385,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_5_if_end: 0x0155
 15a00400 // tptr = 0x015a // addr:0155
 06c06510 // tcmp = a - 108 // addr:0156
-00054003 // if (tcmp == 0) pc = tptr // addr:0157
+00054003 // pc = (tcmp == 0) ? tptr : pc + 1 // addr:0157
 16200400 // tptr = 0x0162 // addr:0158
 00004003 // pc = tptr // addr:0159
 // // label_6_if_bgn: 0x015a
@@ -401,7 +401,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // 
 16700400 // tptr = 0x0167 // addr:0162
 00007510 // tcmp = b - 0 // addr:0163
-00054013 // if (tcmp != 0) pc = tptr // addr:0164
+00054013 // pc = (tcmp != 0) ? tptr : pc + 1 // addr:0164
 16e00400 // tptr = 0x016e // addr:0165
 00004003 // pc = tptr // addr:0166
 // // label_7_if_bgn: 0x0167
@@ -447,7 +447,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_8_for_bgn: 0x018b
 19000400 // tptr = 0x0190 // addr:018b
 01007510 // tcmp = b - 16 // addr:018c
-00054033 // if (tcmp < 0) pc = tptr // addr:018d
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:018d
 19e00400 // tptr = 0x019e // addr:018e
 00004003 // pc = tptr // addr:018f
 // // label_8_for_loop: 0x0190
@@ -457,7 +457,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 00009a04 // e = mem[d] // addr:0193
 19900400 // tptr = 0x0199 // addr:0194
 0000a510 // tcmp = e - 0 // addr:0195
-00054003 // if (tcmp == 0) pc = tptr // addr:0196
+00054003 // pc = (tcmp == 0) ? tptr : pc + 1 // addr:0196
 19b00400 // tptr = 0x019b // addr:0197
 00004003 // pc = tptr // addr:0198
 // // label_9_if_bgn: 0x0199
@@ -505,7 +505,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_10_for_bgn: 0x01bd
 1c200400 // tptr = 0x01c2 // addr:01bd
 00406510 // tcmp = a - 4 // addr:01be
-00054033 // if (tcmp < 0) pc = tptr // addr:01bf
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:01bf
 1e100400 // tptr = 0x01e1 // addr:01c0
 00004003 // pc = tptr // addr:01c1
 // // label_10_for_loop: 0x01c2
@@ -515,7 +515,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_11_for_bgn: 0x01c5
 1ca00400 // tptr = 0x01ca // addr:01c5
 00408510 // tcmp = c - 4 // addr:01c6
-00054033 // if (tcmp < 0) pc = tptr // addr:01c7
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:01c7
 1de00400 // tptr = 0x01de // addr:01c8
 00004003 // pc = tptr // addr:01c9
 // // label_11_for_loop: 0x01ca
@@ -523,7 +523,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 00009a04 // e = mem[d] // addr:01cb
 1d100400 // tptr = 0x01d1 // addr:01cc
 0000a510 // tcmp = e - 0 // addr:01cd
-00054013 // if (tcmp != 0) pc = tptr // addr:01ce
+00054013 // pc = (tcmp != 0) ? tptr : pc + 1 // addr:01ce
 1db00400 // tptr = 0x01db // addr:01cf
 00004003 // pc = tptr // addr:01d0
 // // label_12_if_bgn: 0x01d1
@@ -531,7 +531,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 000ab005 // mem[f] = e // addr:01d2
 1d800400 // tptr = 0x01d8 // addr:01d3
 0008d511 // tcmp = h - c // addr:01d4
-00054013 // if (tcmp != 0) pc = tptr // addr:01d5
+00054013 // pc = (tcmp != 0) ? tptr : pc + 1 // addr:01d5
 1da00400 // tptr = 0x01da // addr:01d6
 00004003 // pc = tptr // addr:01d7
 // // label_13_if_bgn: 0x01d8
@@ -591,7 +591,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_14_for_bgn: 0x0205
 20a00400 // tptr = 0x020a // addr:0205
 00406510 // tcmp = a - 4 // addr:0206
-00054033 // if (tcmp < 0) pc = tptr // addr:0207
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:0207
 22900400 // tptr = 0x0229 // addr:0208
 00004003 // pc = tptr // addr:0209
 // // label_14_for_loop: 0x020a
@@ -600,7 +600,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_15_for_bgn: 0x020c
 21100400 // tptr = 0x0211 // addr:020c
 00308510 // tcmp = c - 3 // addr:020d
-00054033 // if (tcmp < 0) pc = tptr // addr:020e
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:020e
 22600400 // tptr = 0x0226 // addr:020f
 00004003 // pc = tptr // addr:0210
 // // label_15_for_loop: 0x0211
@@ -608,7 +608,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 00009a04 // e = mem[d] // addr:0212
 21800400 // tptr = 0x0218 // addr:0213
 0000a510 // tcmp = e - 0 // addr:0214
-00054013 // if (tcmp != 0) pc = tptr // addr:0215
+00054013 // pc = (tcmp != 0) ? tptr : pc + 1 // addr:0215
 22300400 // tptr = 0x0223 // addr:0216
 00004003 // pc = tptr // addr:0217
 // // label_16_if_bgn: 0x0218
@@ -616,7 +616,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 0000bc04 // g = mem[f] // addr:0219
 21f00400 // tptr = 0x021f // addr:021a
 000ca511 // tcmp = e - g // addr:021b
-00054003 // if (tcmp == 0) pc = tptr // addr:021c
+00054003 // pc = (tcmp == 0) ? tptr : pc + 1 // addr:021c
 22300400 // tptr = 0x0223 // addr:021d
 00004003 // pc = tptr // addr:021e
 // // label_17_if_bgn: 0x021f
@@ -673,7 +673,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_18_for_bgn: 0x024a
 24f00400 // tptr = 0x024f // addr:024a
 00406510 // tcmp = a - 4 // addr:024b
-00054033 // if (tcmp < 0) pc = tptr // addr:024c
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:024c
 26300400 // tptr = 0x0263 // addr:024d
 00004003 // pc = tptr // addr:024e
 // // label_18_for_loop: 0x024f
@@ -682,7 +682,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_19_for_bgn: 0x0251
 25600400 // tptr = 0x0256 // addr:0251
 00208510 // tcmp = c - 2 // addr:0252
-00054033 // if (tcmp < 0) pc = tptr // addr:0253
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:0253
 26000400 // tptr = 0x0260 // addr:0254
 00004003 // pc = tptr // addr:0255
 // // label_19_for_loop: 0x0256
@@ -736,7 +736,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_20_for_bgn: 0x0281
 28600400 // tptr = 0x0286 // addr:0281
 00406510 // tcmp = a - 4 // addr:0282
-00054033 // if (tcmp < 0) pc = tptr // addr:0283
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:0283
 29f00400 // tptr = 0x029f // addr:0284
 00004003 // pc = tptr // addr:0285
 // // label_20_for_loop: 0x0286
@@ -745,13 +745,13 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_21_for_bgn: 0x0288
 28d00400 // tptr = 0x028d // addr:0288
 00408510 // tcmp = c - 4 // addr:0289
-00054033 // if (tcmp < 0) pc = tptr // addr:028a
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:028a
 29c00400 // tptr = 0x029c // addr:028b
 00004003 // pc = tptr // addr:028c
 // // label_21_for_loop: 0x028d
 29200400 // tptr = 0x0292 // addr:028d
 00086511 // tcmp = a - c // addr:028e
-00054033 // if (tcmp < 0) pc = tptr // addr:028f
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:028f
 29900400 // tptr = 0x0299 // addr:0290
 00004003 // pc = tptr // addr:0291
 // // label_22_if_bgn: 0x0292
@@ -934,7 +934,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_23_for_bgn: 0x0335
 33a00400 // tptr = 0x033a // addr:0335
 0090e510 // tcmp = i - 9 // addr:0336
-00054033 // if (tcmp < 0) pc = tptr // addr:0337
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:0337
 36600400 // tptr = 0x0366 // addr:0338
 00004003 // pc = tptr // addr:0339
 // // label_23_for_loop: 0x033a
@@ -996,7 +996,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_24_for_bgn: 0x036e
 37300400 // tptr = 0x0373 // addr:036e
 0040e510 // tcmp = i - 4 // addr:036f
-00054033 // if (tcmp < 0) pc = tptr // addr:0370
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:0370
 3b100400 // tptr = 0x03b1 // addr:0371
 00004003 // pc = tptr // addr:0372
 // // label_24_for_loop: 0x0373
@@ -1016,7 +1016,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_25_for_bgn: 0x037f
 38400400 // tptr = 0x0384 // addr:037f
 00408510 // tcmp = c - 4 // addr:0380
-00054033 // if (tcmp < 0) pc = tptr // addr:0381
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:0381
 39d00400 // tptr = 0x039d // addr:0382
 00004003 // pc = tptr // addr:0383
 // // label_25_for_loop: 0x0384
@@ -1098,7 +1098,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // 
 3d000400 // tptr = 0x03d0 // addr:03cb
 00106510 // tcmp = a - 1 // addr:03cc
-00054023 // if (tcmp >= 0) pc = tptr // addr:03cd
+00054023 // pc = (tcmp >= 0) ? tptr : pc + 1 // addr:03cd
 3d200400 // tptr = 0x03d2 // addr:03ce
 00004003 // pc = tptr // addr:03cf
 // // label_26_if_bgn: 0x03d0
@@ -1107,7 +1107,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_26_if_end: 0x03d2
 3d700400 // tptr = 0x03d7 // addr:03d2
 00706510 // tcmp = a - 7 // addr:03d3
-00054023 // if (tcmp >= 0) pc = tptr // addr:03d4
+00054023 // pc = (tcmp >= 0) ? tptr : pc + 1 // addr:03d4
 3d900400 // tptr = 0x03d9 // addr:03d5
 00004003 // pc = tptr // addr:03d6
 // // label_27_if_bgn: 0x03d7
@@ -1116,7 +1116,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_27_if_end: 0x03d9
 3de00400 // tptr = 0x03de // addr:03d9
 00d06510 // tcmp = a - 13 // addr:03da
-00054023 // if (tcmp >= 0) pc = tptr // addr:03db
+00054023 // pc = (tcmp >= 0) ? tptr : pc + 1 // addr:03db
 3df00400 // tptr = 0x03df // addr:03dc
 00004003 // pc = tptr // addr:03dd
 // // label_28_if_bgn: 0x03de
@@ -1231,7 +1231,7 @@ fa000500 // tcmp = 4000 // addr:00ab
 // // label_29_for_bgn: 0x0445
 44a00400 // tptr = 0x044a // addr:0445
 00d0e510 // tcmp = i - 13 // addr:0446
-00054033 // if (tcmp < 0) pc = tptr // addr:0447
+00054033 // pc = (tcmp < 0) ? tptr : pc + 1 // addr:0447
 45700400 // tptr = 0x0457 // addr:0448
 00004003 // pc = tptr // addr:0449
 // // label_29_for_loop: 0x044a
