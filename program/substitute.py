@@ -6,15 +6,16 @@ def substitute_comp(line):
   ret = []
   SRC1 = f"(?P<src1>{REG})"
   SRC2 = f"(?P<src2>({REG_LVAL}))"
-  SRC3 = f"(?P<src3>({REG_LVAL}))"
+  SRC3 = f"(?P<src3>({REG}))"
   if m := re.search(f"pc=\({SRC1}{COMP}{SRC2}\)\?{SRC3}:pc\+1", line):
     src1 = m.group("src1")
     src2 = m.group("src2")
     src3 = m.group("src3")
     comp = m.group("opt")
 
-    ret.append(f"tcmp = {src1} - {src2}")
-    ret.append(f"pc = (tcmp {comp} 0) ? {src3} : pc + 1")
+    if src2 != "0":
+      ret.append(f"tcmp = {src1} - {src2}")
+      ret.append(f"pc = (tcmp {comp} 0) ? {src3} : pc + 1")
   return ret
 
 def substitute_push(line):
