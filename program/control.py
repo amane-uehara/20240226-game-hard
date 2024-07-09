@@ -4,9 +4,8 @@ import sys
 def substitute_for(line, label):
   bgn = []
   end = []
-  m = re.match("^for\((?P<expressions>(.*))\)\{$", line)
-  if m:
-    expressions = m.groupdict()["expressions"].split(";")
+  if m := re.search("for\((?P<expressions>(.*))\)\{", line):
+    expressions = m.group("expressions").split(";")
     initialization = expressions[0]
     condition      = expressions[1]
     advancement    = expressions[2]
@@ -29,9 +28,8 @@ def substitute_for(line, label):
 def substitute_if(line, label):
   bgn = []
   end = []
-  m = re.match("^if\((?P<condition>(.*))\)\{$", line)
-  if m:
-    condition = m.groupdict()["condition"]
+  if m := re.search("if\((?P<condition>(.*))\)\{", line):
+    condition = m.group("condition")
 
     bgn.append(f"tptr = {label}_if_bgn")
     bgn.append(f"if ({condition}) pc = tptr")
@@ -46,9 +44,8 @@ def substitute_if(line, label):
 def substitute_fn_def(line):
   bgn = []
   end = []
-  m = re.match("^(?P<fn_name>(fn_[a-z0-9_]*))\{$", line)
-  if m:
-    fn_name = m.groupdict()["fn_name"]
+  if m := re.search("(?P<fn_name>(fn_[a-z0-9_]*))\{", line):
+    fn_name = m.group("fn_name")
     bgn.append(f"deflabel label_{fn_name}")
     end.append("pc = ra")
 
@@ -69,7 +66,7 @@ def main():
       (bgn_if, end_if) = substitute_if(line, f"label_{label_count}")
       (bgn_def, end_def) = substitute_fn_def(line)
 
-      if re.match("\}$", line):
+      if re.search("\}", line):
         code += stack.pop()
       elif bgn_for:
         code += bgn_for
