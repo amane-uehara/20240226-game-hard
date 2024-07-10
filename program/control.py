@@ -5,7 +5,7 @@ from common import *
 def substitute_for(line, label):
   bgn = []
   end = []
-  if m := re.search("for\((?P<expressions>(.*))\)\{", line):
+  if m := re.fullmatch("for\((?P<expressions>(.*))\)\{", line):
     expressions = m.group("expressions").split(";")
     initialization = expressions[0]
     condition      = expressions[1]
@@ -29,7 +29,7 @@ def substitute_for(line, label):
 def substitute_if(line, label):
   bgn = []
   end = []
-  if m := re.search("if\((?P<condition>(.*))\)\{", line):
+  if m := re.fullmatch("if\((?P<condition>(.*))\)\{", line):
     condition = m.group("condition")
 
     bgn.append(f"tptr = {label}_if_bgn")
@@ -45,7 +45,7 @@ def substitute_if(line, label):
 def substitute_fn_def(line):
   bgn = []
   end = []
-  if m := re.search(f"(?P<fn_name>{FUNCTION})"+"\{", line):
+  if m := re.fullmatch(f"(?P<fn_name>{FUNCTION})"+"\{", line):
     fn_name = m.group("fn_name")
     bgn.append(f"label_{fn_name}:")
     end.append("pc = ra")
@@ -67,7 +67,7 @@ def main():
       (bgn_if, end_if) = substitute_if(line, f"label_{label_count}")
       (bgn_def, end_def) = substitute_fn_def(line)
 
-      if re.search("\}", line):
+      if re.fullmatch("\}", line):
         code += stack.pop()
       elif bgn_for:
         code += bgn_for
