@@ -3,7 +3,7 @@ VAL = "[+-]?(0x[0-9a-f]+|\d+)"
 LABEL = "(label_[0-9a-z_]+)"
 LVAL = f"({LABEL}|{VAL})"
 REG_LVAL = f"({REG}|{LABEL}|{VAL})"
-FN_NAME = "(fn_[0-9a-z_]+)"
+FUNCTION = "(fn_[0-9a-z_]+)"
 
 RS1 = f"(?P<rs1>{REG})"
 RS2 = f"(?P<rs2>{REG})"

@@ -20,7 +20,8 @@ def substitute_comp(line):
 
 def substitute_push(line):
   ret = []
-  if m := re.search(f"push\((?P<regs>{REG}(,{REG})*)\)", line):
+  REGS = f"(?P<regs>{REG}(,{REG})*)"
+  if m := re.search(f"push\({REGS}\)", line):
     for reg in m.group("regs").split(","):
       ret.append("sp = sp - 1")
       ret.append(f"mem[sp] = {reg}")
@@ -28,7 +29,8 @@ def substitute_push(line):
 
 def substitute_pop(line):
   ret = []
-  if m := re.search(f"pop\((?P<regs>{REG}(,{REG})*)\)", line):
+  REGS = f"(?P<regs>{REG}(,{REG})*)"
+  if m := re.search(f"pop\({REGS}\)", line):
     for reg in m.group("regs").split(","):
       ret.append(f"{reg} = mem[sp]")
       ret.append("sp = sp + 1")
@@ -36,12 +38,11 @@ def substitute_pop(line):
 
 def substitute_call(line):
   ret = []
-  fn_name = ""
   DST = f"(?P<dst>{REG})"
-  FN = f"(?P<fn_name>{FN_NAME})"
+  FN_NAME = f"(?P<fn_name>{FUNCTION})"
   ARGS = f"(?P<args>({REG_LVAL}?(,{REG_LVAL})*))"
 
-  if m := re.search(f"({DST}=)?{FN}\({ARGS}?\)", line):
+  if m := re.search(f"({DST}=)?{FN_NAME}\({ARGS}?\)", line):
     push_list = ["ra"]
     if m.group("args"):
       push_list += m.group("args").split(",")
