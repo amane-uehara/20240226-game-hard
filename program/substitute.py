@@ -82,6 +82,6 @@ def main():
       if substitute:
         print('\n'.join(substitute))
       else:
-        print(line_strip)
+        print(line)
 
 main()
