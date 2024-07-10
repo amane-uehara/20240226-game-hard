@@ -17,7 +17,7 @@ def create_symbol_table(filename):
           addr += 1
   return symbol_table
 
-def link_address(filename, symbol_table):
+def replace_address(filename, symbol_table):
   addr = 0
   with open(filename) as f:
     for line_raw in f:
@@ -42,6 +42,6 @@ def link_address(filename, symbol_table):
 def main():
   filename = sys.argv[1]
   symbol_table = create_symbol_table(filename)
-  link_address(filename, symbol_table)
+  replace_address(filename, symbol_table)
 
 main()
