@@ -1,5 +1,6 @@
 import re
 import sys
+from common import *
 
 def substitute_for(line, label):
   bgn = []
@@ -44,7 +45,7 @@ def substitute_if(line, label):
 def substitute_fn_def(line):
   bgn = []
   end = []
-  if m := re.search("(?P<fn_name>(fn_[a-z0-9_]*))\{", line):
+  if m := re.search(f"(?P<fn_name>{FUNCTION})"+"\{", line):
     fn_name = m.group("fn_name")
     bgn.append(f"deflabel label_{fn_name}")
     end.append("pc = ra")
