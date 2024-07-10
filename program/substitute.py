@@ -68,7 +68,6 @@ def substitute_call(line):
 def main():
   filename = sys.argv[1]
 
-  ret = []
   with open(filename) as f:
     for line_raw in f:
       line_strip = line_raw.strip()
@@ -81,10 +80,8 @@ def main():
       substitute += substitute_pop(line)
 
       if substitute:
-        ret += substitute
+        print('\n'.join(substitute))
       else:
-        ret.append(line_strip)
-
-  print('\n'.join(ret))
+        print(line_strip)
 
 main()
