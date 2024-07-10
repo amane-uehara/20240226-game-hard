@@ -71,8 +71,9 @@ def main():
   ret = []
   with open(filename) as f:
     for line_raw in f:
-      line_with_comment = line_raw.replace(" ","")
-      line = line_with_comment.split("//")[0]
+      line_strip = line_raw.strip()
+      line = line_strip.replace(" ","").split("//")[0]
+
       substitute = []
       substitute += substitute_call(line)
       substitute += substitute_comp(line)
@@ -82,7 +83,7 @@ def main():
       if substitute:
         ret += substitute
       else:
-        ret.append(line_raw.strip())
+        ret.append(line_strip)
 
   print('\n'.join(ret))
 
