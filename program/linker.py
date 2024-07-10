@@ -11,16 +11,13 @@ def create_symbol_table(filename):
       line = line_strip.replace(" ","").split("//")[0]
 
       if line:
-        m = re.fullmatch(f"(?P<label>{LABEL}):", line)
-        if m:
+        if m := re.fullmatch(f"(?P<label>{LABEL}):", line):
           symbol_table[m.group("label")] = f"0x{hex_format(addr, 4)}"
-          continue
-        addr += 1
+        else:
+          addr += 1
   return symbol_table
 
-def main():
-  filename = sys.argv[1]
-  symbol_table = create_symbol_table(filename)
+def link_address(filename, symbol_table):
   addr = 0
   with open(filename) as f:
     for line_raw in f:
@@ -28,18 +25,23 @@ def main():
       line = line_strip.replace(" ","").split("//")[0]
 
       if line:
-        if m := re.fullmatch(f"(?P<label>{LABEL}):", line):
-          label = m.group("label")
-          print(f"// {label}: {symbol_table[label]}")
-          continue
-
         if m := re.search(f"(?P<label>{LABEL})", line):
           label = m.group("label")
           label_addr = symbol_table[label]
-          print(line.replace(label, label_addr, 1), end="")
+          if re.search(":$", line):
+            mnemonic = f"// {label}: {label_addr}"
+          else:
+            mnemonic = line.replace(label, label_addr, 1)
         else:
-          print(line, end="")
-        print(f" // addr:{hex_format(addr, 4)}")
-        addr += 1
+          mnemonic = line
+
+        print(f"{mnemonic.ljust(22)} // addr:{hex_format(addr, 4)}")
+        if mnemonic[0:2] != "//":
+          addr += 1
+
+def main():
+  filename = sys.argv[1]
+  symbol_table = create_symbol_table(filename)
+  link_address(filename, symbol_table)
 
 main()
