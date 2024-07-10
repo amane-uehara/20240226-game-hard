@@ -8,7 +8,7 @@ def substitute_comp(line):
   SRC2 = f"(?P<src2>({REG_LVAL}))"
   SRC3 = f"(?P<src3>({REG}))"
   COMP = f"(?P<comp>({OP_COMP}))"
-  if m := re.search(f"pc=\({SRC1}{COMP}{SRC2}\)\?{SRC3}:pc\+1", line):
+  if m := re.fullmatch(f"pc=\({SRC1}{COMP}{SRC2}\)\?{SRC3}:pc\+1", line):
     src1 = m.group("src1")
     src2 = m.group("src2")
     src3 = m.group("src3")
@@ -22,7 +22,7 @@ def substitute_comp(line):
 def substitute_push(line):
   ret = []
   REGS = f"(?P<regs>{REG}(,{REG})*)"
-  if m := re.search(f"push\({REGS}\)", line):
+  if m := re.fullmatch(f"push\({REGS}\)", line):
     for reg in m.group("regs").split(","):
       ret.append("sp = sp - 1")
       ret.append(f"mem[sp] = {reg}")
@@ -31,7 +31,7 @@ def substitute_push(line):
 def substitute_pop(line):
   ret = []
   REGS = f"(?P<regs>{REG}(,{REG})*)"
-  if m := re.search(f"pop\({REGS}\)", line):
+  if m := re.fullmatch(f"pop\({REGS}\)", line):
     for reg in m.group("regs").split(","):
       ret.append(f"{reg} = mem[sp]")
       ret.append("sp = sp + 1")
@@ -43,7 +43,7 @@ def substitute_call(line):
   FN_NAME = f"(?P<fn_name>{FUNCTION})"
   ARGS = f"(?P<args>({REG_LVAL}?(,{REG_LVAL})*))"
 
-  if m := re.search(f"({DST}=)?{FN_NAME}\({ARGS}?\)", line):
+  if m := re.fullmatch(f"({DST}=)?{FN_NAME}\({ARGS}?\)", line):
     push_list = ["ra"]
     if m.group("args"):
       push_list += m.group("args").split(",")
