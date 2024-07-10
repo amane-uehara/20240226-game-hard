@@ -61,11 +61,11 @@ def main():
   filename = sys.argv[1]
   with open(filename) as f:
     for line_raw in f:
-      line = line_raw.replace(" ","")
+      line_strip = line_raw.strip()
+      line = line_strip.replace(" ","").split("//")[0]
 
       for template in template_table:
-        template_match = f"^{template['regex']}{COMMENT}?$"
-        if match := re.search(template_match, line):
+        if match := re.fullmatch(template['regex'], line):
           parse = {
             "rs1": "zero",
             "rs2": "zero",
@@ -84,6 +84,6 @@ def main():
           print(f"{imm}{rs2}{rs1}{rd}{opt}{opcode} ", end="")
           break
 
-      print(f"// {line_raw.strip()}")
+      print(f"// {line_strip}", end="\n")
 
 main()
