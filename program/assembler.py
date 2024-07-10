@@ -40,6 +40,13 @@ NUM_OPT = {
   "<=":   5
 }
 
+RS1  = f"(?P<rs1>{REG})"
+RS2  = f"(?P<rs2>{REG})"
+RD   = f"(?P<rd>{REG})"
+IMM  = f"(?P<imm>{VAL})"
+CALC = f"(?P<opt>{OP_CALC})"
+COMP = f"(?P<opt>{OP_COMP})"
+
 template_table = [
   {"opcode": 0, "regex":f"{RD}={RS1}{CALC}{IMM}"},
   {"opcode": 1, "regex":f"{RD}={RS1}{CALC}{RS2}"},

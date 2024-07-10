@@ -7,11 +7,12 @@ def substitute_comp(line):
   SRC1 = f"(?P<src1>{REG})"
   SRC2 = f"(?P<src2>({REG_LVAL}))"
   SRC3 = f"(?P<src3>({REG}))"
+  COMP = f"(?P<comp>({OP_COMP}))"
   if m := re.search(f"pc=\({SRC1}{COMP}{SRC2}\)\?{SRC3}:pc\+1", line):
     src1 = m.group("src1")
     src2 = m.group("src2")
     src3 = m.group("src3")
-    comp = m.group("opt")
+    comp = m.group("comp")
 
     if src2 != "0":
       ret.append(f"tcmp = {src1} - {src2}")
