@@ -27,12 +27,25 @@ def sub_comp(line):
 
 def sub_push(line):
   ret = ""
-  REGS = f"(?P<regs>{REG}(,{REG})*)"
-  if m := re.fullmatch(f"push\({REGS}\)", line):
-    for reg in m.group("regs").split(","):
+  ARGS = f"(?P<args>({REG_LVAL}?(,{REG_LVAL})*))"
+  if m := re.fullmatch(f"push\({ARGS}\)", line):
+    args = m.group("args").split(",")
+    ret = push_args(args)
+  return ret
+
+def push_args(args):
+  ret = ""
+  for arg in args:
+    if re.fullmatch(f"{REG}", arg):
       ret += f"""
         sp = sp - 1
-        mem[sp] = {reg}
+        mem[sp] = {arg}
+      """
+    else:
+      ret += f"""
+        sp = sp - 1
+        tcmp = {arg}
+        mem[sp] = tcmp
       """
   return ret
 
@@ -54,29 +67,24 @@ def sub_call(line):
   ARGS = f"(?P<args>({REG_LVAL}?(,{REG_LVAL})*))"
 
   if m := re.fullmatch(f"({DST}=)?{FUNC}\({ARGS}?\)", line):
-    push_list = ["ra"]
     if m.group("args"):
-      push_list += m.group("args").split(",")
+      push_list = m.group("args").split(",")
+      ret += push_args(reversed(push_list))
 
-    for reg_or_imm in reversed(push_list):
-      ret += f"""
-        sp = sp - 1
-        tcmp = {reg_or_imm}
-        mem[sp] = tcmp
-      """
-
-    func = m.group("func")
     ret += f"""
-      ra = {func}
+      sp = sp - 1
+      mem[sp] = ra
+      ra = {m.group('func')}
       (pc, ra) = (ra, pc + 1)
       ra = mem[sp]
-      sp = sp + {len(push_list)}
+      sp = sp + 1
     """
 
-    if m.group("dst"):
-      dst = m.group("dst")
-      ret += f"{dst} = rv"
+    if m.group("args"):
+      ret += f"sp = sp + {len(push_list)}"
 
+    if m.group("dst"):
+      ret += f"{m.group('dst')} = rv"
   return ret
 
 def main():
