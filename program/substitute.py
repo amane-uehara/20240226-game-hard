@@ -3,10 +3,10 @@ import sys
 from common import *
 
 def sub_identity(line):
-  return [line]
+  return line
 
 def sub_comp(line):
-  ret = []
+  ret = ""
   SRC1 = f"(?P<src1>{REG})"
   SRC2 = f"(?P<src2>({REG_LVAL}))"
   SRC3 = f"(?P<src3>({REG}))"
@@ -18,30 +18,36 @@ def sub_comp(line):
     comp = m.group("comp")
 
     if src2 != "0":
-      ret.append(f"tcmp = {src1} - {src2}")
-      ret.append(f"pc = (tcmp {comp} 0) ? {src3} : pc + 1")
+      ret = f"""
+        tcmp = {src1} - {src2}
+        pc = (tcmp {comp} 0) ? {src3} : pc + 1
+      """
   return ret
 
 def sub_push(line):
-  ret = []
+  ret = ""
   REGS = f"(?P<regs>{REG}(,{REG})*)"
   if m := re.fullmatch(f"push\({REGS}\)", line):
     for reg in m.group("regs").split(","):
-      ret.append("sp = sp - 1")
-      ret.append(f"mem[sp] = {reg}")
+      ret += f"""
+        sp = sp - 1
+        mem[sp] = {reg}
+      """
   return ret
 
 def sub_pop(line):
-  ret = []
+  ret = ""
   REGS = f"(?P<regs>{REG}(,{REG})*)"
   if m := re.fullmatch(f"pop\({REGS}\)", line):
     for reg in m.group("regs").split(","):
-      ret.append(f"{reg} = mem[sp]")
-      ret.append("sp = sp + 1")
+      ret += f"""
+        {reg} = mem[sp]
+        sp = sp + 1
+      """
   return ret
 
 def sub_call(line):
-  ret = []
+  ret = ""
   DST = f"(?P<dst>{REG})"
   FUNC = f"(?P<func>{LABEL})"
   ARGS = f"(?P<args>({REG_LVAL}?(,{REG_LVAL})*))"
@@ -52,19 +58,23 @@ def sub_call(line):
       push_list += m.group("args").split(",")
 
     for reg_or_imm in reversed(push_list):
-      ret.append("sp = sp - 1")
-      ret.append(f"tcmp = {reg_or_imm}")
-      ret.append("mem[sp] = tcmp")
+      ret += f"""
+        sp = sp - 1
+        tcmp = {reg_or_imm}
+        mem[sp] = tcmp
+      """
 
     func = m.group("func")
-    ret.append(f"ra = {func}")
-    ret.append("(pc, ra) = (ra, pc + 1)")
-    ret.append("ra = mem[sp]")
-    ret.append(f"sp = sp + {len(push_list)}")
+    ret += f"""
+      ra = {func}
+      (pc, ra) = (ra, pc + 1)
+      ra = mem[sp]
+      sp = sp + {len(push_list)}
+    """
 
     if m.group("dst"):
       dst = m.group("dst")
-      ret.append(f"{dst} = rv")
+      ret += f"{dst} = rv"
 
   return ret
 
@@ -79,7 +89,7 @@ def main():
       print_line = line_raw
       for f in [sub_call, sub_comp, sub_push, sub_pop, sub_identity]:
         if substitute := f(line):
-          print('\n'.join(substitute))
+          print(substitute)
           break
 
 main()
