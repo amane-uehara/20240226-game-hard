@@ -2,6 +2,9 @@ import re
 import sys
 from common import *
 
+def sub_identity(line):
+  return [line]
+
 def sub_comp(line):
   ret = []
   SRC1 = f"(?P<src1>{REG})"
@@ -40,10 +43,10 @@ def sub_pop(line):
 def sub_call(line):
   ret = []
   DST = f"(?P<dst>{REG})"
-  FN_NAME = f"(?P<fn_name>{FUNCTION})"
+  FUNC = f"(?P<func>{LABEL})"
   ARGS = f"(?P<args>({REG_LVAL}?(,{REG_LVAL})*))"
 
-  if m := re.fullmatch(f"({DST}=)?{FN_NAME}\({ARGS}?\)", line):
+  if m := re.fullmatch(f"({DST}=)?{FUNC}\({ARGS}?\)", line):
     push_list = ["ra"]
     if m.group("args"):
       push_list += m.group("args").split(",")
@@ -53,8 +56,8 @@ def sub_call(line):
       ret.append(f"tcmp = {reg_or_imm}")
       ret.append("mem[sp] = tcmp")
 
-    fn_name = m.group("fn_name")
-    ret.append(f"ra = label_{fn_name}")
+    func = m.group("func")
+    ret.append(f"ra = {func}")
     ret.append("(pc, ra) = (ra, pc + 1)")
     ret.append("ra = mem[sp]")
     ret.append(f"sp = sp + {len(push_list)}")
@@ -74,10 +77,9 @@ def main():
       line = line_strip.replace(" ","").split("//")[0]
 
       print_line = line_raw
-      for f in [sub_call, sub_comp, sub_push, sub_pop]:
-        substitute = f(line)
-        print('\n'.join(substitute))
-
-      print(print_line)
+      for f in [sub_call, sub_comp, sub_push, sub_pop, sub_identity]:
+        if substitute := f(line):
+          print('\n'.join(substitute))
+          break
 
 main()

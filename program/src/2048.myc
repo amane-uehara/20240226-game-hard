@@ -1,19 +1,19 @@
-fn_main {
+fn_main:
   fn_set_rand_seed(4000)
   fn_init_game()
   fn_reprint_board()
-}
+  pc = ra
 
-fn_set_rand_seed {
+fn_set_rand_seed:
   push(a,b,i)
   i = sp + 4
   a = mem[i]
   b = 16
   mem[b] = a
   pop(i,b,a)
-}
+  pc = ra
 
-fn_rand {
+fn_rand:
   push(a,b,c)
 
   c = 16
@@ -28,27 +28,27 @@ fn_rand {
 
   rv = a
   pop(c,b,a)
-}
+  pc = ra
 
-fn_init_game {
+fn_init_game:
   push(a,b,i)
   for (i=0; i<16; i=i+1) {
     mem[i] = zero
   }
   fn_add_new()
   pop(i,b,a)
-}
+  pc = ra
 
-fn_trap_handler {
+fn_trap_handler:
   push(a,i)
   i = sp + 3
   a = mem[i]
   fn_update_board(a)
   fn_reprint_board()
   pop(i,a)
-}
+  pc = ra
 
-fn_update_board {
+fn_update_board:
   push(a,b,i)
   i = sp + 4
   a = mem[i]
@@ -71,9 +71,9 @@ fn_update_board {
     fn_add_new()
   }
   pop(i,b,a)
-}
+  pc = ra
 
-fn_add_new {
+fn_add_new:
   push(a,b,c,d,e,f)
   f = 1
   a = fn_rand()
@@ -88,9 +88,9 @@ fn_add_new {
     }
   }
   pop(f,e,d,c,b,a)
-}
+  pc = ra
 
-fn_compress {
+fn_compress:
   push(a,b,c,d,e,f,h,i)
   i = 0
 
@@ -114,9 +114,9 @@ fn_compress {
 
   rv = i
   pop(i,h,f,e,d,c,b,a)
-}
+  pc = ra
 
-fn_merge {
+fn_merge:
   push(a,b,c,d,e,f,g,i)
   i = 0
 
@@ -140,9 +140,9 @@ fn_merge {
 
   rv = i
   pop(i,g,f,e,d,c,b,a)
-}
+  pc = ra
 
-fn_reverse {
+fn_reverse:
   push(a,b,c,d,e,f,g)
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -157,9 +157,9 @@ fn_reverse {
     }
   }
   pop(g,f,e,d,c,b,a)
-}
+  pc = ra
 
-fn_transpose {
+fn_transpose:
   push(a,b,c,d,e,f,g)
   for (a=0; a<4; a=a+1) {
     b = a << 2
@@ -176,9 +176,9 @@ fn_transpose {
     }
   }
   pop(g,f,e,d,c,b,a)
-}
+  pc = ra
 
-fn_move_left {
+fn_move_left:
   push(a,b,c)
   a = fn_compress()
   b = fn_merge()
@@ -187,36 +187,36 @@ fn_move_left {
   a = a | c
   rv = a
   pop(c,b,a)
-}
+  pc = ra
 
-fn_move_right {
+fn_move_right:
   push(a)
   fn_reverse()
   a = fn_move_left()
   fn_reverse()
   rv = a
   pop(a)
-}
+  pc = ra
 
-fn_move_up {
+fn_move_up:
   push(a)
   fn_transpose()
   a = fn_move_left()
   fn_transpose()
   rv = a
   pop(a)
-}
+  pc = ra
 
-fn_move_down {
+fn_move_down:
   push(a)
   fn_transpose()
   a = fn_move_right()
   fn_transpose()
   rv = a
   pop(a)
-}
+  pc = ra
 
-fn_reprint_board {
+fn_reprint_board:
   push(b,c,d,e,i)
   for(i=0; i<9; i=i+1) {
     fn_print(27,91,49,70,0)  // ESC [ 1 F (cursor up)
@@ -239,9 +239,9 @@ fn_reprint_board {
     fn_print_line()
   }
   pop(i,e,d,c,b)
-}
+  pc = ra
 
-fn_print_single_block {
+fn_print_single_block:
   push(a,b,c,d,i)
   i = sp + 6
   a = mem[i]
@@ -267,13 +267,13 @@ fn_print_single_block {
   fn_print(27,91,48,109,0) // ESC [ 0 m NULL
 
   pop(i,d,c,b,a)
-}
+  pc = ra
 
-fn_print_line {
+fn_print_line:
   push(i)
   for (i=0; i<13; i=i+1) {
     fn_putchar(45) // -
   }
   fn_putchar(10) // LF
   pop(i)
-}
+  pc = ra

@@ -42,16 +42,6 @@ def substitute_if(line, label):
 
   return (bgn, end)
 
-def substitute_fn_def(line):
-  bgn = []
-  end = []
-  if m := re.fullmatch(f"(?P<fn_name>{FUNCTION})"+"\{", line):
-    fn_name = m.group("fn_name")
-    bgn.append(f"label_{fn_name}:")
-    end.append("pc = ra")
-
-  return (bgn, end)
-
 def main():
   code = []
   stack = []
@@ -65,7 +55,6 @@ def main():
 
       (bgn_for, end_for) = substitute_for(line, f"label_{label_count}")
       (bgn_if, end_if) = substitute_if(line, f"label_{label_count}")
-      (bgn_def, end_def) = substitute_fn_def(line)
 
       if re.fullmatch("\}", line):
         code += stack.pop()
@@ -77,9 +66,6 @@ def main():
         code += bgn_if
         stack.append(end_if)
         label_count += 1
-      elif bgn_def:
-        code += bgn_def
-        stack.append(end_def)
       else:
         code.append(line_delete_comment)
 

@@ -1,4 +1,4 @@
-// // label_fn_start: 0x0000 // addr:0000
+// // fn_start: 0x0000    // addr:0000
 00100008 // intr[1]=zero           // addr:0000
 04000100 // sp=64                  // addr:0001
 02800600 // a=0x0028               // addr:0002
@@ -39,7 +39,7 @@
 00106008 // intr[1]=a              // addr:0025
 0000000a // halt()                 // addr:0026
 00002003 // pc=ra                  // addr:0027
-// // label_fn_trap_vector: 0x0028 // addr:0028
+// // fn_trap_vector: 0x0028 // addr:0028
 00101110 // sp=sp-1                // addr:0028
 00011005 // mem[sp]=sp             // addr:0029
 00101110 // sp=sp-1                // addr:002a
@@ -115,7 +115,7 @@
 00101100 // sp=sp+1                // addr:0070
 00000009 // iret()                 // addr:0071
 00002003 // pc=ra                  // addr:0072
-// // label_fn_putchar: 0x0073 // addr:0073
+// // fn_putchar: 0x0073  // addr:0073
 00101110 // sp=sp-1                // addr:0073
 00061005 // mem[sp]=a              // addr:0074
 00101110 // sp=sp-1                // addr:0075
@@ -144,7 +144,7 @@
 00001604 // a=mem[sp]              // addr:0089
 00101100 // sp=sp+1                // addr:008a
 00002003 // pc=ra                  // addr:008b
-// // label_fn_print: 0x008c // addr:008c
+// // fn_print: 0x008c    // addr:008c
 00101110 // sp=sp-1                // addr:008c
 00061005 // mem[sp]=a              // addr:008d
 00101110 // sp=sp-1                // addr:008e
@@ -177,7 +177,7 @@
 00001604 // a=mem[sp]              // addr:00a6
 00101100 // sp=sp+1                // addr:00a7
 00002003 // pc=ra                  // addr:00a8
-// // label_fn_main: 0x00a9 // addr:00a9
+// // fn_main: 0x00a9     // addr:00a9
 00101110 // sp=sp-1                // addr:00a9
 fa000500 // tcmp=4000              // addr:00aa
 00051005 // mem[sp]=tcmp           // addr:00ab
@@ -203,7 +203,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001204 // ra=mem[sp]             // addr:00bf
 00101100 // sp=sp+1                // addr:00c0
 00002003 // pc=ra                  // addr:00c1
-// // label_fn_set_rand_seed: 0x00c2 // addr:00c2
+// // fn_set_rand_seed: 0x00c2 // addr:00c2
 00101110 // sp=sp-1                // addr:00c2
 00061005 // mem[sp]=a              // addr:00c3
 00101110 // sp=sp-1                // addr:00c4
@@ -221,7 +221,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:00d0
 00101100 // sp=sp+1                // addr:00d1
 00002003 // pc=ra                  // addr:00d2
-// // label_fn_rand: 0x00d3 // addr:00d3
+// // fn_rand: 0x00d3     // addr:00d3
 00101110 // sp=sp-1                // addr:00d3
 00061005 // mem[sp]=a              // addr:00d4
 00101110 // sp=sp-1                // addr:00d5
@@ -245,7 +245,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:00e7
 00101100 // sp=sp+1                // addr:00e8
 00002003 // pc=ra                  // addr:00e9
-// // label_fn_init_game: 0x00ea // addr:00ea
+// // fn_init_game: 0x00ea // addr:00ea
 00101110 // sp=sp-1                // addr:00ea
 00061005 // mem[sp]=a              // addr:00eb
 00101110 // sp=sp-1                // addr:00ec
@@ -279,7 +279,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:0105
 00101100 // sp=sp+1                // addr:0106
 00002003 // pc=ra                  // addr:0107
-// // label_fn_trap_handler: 0x0108 // addr:0108
+// // fn_trap_handler: 0x0108 // addr:0108
 00101110 // sp=sp-1                // addr:0108
 00061005 // mem[sp]=a              // addr:0109
 00101110 // sp=sp-1                // addr:010a
@@ -308,7 +308,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:0121
 00101100 // sp=sp+1                // addr:0122
 00002003 // pc=ra                  // addr:0123
-// // label_fn_update_board: 0x0124 // addr:0124
+// // fn_update_board: 0x0124 // addr:0124
 00101110 // sp=sp-1                // addr:0124
 00061005 // mem[sp]=a              // addr:0125
 00101110 // sp=sp-1                // addr:0126
@@ -398,7 +398,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:0170
 00101100 // sp=sp+1                // addr:0171
 00002003 // pc=ra                  // addr:0172
-// // label_fn_add_new: 0x0173 // addr:0173
+// // fn_add_new: 0x0173  // addr:0173
 00101110 // sp=sp-1                // addr:0173
 00061005 // mem[sp]=a              // addr:0174
 00101110 // sp=sp-1                // addr:0175
@@ -457,7 +457,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:01a5
 00101100 // sp=sp+1                // addr:01a6
 00002003 // pc=ra                  // addr:01a7
-// // label_fn_compress: 0x01a8 // addr:01a8
+// // fn_compress: 0x01a8 // addr:01a8
 00101110 // sp=sp-1                // addr:01a8
 00061005 // mem[sp]=a              // addr:01a9
 00101110 // sp=sp-1                // addr:01aa
@@ -539,7 +539,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:01ec
 00101100 // sp=sp+1                // addr:01ed
 00002003 // pc=ra                  // addr:01ee
-// // label_fn_merge: 0x01ef // addr:01ef
+// // fn_merge: 0x01ef    // addr:01ef
 00101110 // sp=sp-1                // addr:01ef
 00061005 // mem[sp]=a              // addr:01f0
 00101110 // sp=sp-1                // addr:01f1
@@ -621,7 +621,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:0233
 00101100 // sp=sp+1                // addr:0234
 00002003 // pc=ra                  // addr:0235
-// // label_fn_reverse: 0x0236 // addr:0236
+// // fn_reverse: 0x0236  // addr:0236
 00101110 // sp=sp-1                // addr:0236
 00061005 // mem[sp]=a              // addr:0237
 00101110 // sp=sp-1                // addr:0238
@@ -683,7 +683,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:026a
 00101100 // sp=sp+1                // addr:026b
 00002003 // pc=ra                  // addr:026c
-// // label_fn_transpose: 0x026d // addr:026d
+// // fn_transpose: 0x026d // addr:026d
 00101110 // sp=sp-1                // addr:026d
 00061005 // mem[sp]=a              // addr:026e
 00101110 // sp=sp-1                // addr:026f
@@ -752,7 +752,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:02a6
 00101100 // sp=sp+1                // addr:02a7
 00002003 // pc=ra                  // addr:02a8
-// // label_fn_move_left: 0x02a9 // addr:02a9
+// // fn_move_left: 0x02a9 // addr:02a9
 00101110 // sp=sp-1                // addr:02a9
 00061005 // mem[sp]=a              // addr:02aa
 00101110 // sp=sp-1                // addr:02ab
@@ -793,7 +793,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:02ce
 00101100 // sp=sp+1                // addr:02cf
 00002003 // pc=ra                  // addr:02d0
-// // label_fn_move_right: 0x02d1 // addr:02d1
+// // fn_move_right: 0x02d1 // addr:02d1
 00101110 // sp=sp-1                // addr:02d1
 00061005 // mem[sp]=a              // addr:02d2
 00101110 // sp=sp-1                // addr:02d3
@@ -822,7 +822,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:02ea
 00101100 // sp=sp+1                // addr:02eb
 00002003 // pc=ra                  // addr:02ec
-// // label_fn_move_up: 0x02ed // addr:02ed
+// // fn_move_up: 0x02ed  // addr:02ed
 00101110 // sp=sp-1                // addr:02ed
 00061005 // mem[sp]=a              // addr:02ee
 00101110 // sp=sp-1                // addr:02ef
@@ -851,7 +851,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:0306
 00101100 // sp=sp+1                // addr:0307
 00002003 // pc=ra                  // addr:0308
-// // label_fn_move_down: 0x0309 // addr:0309
+// // fn_move_down: 0x0309 // addr:0309
 00101110 // sp=sp-1                // addr:0309
 00061005 // mem[sp]=a              // addr:030a
 00101110 // sp=sp-1                // addr:030b
@@ -880,7 +880,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:0322
 00101100 // sp=sp+1                // addr:0323
 00002003 // pc=ra                  // addr:0324
-// // label_fn_reprint_board: 0x0325 // addr:0325
+// // fn_reprint_board: 0x0325 // addr:0325
 00101110 // sp=sp-1                // addr:0325
 00071005 // mem[sp]=b              // addr:0326
 00101110 // sp=sp-1                // addr:0327
@@ -1036,7 +1036,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001704 // b=mem[sp]              // addr:03b4
 00101100 // sp=sp+1                // addr:03b5
 00002003 // pc=ra                  // addr:03b6
-// // label_fn_print_single_block: 0x03b7 // addr:03b7
+// // fn_print_single_block: 0x03b7 // addr:03b7
 00101110 // sp=sp-1                // addr:03b7
 00061005 // mem[sp]=a              // addr:03b8
 00101110 // sp=sp-1                // addr:03b9
@@ -1177,7 +1177,7 @@ fa000500 // tcmp=4000              // addr:00aa
 00001604 // a=mem[sp]              // addr:043a
 00101100 // sp=sp+1                // addr:043b
 00002003 // pc=ra                  // addr:043c
-// // label_fn_print_line: 0x043d // addr:043d
+// // fn_print_line: 0x043d // addr:043d
 00101110 // sp=sp-1                // addr:043d
 000e1005 // mem[sp]=i              // addr:043e
 00000e00 // i=0                    // addr:043f
