@@ -95,7 +95,6 @@ def main():
       line_strip = line_raw.strip()
       line = line_strip.replace(" ","").split("//")[0]
 
-      print_line = line_raw
       for f in [sub_call, sub_comp, sub_push, sub_pop, sub_identity]:
         if substitute := f(line):
           print(textwrap.dedent(substitute))
