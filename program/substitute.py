@@ -2,7 +2,7 @@ import re
 import sys
 from common import *
 
-def substitute_comp(line):
+def sub_comp(line):
   ret = []
   SRC1 = f"(?P<src1>{REG})"
   SRC2 = f"(?P<src2>({REG_LVAL}))"
@@ -19,7 +19,7 @@ def substitute_comp(line):
       ret.append(f"pc = (tcmp {comp} 0) ? {src3} : pc + 1")
   return ret
 
-def substitute_push(line):
+def sub_push(line):
   ret = []
   REGS = f"(?P<regs>{REG}(,{REG})*)"
   if m := re.fullmatch(f"push\({REGS}\)", line):
@@ -28,7 +28,7 @@ def substitute_push(line):
       ret.append(f"mem[sp] = {reg}")
   return ret
 
-def substitute_pop(line):
+def sub_pop(line):
   ret = []
   REGS = f"(?P<regs>{REG}(,{REG})*)"
   if m := re.fullmatch(f"pop\({REGS}\)", line):
@@ -37,7 +37,7 @@ def substitute_pop(line):
       ret.append("sp = sp + 1")
   return ret
 
-def substitute_call(line):
+def sub_call(line):
   ret = []
   DST = f"(?P<dst>{REG})"
   FN_NAME = f"(?P<fn_name>{FUNCTION})"
@@ -73,15 +73,11 @@ def main():
       line_strip = line_raw.strip()
       line = line_strip.replace(" ","").split("//")[0]
 
-      substitute = []
-      substitute += substitute_call(line)
-      substitute += substitute_comp(line)
-      substitute += substitute_push(line)
-      substitute += substitute_pop(line)
-
-      if substitute:
+      print_line = line_raw
+      for f in [sub_call, sub_comp, sub_push, sub_pop]:
+        substitute = f(line)
         print('\n'.join(substitute))
-      else:
-        print(line)
+
+      print(print_line)
 
 main()
