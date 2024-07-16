@@ -1,48 +1,54 @@
 import re
 import sys
+import textwrap
 from common import *
 
 def sub_identity(line, label):
-  return ([line], [])
+  return (line, "")
 
 def sub_for(line, label):
-  bgn = []
-  end = []
+  bgn = ""
+  end = ""
   if m := re.fullmatch("for\((?P<expressions>(.*))\)\{", line):
     expressions = m.group("expressions").split(";")
     initialization = expressions[0]
     condition      = expressions[1]
     advancement    = expressions[2]
 
-    bgn.append(initialization)
-    bgn.append(f"{label}_for_bgn:")
-    bgn.append(f"tptr = {label}_for_loop")
-    bgn.append(f"pc = ({condition}) ? tptr : pc + 1")
-    bgn.append(f"tptr = {label}_for_end")
-    bgn.append(f"pc = tptr")
-    bgn.append(f"{label}_for_loop:")
+    bgn = f"""
+      {initialization}
+      {label}_for_bgn:
+      tptr = {label}_for_loop
+      pc = ({condition}) ? tptr : pc + 1
+      tptr = {label}_for_end
+      pc = tptr
+      {label}_for_loop:
+    """
 
-    end.append(advancement)
-    end.append(f"tptr = {label}_for_bgn")
-    end.append(f"pc = tptr")
-    end.append(f"{label}_for_end:")
+    end = f"""
+      {advancement}
+      tptr = {label}_for_bgn
+      pc = tptr
+      {label}_for_end:
+    """
 
   return (bgn, end)
 
 def sub_if(line, label):
-  bgn = []
-  end = []
+  bgn = ""
+  end = ""
   if m := re.fullmatch("if\((?P<condition>(.*))\)\{", line):
     condition = m.group("condition")
 
-    bgn.append(f"tptr = {label}_if_bgn")
-    bgn.append(f"pc = ({condition}) ? tptr : pc + 1")
-    bgn.append(f"tptr = {label}_if_end")
-    bgn.append(f"pc = tptr")
-    bgn.append(f"{label}_if_bgn:")
+    bgn = f"""
+      tptr = {label}_if_bgn
+      pc = ({condition}) ? tptr : pc + 1
+      tptr = {label}_if_end
+      pc = tptr
+      {label}_if_bgn:
+    """
 
-    end.append(f"{label}_if_end:")
-
+    end = f"{label}_if_end:"
   return (bgn, end)
 
 def main():
@@ -57,20 +63,18 @@ def main():
       line = line_delete_comment.replace(" ", "")
 
       if re.fullmatch("\}", line):
-        mnemonic_list = stack.pop()
-        print('\n'.join(mnemonic_list))
+        mnemonic = stack.pop()
+        print(textwrap.dedent(mnemonic))
         continue
 
       for f in [sub_for, sub_if, sub_identity]:
         (bgn, end) = f(line, f"label_{label_count}")
         if bgn:
-          print('\n'.join(bgn))
+          print(textwrap.dedent(bgn))
         if end:
           stack.append(end)
           label_count += 1
         if bgn or end:
           break
-
-  print('\n'.join(code))
 
 main()
