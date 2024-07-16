@@ -1,5 +1,6 @@
 import re
 import sys
+import textwrap
 from common import *
 
 def sub_identity(line):
@@ -89,7 +90,7 @@ def main():
       print_line = line_raw
       for f in [sub_call, sub_comp, sub_push, sub_pop, sub_identity]:
         if substitute := f(line):
-          print(substitute)
+          print(textwrap.dedent(substitute))
           break
 
 main()
