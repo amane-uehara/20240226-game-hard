@@ -2,7 +2,10 @@ import re
 import sys
 from common import *
 
-def substitute_for(line, label):
+def sub_identity(line, label):
+  return ([line], [])
+
+def sub_for(line, label):
   bgn = []
   end = []
   if m := re.fullmatch("for\((?P<expressions>(.*))\)\{", line):
@@ -26,7 +29,7 @@ def substitute_for(line, label):
 
   return (bgn, end)
 
-def substitute_if(line, label):
+def sub_if(line, label):
   bgn = []
   end = []
   if m := re.fullmatch("if\((?P<condition>(.*))\)\{", line):
@@ -53,21 +56,20 @@ def main():
       line_delete_comment = re.split("//", line_raw)[0].strip()
       line = line_delete_comment.replace(" ", "")
 
-      (bgn_for, end_for) = substitute_for(line, f"label_{label_count}")
-      (bgn_if, end_if) = substitute_if(line, f"label_{label_count}")
-
       if re.fullmatch("\}", line):
-        code += stack.pop()
-      elif bgn_for:
-        code += bgn_for
-        stack.append(end_for)
-        label_count += 1
-      elif bgn_if:
-        code += bgn_if
-        stack.append(end_if)
-        label_count += 1
-      else:
-        code.append(line_delete_comment)
+        mnemonic_list = stack.pop()
+        print('\n'.join(mnemonic_list))
+        continue
+
+      for f in [sub_for, sub_if, sub_identity]:
+        (bgn, end) = f(line, f"label_{label_count}")
+        if bgn:
+          print('\n'.join(bgn))
+        if end:
+          stack.append(end)
+          label_count += 1
+        if bgn or end:
+          break
 
   print('\n'.join(code))
 
