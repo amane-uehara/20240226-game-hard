@@ -15,7 +15,7 @@ def sub_for(line, label):
     condition      = expressions[1]
     advancement    = expressions[2]
 
-    bgn = f"""
+    bgn = textwrap.dedent(f"""
       {initialization}
       {label}_for_bgn:
       tptr = {label}_for_loop
@@ -23,14 +23,14 @@ def sub_for(line, label):
       tptr = {label}_for_end
       pc = tptr
       {label}_for_loop:
-    """
+    """)
 
-    end = f"""
+    end = textwrap.dedent(f"""
       {advancement}
       tptr = {label}_for_bgn
       pc = tptr
       {label}_for_end:
-    """
+    """)
 
   return (bgn, end)
 
@@ -40,13 +40,13 @@ def sub_if(line, label):
   if m := re.fullmatch("if\((?P<condition>(.*))\)\{", line):
     condition = m.group("condition")
 
-    bgn = f"""
+    bgn = textwrap.dedent(f"""
       tptr = {label}_if_bgn
       pc = ({condition}) ? tptr : pc + 1
       tptr = {label}_if_end
       pc = tptr
       {label}_if_bgn:
-    """
+    """)
 
     end = f"{label}_if_end:"
   return (bgn, end)
@@ -64,13 +64,13 @@ def main():
 
       if re.fullmatch("\}", line):
         mnemonic = stack.pop()
-        print(textwrap.dedent(mnemonic))
+        print(mnemonic)
         continue
 
       for f in [sub_for, sub_if, sub_identity]:
         (bgn, end) = f(line, f"label_{label_count}")
         if bgn:
-          print(textwrap.dedent(bgn))
+          print(bgn)
         if end:
           stack.append(end)
           label_count += 1

@@ -19,10 +19,10 @@ def sub_comp(line):
     comp = m.group("comp")
 
     if src2 != "0":
-      ret = f"""
+      ret = textwrap.dedent(f"""
         tcmp = {src1} - {src2}
         pc = (tcmp {comp} 0) ? {src3} : pc + 1
-      """
+      """)
   return ret
 
 def sub_push(line):
@@ -37,16 +37,16 @@ def push_args(args):
   ret = ""
   for arg in args:
     if re.fullmatch(f"{REG}", arg):
-      ret += f"""
+      ret += textwrap.dedent(f"""
         sp = sp - 1
         mem[sp] = {arg}
-      """
+      """)
     else:
-      ret += f"""
+      ret += textwrap.dedent(f"""
         sp = sp - 1
         tcmp = {arg}
         mem[sp] = tcmp
-      """
+      """)
   return ret
 
 def sub_pop(line):
@@ -54,10 +54,10 @@ def sub_pop(line):
   REGS = f"(?P<regs>{REG}(,{REG})*)"
   if m := re.fullmatch(f"pop\({REGS}\)", line):
     for reg in m.group("regs").split(","):
-      ret += f"""
+      ret += textwrap.dedent(f"""
         {reg} = mem[sp]
         sp = sp + 1
-      """
+      """)
   return ret
 
 def sub_call(line):
@@ -71,14 +71,14 @@ def sub_call(line):
       push_list = m.group("args").split(",")
       ret += push_args(reversed(push_list))
 
-    ret += f"""
+    ret += textwrap.dedent(f"""
       sp = sp - 1
       mem[sp] = ra
       ra = {m.group('func')}
       (pc, ra) = (ra, pc + 1)
       ra = mem[sp]
       sp = sp + 1
-    """
+    """)
 
     if m.group("args"):
       ret += f"sp = sp + {len(push_list)}"
@@ -97,7 +97,7 @@ def main():
 
       for f in [sub_call, sub_comp, sub_push, sub_pop, sub_identity]:
         if substitute := f(line):
-          print(textwrap.dedent(substitute))
+          print(substitute)
           break
 
 main()
