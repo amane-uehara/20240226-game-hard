@@ -123,17 +123,17 @@
 00401e00 // i=sp+4                 // addr:0077
 0000e604 // a=mem[i]               // addr:0078
 00100700 // b=1                    // addr:0079
-// // label_0_for_bgn: 0x007a // addr:007a
+// // label_stdio_0_for_bgn: 0x007a // addr:007a
 07f00400 // tptr=0x007f            // addr:007a
 00107510 // tcmp=b-1               // addr:007b
 00054003 // pc=(tcmp==0)?tptr:pc+1 // addr:007c
 08200400 // tptr=0x0082            // addr:007d
 00004003 // pc=tptr                // addr:007e
-// // label_0_for_loop: 0x007f // addr:007f
+// // label_stdio_0_for_loop: 0x007f // addr:007f
 00000706 // b=io[0]                // addr:007f
 07a00400 // tptr=0x007a            // addr:0080
 00004003 // pc=tptr                // addr:0081
-// // label_0_for_end: 0x0082 // addr:0082
+// // label_stdio_0_for_end: 0x0082 // addr:0082
 00006007 // io[0]=a                // addr:0082
 00001e04 // i=mem[sp]              // addr:0083
 00101100 // sp=sp+1                // addr:0084
@@ -149,12 +149,12 @@
 000e1005 // mem[sp]=i              // addr:008d
 00301e00 // i=sp+3                 // addr:008e
 0000e604 // a=mem[i]               // addr:008f
-// // label_1_for_bgn: 0x0090 // addr:0090
+// // label_stdio_1_for_bgn: 0x0090 // addr:0090
 09400400 // tptr=0x0094            // addr:0090
 00064013 // pc=(a!=0)?tptr:pc+1    // addr:0091
 0a100400 // tptr=0x00a1            // addr:0092
 00004003 // pc=tptr                // addr:0093
-// // label_1_for_loop: 0x0094 // addr:0094
+// // label_stdio_1_for_loop: 0x0094 // addr:0094
 00101110 // sp=sp-1                // addr:0094
 00061005 // mem[sp]=a              // addr:0095
 00101110 // sp=sp-1                // addr:0096
@@ -168,7 +168,7 @@
 0000e604 // a=mem[i]               // addr:009e
 09000400 // tptr=0x0090            // addr:009f
 00004003 // pc=tptr                // addr:00a0
-// // label_1_for_end: 0x00a1 // addr:00a1
+// // label_stdio_1_for_end: 0x00a1 // addr:00a1
 00001e04 // i=mem[sp]              // addr:00a1
 00101100 // sp=sp+1                // addr:00a2
 00001604 // a=mem[sp]              // addr:00a3
@@ -248,18 +248,18 @@ fa000500 // tcmp=4000              // addr:00a7
 00101110 // sp=sp-1                // addr:00e9
 000e1005 // mem[sp]=i              // addr:00ea
 00000e00 // i=0                    // addr:00eb
-// // label_2_for_bgn: 0x00ec // addr:00ec
+// // label_2048_0_for_bgn: 0x00ec // addr:00ec
 0f100400 // tptr=0x00f1            // addr:00ec
 0100e510 // tcmp=i-16              // addr:00ed
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:00ee
 0f500400 // tptr=0x00f5            // addr:00ef
 00004003 // pc=tptr                // addr:00f0
-// // label_2_for_loop: 0x00f1 // addr:00f1
+// // label_2048_0_for_loop: 0x00f1 // addr:00f1
 0000e005 // mem[i]=zero            // addr:00f1
 0010ee00 // i=i+1                  // addr:00f2
 0ec00400 // tptr=0x00ec            // addr:00f3
 00004003 // pc=tptr                // addr:00f4
-// // label_2_for_end: 0x00f5 // addr:00f5
+// // label_2048_0_for_end: 0x00f5 // addr:00f5
 00101110 // sp=sp-1                // addr:00f5
 00021005 // mem[sp]=ra             // addr:00f6
 16600200 // ra=0x0166              // addr:00f7
@@ -315,7 +315,7 @@ fa000500 // tcmp=4000              // addr:00a7
 00054003 // pc=(tcmp==0)?tptr:pc+1 // addr:0127
 13100400 // tptr=0x0131            // addr:0128
 00004003 // pc=tptr                // addr:0129
-// // label_3_if_bgn: 0x012a // addr:012a
+// // label_2048_1_if_bgn: 0x012a // addr:012a
 00101110 // sp=sp-1                // addr:012a
 00021005 // mem[sp]=ra             // addr:012b
 2d900200 // ra=0x02d9              // addr:012c
@@ -323,13 +323,13 @@ fa000500 // tcmp=4000              // addr:00a7
 00001204 // ra=mem[sp]             // addr:012e
 00101100 // sp=sp+1                // addr:012f
 00003701 // b=rv                   // addr:0130
-// // label_3_if_end: 0x0131 // addr:0131
+// // label_2048_1_if_end: 0x0131 // addr:0131
 13600400 // tptr=0x0136            // addr:0131
 06a06510 // tcmp=a-106             // addr:0132
 00054003 // pc=(tcmp==0)?tptr:pc+1 // addr:0133
 13d00400 // tptr=0x013d            // addr:0134
 00004003 // pc=tptr                // addr:0135
-// // label_4_if_bgn: 0x0136 // addr:0136
+// // label_2048_2_if_bgn: 0x0136 // addr:0136
 00101110 // sp=sp-1                // addr:0136
 00021005 // mem[sp]=ra             // addr:0137
 2f200200 // ra=0x02f2              // addr:0138
@@ -337,13 +337,13 @@ fa000500 // tcmp=4000              // addr:00a7
 00001204 // ra=mem[sp]             // addr:013a
 00101100 // sp=sp+1                // addr:013b
 00003701 // b=rv                   // addr:013c
-// // label_4_if_end: 0x013d // addr:013d
+// // label_2048_2_if_end: 0x013d // addr:013d
 14200400 // tptr=0x0142            // addr:013d
 06806510 // tcmp=a-104             // addr:013e
 00054003 // pc=(tcmp==0)?tptr:pc+1 // addr:013f
 14900400 // tptr=0x0149            // addr:0140
 00004003 // pc=tptr                // addr:0141
-// // label_5_if_bgn: 0x0142 // addr:0142
+// // label_2048_3_if_bgn: 0x0142 // addr:0142
 00101110 // sp=sp-1                // addr:0142
 00021005 // mem[sp]=ra             // addr:0143
 29b00200 // ra=0x029b              // addr:0144
@@ -351,13 +351,13 @@ fa000500 // tcmp=4000              // addr:00a7
 00001204 // ra=mem[sp]             // addr:0146
 00101100 // sp=sp+1                // addr:0147
 00003701 // b=rv                   // addr:0148
-// // label_5_if_end: 0x0149 // addr:0149
+// // label_2048_3_if_end: 0x0149 // addr:0149
 14e00400 // tptr=0x014e            // addr:0149
 06c06510 // tcmp=a-108             // addr:014a
 00054003 // pc=(tcmp==0)?tptr:pc+1 // addr:014b
 15500400 // tptr=0x0155            // addr:014c
 00004003 // pc=tptr                // addr:014d
-// // label_6_if_bgn: 0x014e // addr:014e
+// // label_2048_4_if_bgn: 0x014e // addr:014e
 00101110 // sp=sp-1                // addr:014e
 00021005 // mem[sp]=ra             // addr:014f
 2c000200 // ra=0x02c0              // addr:0150
@@ -365,19 +365,19 @@ fa000500 // tcmp=4000              // addr:00a7
 00001204 // ra=mem[sp]             // addr:0152
 00101100 // sp=sp+1                // addr:0153
 00003701 // b=rv                   // addr:0154
-// // label_6_if_end: 0x0155 // addr:0155
+// // label_2048_4_if_end: 0x0155 // addr:0155
 15900400 // tptr=0x0159            // addr:0155
 00074013 // pc=(b!=0)?tptr:pc+1    // addr:0156
 15f00400 // tptr=0x015f            // addr:0157
 00004003 // pc=tptr                // addr:0158
-// // label_7_if_bgn: 0x0159 // addr:0159
+// // label_2048_5_if_bgn: 0x0159 // addr:0159
 00101110 // sp=sp-1                // addr:0159
 00021005 // mem[sp]=ra             // addr:015a
 16600200 // ra=0x0166              // addr:015b
 00002202 // (pc,ra)=(ra,pc+1)      // addr:015c
 00001204 // ra=mem[sp]             // addr:015d
 00101100 // sp=sp+1                // addr:015e
-// // label_7_if_end: 0x015f // addr:015f
+// // label_2048_5_if_end: 0x015f // addr:015f
 00001e04 // i=mem[sp]              // addr:015f
 00101100 // sp=sp+1                // addr:0160
 00001704 // b=mem[sp]              // addr:0161
@@ -407,13 +407,13 @@ fa000500 // tcmp=4000              // addr:00a7
 00101100 // sp=sp+1                // addr:0178
 00003601 // a=rv                   // addr:0179
 00000700 // b=0                    // addr:017a
-// // label_8_for_bgn: 0x017b // addr:017b
+// // label_2048_6_for_bgn: 0x017b // addr:017b
 18000400 // tptr=0x0180            // addr:017b
 01007510 // tcmp=b-16              // addr:017c
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:017d
 18d00400 // tptr=0x018d            // addr:017e
 00004003 // pc=tptr                // addr:017f
-// // label_8_for_loop: 0x0180 // addr:0180
+// // label_2048_6_for_loop: 0x0180 // addr:0180
 00076801 // c=a+b                  // addr:0180
 00f00900 // d=15                   // addr:0181
 00098951 // d=c&d                  // addr:0182
@@ -422,14 +422,14 @@ fa000500 // tcmp=4000              // addr:00a7
 000a4003 // pc=(e==0)?tptr:pc+1    // addr:0185
 18a00400 // tptr=0x018a            // addr:0186
 00004003 // pc=tptr                // addr:0187
-// // label_9_if_bgn: 0x0188 // addr:0188
+// // label_2048_7_if_bgn: 0x0188 // addr:0188
 000b9005 // mem[d]=f               // addr:0188
 00000b00 // f=0                    // addr:0189
-// // label_9_if_end: 0x018a // addr:018a
+// // label_2048_7_if_end: 0x018a // addr:018a
 00107700 // b=b+1                  // addr:018a
 17b00400 // tptr=0x017b            // addr:018b
 00004003 // pc=tptr                // addr:018c
-// // label_8_for_end: 0x018d // addr:018d
+// // label_2048_6_for_end: 0x018d // addr:018d
 00001b04 // f=mem[sp]              // addr:018d
 00101100 // sp=sp+1                // addr:018e
 00001a04 // e=mem[sp]              // addr:018f
@@ -462,30 +462,30 @@ fa000500 // tcmp=4000              // addr:00a7
 000e1005 // mem[sp]=i              // addr:01a9
 00000e00 // i=0                    // addr:01aa
 00000600 // a=0                    // addr:01ab
-// // label_10_for_bgn: 0x01ac // addr:01ac
+// // label_2048_8_for_bgn: 0x01ac // addr:01ac
 1b100400 // tptr=0x01b1            // addr:01ac
 00406510 // tcmp=a-4               // addr:01ad
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:01ae
 1cf00400 // tptr=0x01cf            // addr:01af
 00004003 // pc=tptr                // addr:01b0
-// // label_10_for_loop: 0x01b1 // addr:01b1
+// // label_2048_8_for_loop: 0x01b1 // addr:01b1
 00206720 // b=a<<2                 // addr:01b1
 00000d00 // h=0                    // addr:01b2
 00000800 // c=0                    // addr:01b3
-// // label_11_for_bgn: 0x01b4 // addr:01b4
+// // label_2048_9_for_bgn: 0x01b4 // addr:01b4
 1b900400 // tptr=0x01b9            // addr:01b4
 00408510 // tcmp=c-4               // addr:01b5
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:01b6
 1cc00400 // tptr=0x01cc            // addr:01b7
 00004003 // pc=tptr                // addr:01b8
-// // label_11_for_loop: 0x01b9 // addr:01b9
+// // label_2048_9_for_loop: 0x01b9 // addr:01b9
 00087901 // d=b+c                  // addr:01b9
 00009a04 // e=mem[d]               // addr:01ba
 1bf00400 // tptr=0x01bf            // addr:01bb
 000a4013 // pc=(e!=0)?tptr:pc+1    // addr:01bc
 1c900400 // tptr=0x01c9            // addr:01bd
 00004003 // pc=tptr                // addr:01be
-// // label_12_if_bgn: 0x01bf // addr:01bf
+// // label_2048_10_if_bgn: 0x01bf // addr:01bf
 000d7b01 // f=b+h                  // addr:01bf
 000ab005 // mem[f]=e               // addr:01c0
 1c600400 // tptr=0x01c6            // addr:01c1
@@ -493,20 +493,20 @@ fa000500 // tcmp=4000              // addr:00a7
 00054013 // pc=(tcmp!=0)?tptr:pc+1 // addr:01c3
 1c800400 // tptr=0x01c8            // addr:01c4
 00004003 // pc=tptr                // addr:01c5
-// // label_13_if_bgn: 0x01c6 // addr:01c6
+// // label_2048_11_if_bgn: 0x01c6 // addr:01c6
 00009005 // mem[d]=zero            // addr:01c6
 00100e00 // i=1                    // addr:01c7
-// // label_13_if_end: 0x01c8 // addr:01c8
+// // label_2048_11_if_end: 0x01c8 // addr:01c8
 0010dd00 // h=h+1                  // addr:01c8
-// // label_12_if_end: 0x01c9 // addr:01c9
+// // label_2048_10_if_end: 0x01c9 // addr:01c9
 00108800 // c=c+1                  // addr:01c9
 1b400400 // tptr=0x01b4            // addr:01ca
 00004003 // pc=tptr                // addr:01cb
-// // label_11_for_end: 0x01cc // addr:01cc
+// // label_2048_9_for_end: 0x01cc // addr:01cc
 00106600 // a=a+1                  // addr:01cc
 1ac00400 // tptr=0x01ac            // addr:01cd
 00004003 // pc=tptr                // addr:01ce
-// // label_10_for_end: 0x01cf // addr:01cf
+// // label_2048_8_for_end: 0x01cf // addr:01cf
 0000e301 // rv=i                   // addr:01cf
 00001e04 // i=mem[sp]              // addr:01d0
 00101100 // sp=sp+1                // addr:01d1
@@ -544,29 +544,29 @@ fa000500 // tcmp=4000              // addr:00a7
 000e1005 // mem[sp]=i              // addr:01f0
 00000e00 // i=0                    // addr:01f1
 00000600 // a=0                    // addr:01f2
-// // label_14_for_bgn: 0x01f3 // addr:01f3
+// // label_2048_12_for_bgn: 0x01f3 // addr:01f3
 1f800400 // tptr=0x01f8            // addr:01f3
 00406510 // tcmp=a-4               // addr:01f4
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:01f5
 21600400 // tptr=0x0216            // addr:01f6
 00004003 // pc=tptr                // addr:01f7
-// // label_14_for_loop: 0x01f8 // addr:01f8
+// // label_2048_12_for_loop: 0x01f8 // addr:01f8
 00206720 // b=a<<2                 // addr:01f8
 00000800 // c=0                    // addr:01f9
-// // label_15_for_bgn: 0x01fa // addr:01fa
+// // label_2048_13_for_bgn: 0x01fa // addr:01fa
 1ff00400 // tptr=0x01ff            // addr:01fa
 00308510 // tcmp=c-3               // addr:01fb
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:01fc
 21300400 // tptr=0x0213            // addr:01fd
 00004003 // pc=tptr                // addr:01fe
-// // label_15_for_loop: 0x01ff // addr:01ff
+// // label_2048_13_for_loop: 0x01ff // addr:01ff
 00087901 // d=b+c                  // addr:01ff
 00009a04 // e=mem[d]               // addr:0200
 20500400 // tptr=0x0205            // addr:0201
 000a4013 // pc=(e!=0)?tptr:pc+1    // addr:0202
 21000400 // tptr=0x0210            // addr:0203
 00004003 // pc=tptr                // addr:0204
-// // label_16_if_bgn: 0x0205 // addr:0205
+// // label_2048_14_if_bgn: 0x0205 // addr:0205
 00109b00 // f=d+1                  // addr:0205
 0000bc04 // g=mem[f]               // addr:0206
 20c00400 // tptr=0x020c            // addr:0207
@@ -574,21 +574,21 @@ fa000500 // tcmp=4000              // addr:00a7
 00054003 // pc=(tcmp==0)?tptr:pc+1 // addr:0209
 21000400 // tptr=0x0210            // addr:020a
 00004003 // pc=tptr                // addr:020b
-// // label_17_if_bgn: 0x020c // addr:020c
+// // label_2048_15_if_bgn: 0x020c // addr:020c
 0010aa00 // e=e+1                  // addr:020c
 000a9005 // mem[d]=e               // addr:020d
 0000b005 // mem[f]=zero            // addr:020e
 00100e00 // i=1                    // addr:020f
-// // label_17_if_end: 0x0210 // addr:0210
-// // label_16_if_end: 0x0210 // addr:0210
+// // label_2048_15_if_end: 0x0210 // addr:0210
+// // label_2048_14_if_end: 0x0210 // addr:0210
 00108800 // c=c+1                  // addr:0210
 1fa00400 // tptr=0x01fa            // addr:0211
 00004003 // pc=tptr                // addr:0212
-// // label_15_for_end: 0x0213 // addr:0213
+// // label_2048_13_for_end: 0x0213 // addr:0213
 00106600 // a=a+1                  // addr:0213
 1f300400 // tptr=0x01f3            // addr:0214
 00004003 // pc=tptr                // addr:0215
-// // label_14_for_end: 0x0216 // addr:0216
+// // label_2048_12_for_end: 0x0216 // addr:0216
 0000e301 // rv=i                   // addr:0216
 00001e04 // i=mem[sp]              // addr:0217
 00101100 // sp=sp+1                // addr:0218
@@ -623,22 +623,22 @@ fa000500 // tcmp=4000              // addr:00a7
 00101110 // sp=sp-1                // addr:0234
 000c1005 // mem[sp]=g              // addr:0235
 00000600 // a=0                    // addr:0236
-// // label_18_for_bgn: 0x0237 // addr:0237
+// // label_2048_16_for_bgn: 0x0237 // addr:0237
 23c00400 // tptr=0x023c            // addr:0237
 00406510 // tcmp=a-4               // addr:0238
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:0239
 25000400 // tptr=0x0250            // addr:023a
 00004003 // pc=tptr                // addr:023b
-// // label_18_for_loop: 0x023c // addr:023c
+// // label_2048_16_for_loop: 0x023c // addr:023c
 00206720 // b=a<<2                 // addr:023c
 00000800 // c=0                    // addr:023d
-// // label_19_for_bgn: 0x023e // addr:023e
+// // label_2048_17_for_bgn: 0x023e // addr:023e
 24300400 // tptr=0x0243            // addr:023e
 00208510 // tcmp=c-2               // addr:023f
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:0240
 24d00400 // tptr=0x024d            // addr:0241
 00004003 // pc=tptr                // addr:0242
-// // label_19_for_loop: 0x0243 // addr:0243
+// // label_2048_17_for_loop: 0x0243 // addr:0243
 00087901 // d=b+c                  // addr:0243
 00009a04 // e=mem[d]               // addr:0244
 00087b11 // f=b-c                  // addr:0245
@@ -649,11 +649,11 @@ fa000500 // tcmp=4000              // addr:00a7
 00108800 // c=c+1                  // addr:024a
 23e00400 // tptr=0x023e            // addr:024b
 00004003 // pc=tptr                // addr:024c
-// // label_19_for_end: 0x024d // addr:024d
+// // label_2048_17_for_end: 0x024d // addr:024d
 00106600 // a=a+1                  // addr:024d
 23700400 // tptr=0x0237            // addr:024e
 00004003 // pc=tptr                // addr:024f
-// // label_18_for_end: 0x0250 // addr:0250
+// // label_2048_16_for_end: 0x0250 // addr:0250
 00001c04 // g=mem[sp]              // addr:0250
 00101100 // sp=sp+1                // addr:0251
 00001b04 // f=mem[sp]              // addr:0252
@@ -685,28 +685,28 @@ fa000500 // tcmp=4000              // addr:00a7
 00101110 // sp=sp-1                // addr:026b
 000c1005 // mem[sp]=g              // addr:026c
 00000600 // a=0                    // addr:026d
-// // label_20_for_bgn: 0x026e // addr:026e
+// // label_2048_18_for_bgn: 0x026e // addr:026e
 27300400 // tptr=0x0273            // addr:026e
 00406510 // tcmp=a-4               // addr:026f
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:0270
 28c00400 // tptr=0x028c            // addr:0271
 00004003 // pc=tptr                // addr:0272
-// // label_20_for_loop: 0x0273 // addr:0273
+// // label_2048_18_for_loop: 0x0273 // addr:0273
 00206720 // b=a<<2                 // addr:0273
 00000800 // c=0                    // addr:0274
-// // label_21_for_bgn: 0x0275 // addr:0275
+// // label_2048_19_for_bgn: 0x0275 // addr:0275
 27a00400 // tptr=0x027a            // addr:0275
 00408510 // tcmp=c-4               // addr:0276
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:0277
 28900400 // tptr=0x0289            // addr:0278
 00004003 // pc=tptr                // addr:0279
-// // label_21_for_loop: 0x027a // addr:027a
+// // label_2048_19_for_loop: 0x027a // addr:027a
 27f00400 // tptr=0x027f            // addr:027a
 00086511 // tcmp=a-c               // addr:027b
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:027c
 28600400 // tptr=0x0286            // addr:027d
 00004003 // pc=tptr                // addr:027e
-// // label_22_if_bgn: 0x027f // addr:027f
+// // label_2048_20_if_bgn: 0x027f // addr:027f
 00087901 // d=b+c                  // addr:027f
 00009a04 // e=mem[d]               // addr:0280
 00208b20 // f=c<<2                 // addr:0281
@@ -714,15 +714,15 @@ fa000500 // tcmp=4000              // addr:00a7
 0000bc04 // g=mem[f]               // addr:0283
 000c9005 // mem[d]=g               // addr:0284
 000ab005 // mem[f]=e               // addr:0285
-// // label_22_if_end: 0x0286 // addr:0286
+// // label_2048_20_if_end: 0x0286 // addr:0286
 00108800 // c=c+1                  // addr:0286
 27500400 // tptr=0x0275            // addr:0287
 00004003 // pc=tptr                // addr:0288
-// // label_21_for_end: 0x0289 // addr:0289
+// // label_2048_19_for_end: 0x0289 // addr:0289
 00106600 // a=a+1                  // addr:0289
 26e00400 // tptr=0x026e            // addr:028a
 00004003 // pc=tptr                // addr:028b
-// // label_20_for_end: 0x028c // addr:028c
+// // label_2048_18_for_end: 0x028c // addr:028c
 00001c04 // g=mem[sp]              // addr:028c
 00101100 // sp=sp+1                // addr:028d
 00001b04 // f=mem[sp]              // addr:028e
@@ -866,13 +866,13 @@ fa000500 // tcmp=4000              // addr:00a7
 00101110 // sp=sp-1                // addr:0313
 000e1005 // mem[sp]=i              // addr:0314
 00000e00 // i=0                    // addr:0315
-// // label_23_for_bgn: 0x0316 // addr:0316
+// // label_2048_21_for_bgn: 0x0316 // addr:0316
 31b00400 // tptr=0x031b            // addr:0316
 0090e510 // tcmp=i-9               // addr:0317
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:0318
 34700400 // tptr=0x0347            // addr:0319
 00004003 // pc=tptr                // addr:031a
-// // label_23_for_loop: 0x031b // addr:031b
+// // label_2048_21_for_loop: 0x031b // addr:031b
 00101110 // sp=sp-1                // addr:031b
 00000500 // tcmp=0                 // addr:031c
 00051005 // mem[sp]=tcmp           // addr:031d
@@ -917,7 +917,7 @@ fa000500 // tcmp=4000              // addr:00a7
 0010ee00 // i=i+1                  // addr:0344
 31600400 // tptr=0x0316            // addr:0345
 00004003 // pc=tptr                // addr:0346
-// // label_23_for_end: 0x0347 // addr:0347
+// // label_2048_21_for_end: 0x0347 // addr:0347
 00101110 // sp=sp-1                // addr:0347
 00021005 // mem[sp]=ra             // addr:0348
 41d00200 // ra=0x041d              // addr:0349
@@ -925,13 +925,13 @@ fa000500 // tcmp=4000              // addr:00a7
 00001204 // ra=mem[sp]             // addr:034b
 00101100 // sp=sp+1                // addr:034c
 00000e00 // i=0                    // addr:034d
-// // label_24_for_bgn: 0x034e // addr:034e
+// // label_2048_22_for_bgn: 0x034e // addr:034e
 35300400 // tptr=0x0353            // addr:034e
 0040e510 // tcmp=i-4               // addr:034f
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:0350
 38f00400 // tptr=0x038f            // addr:0351
 00004003 // pc=tptr                // addr:0352
-// // label_24_for_loop: 0x0353 // addr:0353
+// // label_2048_22_for_loop: 0x0353 // addr:0353
 00101110 // sp=sp-1                // addr:0353
 07c00500 // tcmp=124               // addr:0354
 00051005 // mem[sp]=tcmp           // addr:0355
@@ -944,13 +944,13 @@ fa000500 // tcmp=4000              // addr:00a7
 00101100 // sp=sp+1                // addr:035c
 0020e720 // b=i<<2                 // addr:035d
 00000800 // c=0                    // addr:035e
-// // label_25_for_bgn: 0x035f // addr:035f
+// // label_2048_23_for_bgn: 0x035f // addr:035f
 36400400 // tptr=0x0364            // addr:035f
 00408510 // tcmp=c-4               // addr:0360
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:0361
 37c00400 // tptr=0x037c            // addr:0362
 00004003 // pc=tptr                // addr:0363
-// // label_25_for_loop: 0x0364 // addr:0364
+// // label_2048_23_for_loop: 0x0364 // addr:0364
 00087901 // d=b+c                  // addr:0364
 00009a04 // e=mem[d]               // addr:0365
 00101110 // sp=sp-1                // addr:0366
@@ -975,7 +975,7 @@ fa000500 // tcmp=4000              // addr:00a7
 00108800 // c=c+1                  // addr:0379
 35f00400 // tptr=0x035f            // addr:037a
 00004003 // pc=tptr                // addr:037b
-// // label_25_for_end: 0x037c // addr:037c
+// // label_2048_23_for_end: 0x037c // addr:037c
 00101110 // sp=sp-1                // addr:037c
 00a00500 // tcmp=10                // addr:037d
 00051005 // mem[sp]=tcmp           // addr:037e
@@ -995,7 +995,7 @@ fa000500 // tcmp=4000              // addr:00a7
 0010ee00 // i=i+1                  // addr:038c
 34e00400 // tptr=0x034e            // addr:038d
 00004003 // pc=tptr                // addr:038e
-// // label_24_for_end: 0x038f // addr:038f
+// // label_2048_22_for_end: 0x038f // addr:038f
 00001e04 // i=mem[sp]              // addr:038f
 00101100 // sp=sp+1                // addr:0390
 00001a04 // e=mem[sp]              // addr:0391
@@ -1028,27 +1028,27 @@ fa000500 // tcmp=4000              // addr:00a7
 00054023 // pc=(tcmp>=0)?tptr:pc+1 // addr:03ab
 3b000400 // tptr=0x03b0            // addr:03ac
 00004003 // pc=tptr                // addr:03ad
-// // label_26_if_bgn: 0x03ae // addr:03ae
+// // label_2048_24_if_bgn: 0x03ae // addr:03ae
 03006700 // b=a+48                 // addr:03ae
 00007801 // c=b                    // addr:03af
-// // label_26_if_end: 0x03b0 // addr:03b0
+// // label_2048_24_if_end: 0x03b0 // addr:03b0
 3b500400 // tptr=0x03b5            // addr:03b0
 00706510 // tcmp=a-7               // addr:03b1
 00054023 // pc=(tcmp>=0)?tptr:pc+1 // addr:03b2
 3b700400 // tptr=0x03b7            // addr:03b3
 00004003 // pc=tptr                // addr:03b4
-// // label_27_if_bgn: 0x03b5 // addr:03b5
+// // label_2048_25_if_bgn: 0x03b5 // addr:03b5
 00700800 // c=7                    // addr:03b5
 02a06900 // d=a+42                 // addr:03b6
-// // label_27_if_end: 0x03b7 // addr:03b7
+// // label_2048_25_if_end: 0x03b7 // addr:03b7
 3bc00400 // tptr=0x03bc            // addr:03b7
 00d06510 // tcmp=a-13              // addr:03b8
 00054023 // pc=(tcmp>=0)?tptr:pc+1 // addr:03b9
 3bd00400 // tptr=0x03bd            // addr:03ba
 00004003 // pc=tptr                // addr:03bb
-// // label_28_if_bgn: 0x03bc // addr:03bc
+// // label_2048_26_if_bgn: 0x03bc // addr:03bc
 03700900 // d=55                   // addr:03bc
-// // label_28_if_end: 0x03bd // addr:03bd
+// // label_2048_26_if_end: 0x03bd // addr:03bd
 00101110 // sp=sp-1                // addr:03bd
 00000500 // tcmp=0                 // addr:03be
 00051005 // mem[sp]=tcmp           // addr:03bf
@@ -1149,13 +1149,13 @@ fa000500 // tcmp=4000              // addr:00a7
 00101110 // sp=sp-1                // addr:041d
 000e1005 // mem[sp]=i              // addr:041e
 00000e00 // i=0                    // addr:041f
-// // label_29_for_bgn: 0x0420 // addr:0420
+// // label_2048_27_for_bgn: 0x0420 // addr:0420
 42500400 // tptr=0x0425            // addr:0420
 00d0e510 // tcmp=i-13              // addr:0421
 00054033 // pc=(tcmp<0)?tptr:pc+1  // addr:0422
 43200400 // tptr=0x0432            // addr:0423
 00004003 // pc=tptr                // addr:0424
-// // label_29_for_loop: 0x0425 // addr:0425
+// // label_2048_27_for_loop: 0x0425 // addr:0425
 00101110 // sp=sp-1                // addr:0425
 02d00500 // tcmp=45                // addr:0426
 00051005 // mem[sp]=tcmp           // addr:0427
@@ -1169,7 +1169,7 @@ fa000500 // tcmp=4000              // addr:00a7
 0010ee00 // i=i+1                  // addr:042f
 42000400 // tptr=0x0420            // addr:0430
 00004003 // pc=tptr                // addr:0431
-// // label_29_for_end: 0x0432 // addr:0432
+// // label_2048_27_for_end: 0x0432 // addr:0432
 00101110 // sp=sp-1                // addr:0432
 00a00500 // tcmp=10                // addr:0433
 00051005 // mem[sp]=tcmp           // addr:0434

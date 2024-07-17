@@ -1,6 +1,7 @@
 import re
 import sys
 import textwrap
+import os
 from common import *
 
 def sub_identity(line, label):
@@ -57,6 +58,8 @@ def main():
   label_count = 0
 
   filename = sys.argv[1]
+  label_base = os.path.basename(filename).split(".")[0]
+
   with open(filename) as f:
     for line_raw in f:
       line_delete_comment = re.split("//", line_raw)[0].strip()
@@ -68,7 +71,7 @@ def main():
         continue
 
       for f in [sub_for, sub_if, sub_identity]:
-        (bgn, end) = f(line, f"label_{label_count}")
+        (bgn, end) = f(line, f"label_{label_base}_{label_count}")
         if bgn:
           print(bgn)
         if end:
